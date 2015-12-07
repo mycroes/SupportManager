@@ -1,0 +1,112 @@
+﻿@using Microsoft.Web.Mvc.Html
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Features.User.DetailsModel
+
+@{
+    ViewBag.Title = "User home";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h2>
+                User details <small>for @Model.Name</small>
+            </h2>
+        </div>
+
+        <dl class="dl-horizontal">
+            <dt>Primary emailaddress</dt>
+            <dd>@(Model.PrimaryEmailAddressValue ?? "Not set")</dd>
+            <dt>Primary phonenumber</dt>
+            @if (Model.PrimaryPhoneNumberValue != null)
+            {
+                <dd>@Model.PrimaryPhoneNumberValue (@Model.PrimaryPhoneNumberLabel)</dd>
+            }
+            else
+            {
+                <dd>Not set</dd>
+            }
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Emailaddresses</h3>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Emailaddress</th>
+                        <th>Verified?</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.EmailAddresses.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.EmailAddresses[i].Value</td>
+                            <td>@Html.Display(m => m.EmailAddresses[i].IsVerified)</td>
+                            <td>
+                                <a href="#">Set as primary</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="panel-footer">
+                @Html.ActionLink("Add emailaddress", "AddEmailAddress", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Phonenumbers</h3>
+            </div>
+            
+            @if (Model.PhoneNumbers.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Phonenumber</th>
+                            <th>Verified?</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var phone in @Model.PhoneNumbers)
+                        {
+                            <tr>
+                                <td>@phone.Label</td>
+                                <td>@phone.Value</td>
+                                <td>@phone.IsVerified</td>
+                                <td>
+                                    <a href="#">Set as primary</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <div class="alert alert-warning">
+                        No phonenumbers configured yet, you won't be able to take support duty!
+                    </div>
+                </div>
+            }
+
+            <div class="panel-footer">
+                @Html.ActionLink("Add phonenumber", "AddPhoneNumber", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+</div>

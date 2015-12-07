@@ -1,0 +1,20 @@
+﻿@using PagedList.Mvc
+@using SupportManager.Web.Features.PhoneNumber
+@model PagedList.IPagedList<PhoneNumberListItem>
+
+@{
+    ViewBag.Title = "Phone numbers";
+}
+
+<h2>Phone numbers</h2>
+
+<ul>
+    @foreach (var entry in Model)
+    {
+        <li>@entry.Label : @entry.PhoneNumber</li>
+    }
+</ul>
+
+@Html.PagedListPager(Model, page => @Url.Action("Index", new PhoneNumberListQuery { PageNumber = page }))
+
+@Html.ActionLink("Add phone number", "Create")

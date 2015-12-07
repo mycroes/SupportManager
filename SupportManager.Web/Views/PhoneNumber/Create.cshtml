@@ -1,0 +1,33 @@
+﻿@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Features.PhoneNumber.PhoneNumberCreateCommand
+
+@{
+    ViewBag.Title = "Add phone number";
+}
+
+<h2>Add phone number</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <fieldset>
+            <legend>Phone number details</legend>
+            @Html.ValidationDiv()
+            @Html.FormBlock(m => m.Label)
+            @Html.FormBlock(m => m.PhoneNumber)
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to list", "Index")
+</div>
+@Scripts.Render("~/bundles/jqueryval")

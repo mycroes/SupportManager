@@ -1,0 +1,14 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<div class="jumbotron">
+    <h1>Welcome @User.Identity.Name!</h1>
+    <p>
+        You have reached the SupportManager portal.
+        It's time to create your account and join a support team!
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="@Url.Action("Register")">Get started</a></p>
+</div>
