@@ -36,15 +36,17 @@
                 <h3 class="panel-title">Emailaddresses</h3>
             </div>
 
-            <table class="table">
-                <thead>
+            @if (Model.EmailAddresses.Any())
+            {
+                <table class="table">
+                    <thead>
                     <tr>
                         <th>Emailaddress</th>
                         <th>Verified?</th>
                         <th>Actions</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @for (int i = 0; i < Model.EmailAddresses.Count; i++)
                     {
                         <tr>
@@ -55,8 +57,18 @@
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <div class="alert alert-warning" style="margin-bottom: 1px">
+                        No emailaddress configured yet, you won't be able to receive email notifications!
+                    </div>
+                </div>
+            }
+
             <div class="panel-footer">
                 @Html.ActionLink("Add emailaddress", "AddEmailAddress", null, new { @class = "btn btn-default" })
             </div>
@@ -98,8 +110,8 @@
             else
             {
                 <div class="panel-body">
-                    <div class="alert alert-warning">
-                        No phonenumbers configured yet, you won't be able to take support duty!
+                    <div class="alert alert-warning" style="margin-bottom: 1px">
+                        No phonenumber configured yet, you won't be able to take support duty!
                     </div>
                 </div>
             }
