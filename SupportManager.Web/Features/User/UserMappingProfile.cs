@@ -15,6 +15,7 @@ namespace SupportManager.Web.Features.User
             CreateMap<UserPhoneNumber, PhoneListModel>();
             CreateMap<EmailAddressCreateModel, UserEmailAddress>(MemberList.Source);
             CreateMap<UserEmailAddress, EmailAddressListModel>();
+            CreateMap<PhoneNumberCreateModel, UserPhoneNumber>(MemberList.Source);
         }
     }
 }

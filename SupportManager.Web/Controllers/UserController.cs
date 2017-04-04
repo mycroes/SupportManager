@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
+using Hangfire;
 using MediatR;
+using SupportManager.Contracts;
 using SupportManager.Web.Features.User;
 using SupportManager.Web.Infrastructure;
 
@@ -58,6 +60,13 @@ namespace SupportManager.Web.Controllers
             if (result.Success) return RedirectToAction("Index");
 
             throw new Exception("Failed to verify");
+        }
+
+        public ActionResult Send(int id, DateTime when)
+        {
+            BackgroundJob.Schedule<IForwarder>(x => x.ApplyForward(id), when);
+
+            return new ContentResult {Content = "OK"};
         }
     }
 }
