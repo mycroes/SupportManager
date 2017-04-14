@@ -8,6 +8,6 @@ namespace SupportManager.Contracts
 
         Task ApplyForward(int teamId, int userPhoneNumberId);
 
-        Task ReadStatus(int teamId);
+        Task ReadAllTeamStatus();
     }
 }
