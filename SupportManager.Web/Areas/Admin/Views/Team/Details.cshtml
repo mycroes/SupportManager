@@ -72,7 +72,7 @@
     {
         <tr>
             <td>
-                <a href="@Url.Action("EditForward", new EditForward.Query {Id = schedule.Id})"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("EditForward", new {Model.TeamId, schedule.Id})"><span class="glyphicon glyphicon-pencil"></span></a>
             </td>
             <td>@schedule.User</td>
             <td>@schedule.PhoneNumber</td>
