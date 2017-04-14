@@ -1,5 +1,4 @@
 using Hangfire;
-using Hangfire.SqlServer;
 using StructureMap;
 using SupportManager.Control.Infrastructure;
 using Topshelf;
@@ -13,12 +12,13 @@ namespace SupportManager.Control
 
         public SupportManagerService()
         {
+            GlobalConfiguration.Configuration.UseSqlServerStorage("HangFire");
             container = new Container(c => c.AddRegistry<AppRegistry>());
         }
 
         public bool Start(HostControl hostControl)
         {
-            jobServer = new BackgroundJobServer(GetJobServerOptions(), new SqlServerStorage("HangFire"));
+            jobServer = new BackgroundJobServer(GetJobServerOptions());
             return true;
         }
 
