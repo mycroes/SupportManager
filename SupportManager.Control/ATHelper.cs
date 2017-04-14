@@ -35,6 +35,9 @@ namespace SupportManager.Control
         private string[] Execute(ATCommand command)
         {
             var stream = serialPort.BaseStream;
+            stream.ReadTimeout = 10000;
+            stream.WriteTimeout = 10000;
+
             return command.Execute(stream);
         }
 
