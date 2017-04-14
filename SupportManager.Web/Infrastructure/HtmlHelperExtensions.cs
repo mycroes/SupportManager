@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -142,6 +143,22 @@ namespace SupportManager.Web.Infrastructure
                 action);
 
             return Link(helper, linkText, url);
+        }
+
+        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Func<TController, Task>> func)
+            where TController : Controller
+        {
+            var linkText = ((MethodCallExpression) func.Body).Method.Name;
+
+            return helper.Link(func, linkText);
+        }
+
+        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Func<TController, Task>> func,
+            string linkText) where TController : Controller
+        {
+            var action = Expression.Lambda<Action<TController>>(func.Body, func.Parameters);
+
+            return helper.Link(action, linkText);
         }
 
         private static HtmlTag Link(HtmlHelper helper, string linkText, string url)

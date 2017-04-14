@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure.CommandProcessing;
 
 namespace SupportManager.Web.Features.User
 {
@@ -16,7 +17,7 @@ namespace SupportManager.Web.Features.User
 
         protected override void HandleCore(AddPhoneNumberCommand message)
         {
-            var user = db.Users.WhereUserNameIs(message.UserName).Single();
+            var user = db.Users.WhereUserLoginIs(message.UserName).Single();
             var phoneNumber = Mapper.Map<UserPhoneNumber>(message.PhoneNumber);
             var code = VerificationCodeManager.GenerateCode();
             phoneNumber.VerificationToken = VerificationCodeManager.GetHash(phoneNumber.Value + code);

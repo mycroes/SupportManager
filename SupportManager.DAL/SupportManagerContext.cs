@@ -18,14 +18,11 @@ namespace SupportManager.DAL
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<ForwardRegistration> ForwardRegistrations { get; set; }
-
+        public DbSet<ForwardingState> ForwardingStates { get; set; }
+        public DbSet<ScheduledForward> ScheduledForwards { get; set; }
         public DbSet<SupportTeam> Teams { get; set; }
-
         public DbSet<User> Users { get; set; }
-
         public DbSet<UserEmailAddress> UserEmailAddresses { get; set; }
-
         public DbSet<UserPhoneNumber> UserPhoneNumbers { get; set; }
 
         public void BeginTransaction()

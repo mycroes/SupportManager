@@ -7,7 +7,7 @@ namespace SupportManager.DAL
     {
         [Required]
         public virtual string Name { get; set; }
-        public virtual string PhoneComPort { get; set; }
+        public virtual string ComPort { get; set; }
         public virtual ICollection<TeamMember> Members { get; set; }
     }
 }

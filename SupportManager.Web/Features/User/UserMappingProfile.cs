@@ -5,7 +5,7 @@ namespace SupportManager.Web.Features.User
 {
     public class UserMappingProfile : Profile
     {
-        protected override void Configure()
+        public UserMappingProfile()
         {
             CreateMap<UserExistsQuery, UserExistsResponse>(MemberList.Source);
             CreateMap<DAL.User, UserExistsResponse>()

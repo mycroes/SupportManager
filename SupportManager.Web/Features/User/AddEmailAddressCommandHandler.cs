@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure.CommandProcessing;
 using SupportManager.Web.Mailers;
 
 namespace SupportManager.Web.Features.User
@@ -19,7 +20,7 @@ namespace SupportManager.Web.Features.User
 
         protected override void HandleCore(AddEmailAddressCommand message)
         {
-            var user = db.Users.WhereUserNameIs(message.UserName).Single();
+            var user = db.Users.WhereUserLoginIs(message.UserName).Single();
             var emailAddress = new UserEmailAddress {Value = message.EmailAddress};
             var code = VerificationCodeManager.GenerateCode();
             emailAddress.VerificationToken = VerificationCodeManager.GetHash(emailAddress.Value + code);
@@ -34,7 +35,7 @@ namespace SupportManager.Web.Features.User
             };
 
             var url = message.VerificationUrlBuilder(urlCommand);
-            mailer.EmailVerificationCode(emailAddress.Value, user.Name, url);
+            mailer.EmailVerificationCode(emailAddress.Value, user.Login, url);
         }
     }
 }

@@ -49,7 +49,6 @@ namespace SupportManager.Web.App_Start {
             StructureMapDependencyScope = new StructureMapDependencyScope(container);
             DependencyResolver.SetResolver(StructureMapDependencyScope);
             DynamicModuleUtility.RegisterModule(typeof(StructureMapScopeModule));
-            AutoMapperBootstrapper.Initialize(StructureMapDependencyScope.Container);
         }
 
         #endregion

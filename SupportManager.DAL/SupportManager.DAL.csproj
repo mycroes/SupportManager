@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity.cs" />
+    <Compile Include="ForwardingState.cs" />
     <Compile Include="ForwardRegistration.cs" />
+    <Compile Include="ScheduledForward.cs" />
     <Compile Include="TeamMember.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserEmailAddress.cs" />

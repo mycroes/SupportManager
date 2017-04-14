@@ -11,6 +11,7 @@ namespace SupportManager.Web.Infrastructure.Tags
         {
             Editors.Always.AddClass("form-control");
 
+            Editors.IfPropertyIs<DateTimeOffset>().ModifyWith(m => m.CurrentTag.Attr("type", "datetime-local").Value(m.Value<DateTimeOffset>().ToLocalTime().DateTime.ToString("O")));
             Editors.IfPropertyIs<DateTime?>().ModifyWith(m => m.CurrentTag
                 .AddPattern("9{1,2}/9{1,2}/9999")
                 .AddPlaceholder("MM/DD/YYYY")
@@ -19,6 +20,8 @@ namespace SupportManager.Web.Infrastructure.Tags
             Editors.If(er => er.Accessor.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase)).BuildBy(a => new HiddenTag().Value(a.StringValue()));
             Editors.IfPropertyIs<byte[]>().BuildBy(a => new HiddenTag().Value(Convert.ToBase64String(a.Value<byte[]>())));
 
+            Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
+            Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
             Labels.Always.AddClass("control-label");
             Labels.Always.AddClass("col-md-2");

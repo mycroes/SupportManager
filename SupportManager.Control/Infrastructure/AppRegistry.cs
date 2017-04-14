@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using System.Threading.Tasks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -25,6 +26,9 @@ namespace SupportManager.Control.Infrastructure
             For<SmtpClient>()
                 .Use(() => new SmtpClient())
                 .LifecycleIs<TransientLifecycle>();
+
+            var scheduler = new ConcurrentExclusiveSchedulerPair();
+            For<TaskFactory>().Use(new TaskFactory(scheduler.ExclusiveScheduler)).Singleton();
         }
     }
 }

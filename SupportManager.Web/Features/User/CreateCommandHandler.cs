@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure.CommandProcessing;
 
 namespace SupportManager.Web.Features.User
 {

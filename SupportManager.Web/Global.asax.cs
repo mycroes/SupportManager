@@ -2,6 +2,7 @@
 using System.Web.Optimization;
 using System.Web.Routing;
 using Hangfire;
+using SupportManager.Web.Infrastructure.Mapping;
 
 namespace SupportManager.Web
 {
@@ -14,6 +15,8 @@ namespace SupportManager.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             GlobalConfiguration.Configuration.UseSqlServerStorage("HangFire");
+
+            AutoMapperInitializer.Initialize();
         }
     }
 }

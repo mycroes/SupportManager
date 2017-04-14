@@ -1,0 +1,107 @@
+﻿@using SupportManager.Web.Areas.Admin.Controllers
+@using SupportManager.Web.Features.Admin.Team
+@using SupportManager.Web.Infrastructure
+@model Details.Result
+
+@{
+    ViewBag.Title = "Team details";
+}
+
+<h2>Team details</h2>
+<h3>@Model.TeamName</h3>
+<h4>Current forwarding status</h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th class="col-md-1"></th>
+        <th class="col-md-4">User</th>
+        <th class="col-md-4">Phonenumber</th>
+        <th class="col-md-3">Since</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+        <td>@(Model.CurrentStatus?.User)</td>
+        <td>@(Model.CurrentStatus?.PhoneNumber)</td>
+        <td>@(Model.CurrentStatus.When)</td>
+    </tr>
+    </tbody>
+</table>
+
+<h4>Team members</h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th class="col-md-1"></th>
+        <th class="col-md-4">Name</th>
+        <th class="col-md-4">Primary phonenumber</th>
+        <th class="col-md-3"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var member in Model.Members)
+    {
+        <tr>
+            <td></td>
+            <td>@member.DisplayName</td>
+            <td>@member.PrimaryPhoneNumber</td>
+            <td>
+                @if (member.PrimaryPhoneNumberId != null)
+                {
+                    @(Html.Link<TeamController>(c => c.SetForward(new SetForward.Command {TeamId = Model.TeamId, PhoneNumberId = member.PrimaryPhoneNumberId.Value}), "Forward now"))
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h4>Schedule</h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th class="col-md-1"></th>
+        <th class="col-md-4">User</th>
+        <th class="col-md-4">Phonenumber</th>
+        <th class="col-md-3">When</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var schedule in Model.Schedule)
+    {
+        <tr>
+            <td>
+                <a href="@Url.Action("EditForward", new EditForward.Query {Id = schedule.Id})"><span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+            <td>@schedule.User</td>
+            <td>@schedule.PhoneNumber</td>
+            <td>@schedule.When</td>
+        </tr>
+    }
+    </tbody>
+</table>
+@(Html.Link<TeamController>(c => c.ScheduleForward(), "Schedule forward"))
+
+<h4>History</h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th class="col-md-1"></th>
+        <th class="col-md-4">User</th>
+        <th class="col-md-4">Phonenumber</th>
+        <th class="col-md-3">Since</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var registration in Model.History)
+        {
+            <tr>
+                <td></td>
+                <td>@registration.User</td>
+                <td>@registration.PhoneNumber</td>
+                <td>@registration.When</td>
+            </tr>
+        }
+    </tbody>
+</table>

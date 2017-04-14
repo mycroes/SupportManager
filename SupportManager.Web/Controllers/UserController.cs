@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Hangfire;
 using MediatR;
@@ -29,10 +30,10 @@ namespace SupportManager.Web.Controllers
             return View();
         }
 
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
             var command = new CreateCommand {Name = User.Identity.Name};
-            mediator.Send(command);
+            await mediator.Send(command);
 
             return RedirectToAction("Index");
         }
@@ -43,19 +44,19 @@ namespace SupportManager.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEmailAddress(AddEmailAddressCommand command)
+        public async Task<ActionResult> AddEmailAddress(AddEmailAddressCommand command)
         {
             command.UserName = User.Identity.Name;
             command.VerificationUrlBuilder = x => Url.Action("VerifyEmailAddress", "User", x, Request.Url.Scheme);
 
-            mediator.Send(command);
+            await mediator.Send(command);
 
             return this.RedirectToActionJson("Index");
         }
 
-        public ActionResult VerifyEmailAddress(VerifyEmailAddressCommand command)
+        public async Task<ActionResult> VerifyEmailAddress(VerifyEmailAddressCommand command)
         {
-            var result = mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (result.Success) return RedirectToAction("Index");
 
@@ -64,7 +65,7 @@ namespace SupportManager.Web.Controllers
 
         public ActionResult Send(int id, DateTime when)
         {
-            BackgroundJob.Schedule<IForwarder>(x => x.ApplyForward(id), when);
+            BackgroundJob.Schedule<IForwarder>(x => x.ApplyScheduledForward(id), when);
 
             return new ContentResult {Content = "OK"};
         }

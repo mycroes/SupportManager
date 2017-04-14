@@ -1,0 +1,27 @@
+﻿@using SupportManager.Web.Areas.Admin.Controllers
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Features.Admin.Team.ScheduleForward.Command
+
+@{
+    ViewBag.Title = "Schedule forward";
+}
+
+<h2>Schedule forward</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Forwarding information</h4>
+        <hr />
+        @Html.FormBlock(m => m.Team)
+        @Html.FormBlock(m => m.PhoneNumber)
+        @Html.FormBlock(m => m.When)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

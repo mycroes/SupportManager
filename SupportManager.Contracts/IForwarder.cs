@@ -1,9 +1,13 @@
-﻿namespace SupportManager.Contracts
+﻿using System.Threading.Tasks;
+
+namespace SupportManager.Contracts
 {
     public interface IForwarder
     {
-        void ApplyForward(int id);
+        Task ApplyScheduledForward(int id);
 
-        void ReadStatus();
+        Task ApplyForward(int teamId, int userPhoneNumberId);
+
+        Task ReadStatus(int teamId);
     }
 }

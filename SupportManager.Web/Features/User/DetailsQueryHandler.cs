@@ -16,7 +16,7 @@ namespace SupportManager.Web.Features.User
 
         public DetailsModel Handle(DetailsQuery message)
         {
-            return db.Users.WhereUserNameIs(message.UserName)
+            return db.Users.WhereUserLoginIs(message.UserName)
                 .ProjectTo<DetailsModel>().Single();
         }
     }

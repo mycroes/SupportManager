@@ -5,7 +5,7 @@ namespace SupportManager.Web.Features.PhoneNumber
 {
     public class PhoneNumberMappingProfile : Profile
     {
-        protected override void Configure()
+        public PhoneNumberMappingProfile()
         {
             CreateMap<PhoneNumberCreateCommand, UserPhoneNumber>(MemberList.Source);
             CreateMap<UserPhoneNumber, PhoneNumberListItem>();

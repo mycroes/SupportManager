@@ -17,7 +17,7 @@ namespace SupportManager.Web.Features.User
 
         public UserExistsResponse Handle(UserExistsQuery message)
         {
-            return db.Users.Where(user => user.Name == message.UserName)
+            return db.Users.Where(user => user.Login == message.UserName)
                 .ProjectTo<UserExistsResponse>().SingleOrDefault()
                    ?? Mapper.Map<UserExistsResponse>(message);
         }
