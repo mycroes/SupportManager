@@ -1,5 +1,6 @@
 using Hangfire;
 using StructureMap;
+using SupportManager.Contracts;
 using SupportManager.Control.Infrastructure;
 using Topshelf;
 
@@ -19,6 +20,7 @@ namespace SupportManager.Control
         public bool Start(HostControl hostControl)
         {
             jobServer = new BackgroundJobServer(GetJobServerOptions());
+            RecurringJob.AddOrUpdate<IForwarder>(f => f.ReadAllTeamStatus(), Cron.Minutely);
             return true;
         }
 
