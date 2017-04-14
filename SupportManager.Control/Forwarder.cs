@@ -10,12 +10,12 @@ namespace SupportManager.Control
     public class Forwarder : IForwarder
     {
         private readonly SupportManagerContext context;
-        private readonly TaskFactory taskFactory;
+        private readonly TaskFactory exclusiveTaskFactory;
 
-        public Forwarder(SupportManagerContext context, TaskFactory taskFactory)
+        public Forwarder(SupportManagerContext context, TaskFactory exclusiveTaskFactory)
         {
             this.context = context;
-            this.taskFactory = taskFactory;
+            this.exclusiveTaskFactory = exclusiveTaskFactory;
         }
 
         public async Task ApplyScheduledForward(int scheduledForwardId)
@@ -26,7 +26,7 @@ namespace SupportManager.Control
 
             if (scheduledForward.Deleted) return;
 
-            await taskFactory.StartNew(() =>
+            await exclusiveTaskFactory.StartNew(() =>
             {
                 using (var helper = new ATHelper(scheduledForward.Team.ComPort))
                     helper.ForwardTo(scheduledForward.PhoneNumber.Value);
@@ -40,7 +40,7 @@ namespace SupportManager.Control
 
             if (team == null || userPhoneNumber == null) return;
 
-            await taskFactory.StartNew(() =>
+            await exclusiveTaskFactory.StartNew(() =>
             {
                 using (var helper = new ATHelper(team.ComPort))
                     helper.ForwardTo(userPhoneNumber.Value);
@@ -52,7 +52,7 @@ namespace SupportManager.Control
             foreach (var team in context.Teams)
             {
                 var state = await context.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
-                var number = await taskFactory.StartNew(() =>
+                var number = await exclusiveTaskFactory.StartNew(() =>
                 {
                     using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
                 });
