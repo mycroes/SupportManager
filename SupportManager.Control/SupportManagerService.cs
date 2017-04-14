@@ -32,8 +32,7 @@ namespace SupportManager.Control
         {
             return new BackgroundJobServerOptions
             {
-                Activator = new NestedContainerActivator(container),
-                WorkerCount = 1
+                Activator = new NestedContainerActivator(container)
             };
         }
     }
