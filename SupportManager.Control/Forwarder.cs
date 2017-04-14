@@ -49,7 +49,7 @@ namespace SupportManager.Control
 
         public async Task ReadAllTeamStatus()
         {
-            foreach (var team in context.Teams)
+            foreach (var team in context.Teams.ToList())
             {
                 var state = await context.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
                 var number = await exclusiveTaskFactory.StartNew(() =>
