@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
-using SupportManager.DAL;
+﻿using SupportManager.DAL;
 using SupportManager.Web.Infrastructure.CommandProcessing;
 
 namespace SupportManager.Web.Features.User
@@ -16,7 +14,8 @@ namespace SupportManager.Web.Features.User
 
         protected override void HandleCore(CreateCommand message)
         {
-            var user = Mapper.Map<DAL.User>(message);
+            var user = new DAL.User {DisplayName = message.Name, Login = message.Name};
+
             db.Users.Add(user);
         }
     }
