@@ -19,7 +19,7 @@
             <dt>Primary phonenumber</dt>
             @if (Model.PrimaryPhoneNumberValue != null)
             {
-                <dd>@Model.PrimaryPhoneNumberValue (@Model.PrimaryPhoneNumberLabel)</dd>
+                <dd>@Model.PrimaryPhoneNumberValue <span class="label label-default">@Model.PrimaryPhoneNumberLabel</span></dd>
             }
             else
             {
@@ -53,7 +53,14 @@
                             <td>@Model.EmailAddresses[i].Value</td>
                             <td>@Html.Display(m => m.EmailAddresses[i].IsVerified)</td>
                             <td>
-                                <a href="#">Set as primary</a>
+                                @if (Model.PrimaryEmailAddressId == Model.EmailAddresses[i].Id)
+                                {
+                                    <span class="label label-primary">Primary</span>
+                                }
+                                else
+                                {
+                                    <a href="#">Set as primary</a>
+                                }
                             </td>
                         </tr>
                     }
@@ -93,14 +100,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var phone in @Model.PhoneNumbers)
+                        @for (int i = 0; i < Model.PhoneNumbers.Count; i++)
                         {
+                            var phone = Model.PhoneNumbers[i];
                             <tr>
                                 <td>@phone.Label</td>
                                 <td>@phone.Value</td>
-                                <td>@phone.IsVerified</td>
+                                <td>@Html.Display(m => m.PhoneNumbers[i].IsVerified)</td>
                                 <td>
-                                    <a href="#">Set as primary</a>
+                                    @if (Model.PrimaryPhoneNumberId == phone.Id)
+                                    {
+                                        <span class="label label-primary">Primary</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="#">Set as primary</a>
+                                    }
                                 </td>
                             </tr>
                         }
