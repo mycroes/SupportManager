@@ -8,13 +8,19 @@ namespace SupportManager.DAL
     {
         private DbContextTransaction _currentTransaction;
 
+        public SupportManagerContext() : base(nameof(SupportManagerContext))
+        {
+        }
+
         public SupportManagerContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Configurations.AddFromAssembly(GetType().Assembly);
             modelBuilder.Entity<TeamMember>().HasRequired(m => m.User).WithMany();
+
             base.OnModelCreating(modelBuilder);
         }
 
