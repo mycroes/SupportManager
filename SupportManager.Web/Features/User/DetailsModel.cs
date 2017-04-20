@@ -4,7 +4,7 @@ namespace SupportManager.Web.Features.User
 {
     public class DetailsModel
     {
-        public string Name { get; set; }
+        public string DisplayName { get; set; }
         public string PrimaryEmailAddressValue { get; set; }
         public string PrimaryPhoneNumberLabel { get; set; }
         public string PrimaryPhoneNumberValue { get; set; }

@@ -18,10 +18,10 @@ namespace SupportManager.Web.Controllers
             this.mediator = mediator;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var query = new DetailsQuery { UserName = User.Identity.Name };
-            var details = mediator.Send(query);
+            var details = await mediator.Send(query);
             return View(details);
         }
 
