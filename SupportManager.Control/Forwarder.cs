@@ -51,12 +51,12 @@ namespace SupportManager.Control
         {
             foreach (var team in context.Teams.ToList())
             {
-                var state = await context.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
                 var number = await exclusiveTaskFactory.StartNew(() =>
                 {
                     using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
                 });
 
+                var state = await context.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
                 if (state?.RawPhoneNumber == number) continue;
 
                 var newState = new ForwardingState
