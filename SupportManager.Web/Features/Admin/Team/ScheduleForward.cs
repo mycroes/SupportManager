@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
 using SupportManager.Contracts;
@@ -15,7 +16,7 @@ namespace SupportManager.Web.Features.Admin.Team
             public UserPhoneNumber PhoneNumber { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IAsyncRequestHandler<Command>
         {
             private readonly SupportManagerContext db;
 
@@ -24,15 +25,20 @@ namespace SupportManager.Web.Features.Admin.Team
                 this.db = db;
             }
 
-            public void Handle(Command message)
+            public async Task Handle(Command message)
             {
                 var scheduledForward =
                     new ScheduledForward {Team = message.Team, PhoneNumber = message.PhoneNumber, When = message.When};
 
+                db.BeginTransaction();
                 db.ScheduledForwards.Add(scheduledForward);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
-                BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id), message.When);
+                scheduledForward.ScheduleId =
+                    BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id), message.When);
+
+                await db.SaveChangesAsync();
+                db.CloseTransaction();
             }
         }
     }

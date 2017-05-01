@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
 using SupportManager.Contracts;
@@ -20,7 +21,7 @@ namespace SupportManager.Web.Features.Admin.Team
             public DateTimeOffset When { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>, IRequestHandler<Query, Command>
+        public class Handler : IAsyncRequestHandler<Command>, IRequestHandler<Query, Command>
         {
             private readonly SupportManagerContext db;
 
@@ -35,18 +36,23 @@ namespace SupportManager.Web.Features.Admin.Team
                 return new Command {Id = message.Id, PhoneNumber = original.PhoneNumber, When = original.When};
             }
 
-            public void Handle(Command message)
+            public async Task Handle(Command message)
             {
                 var original = db.ScheduledForwards.Find(message.Id);
-                original.Deleted = true;
 
-                var scheduledForward =
-                    new ScheduledForward { Team = original.Team, PhoneNumber = message.PhoneNumber, When = message.When };
+                if (original.ScheduleId != null)
+                {
+                    BackgroundJob.Delete(original.ScheduleId);
+                    original.ScheduleId = null;
+                    await db.SaveChangesAsync();
+                }
 
-                db.ScheduledForwards.Add(scheduledForward);
-                db.SaveChanges();
+                original.PhoneNumber = message.PhoneNumber;
+                original.When = message.When;
+                await db.SaveChangesAsync();
 
-                BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id), message.When);
+                original.ScheduleId = BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(original.Id), message.When);
+                await db.SaveChangesAsync();
             }
         }
     }

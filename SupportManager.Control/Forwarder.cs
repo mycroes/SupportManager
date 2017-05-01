@@ -24,7 +24,7 @@ namespace SupportManager.Control
                 .Include(fwd => fwd.PhoneNumber)
                 .Single(fwd => fwd.Id == scheduledForwardId);
 
-            if (scheduledForward.Deleted) return;
+            if (scheduledForward.Deleted || scheduledForward.ScheduleId == null) return;
 
             await exclusiveTaskFactory.StartNew(() =>
             {
