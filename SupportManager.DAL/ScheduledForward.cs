@@ -8,5 +8,6 @@ namespace SupportManager.DAL
         public virtual int TeamId { get; set; }
         public virtual DateTimeOffset When { get; set; }
         public virtual UserPhoneNumber PhoneNumber { get; set; }
+        public virtual string ScheduleId { get; set; }
     }
 }
