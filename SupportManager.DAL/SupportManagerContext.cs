@@ -8,12 +8,14 @@ namespace SupportManager.DAL
     {
         private DbContextTransaction _currentTransaction;
 
-        public SupportManagerContext() : base(nameof(SupportManagerContext))
+        public SupportManagerContext() : this(nameof(SupportManagerContext))
         {
         }
 
         public SupportManagerContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
+
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SupportManagerContext, Migrations.Configuration>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
