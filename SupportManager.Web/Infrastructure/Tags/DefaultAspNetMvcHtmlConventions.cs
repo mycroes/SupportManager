@@ -28,8 +28,11 @@ namespace SupportManager.Web.Infrastructure.Tags
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
             DisplayLabels.Always.BuildBy<DefaultDisplayLabelBuilder>();
             DisplayLabels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
-            Displays.IfPropertyIs<DateTime>().ModifyWith(m => m.CurrentTag.Text(m.Value<DateTime>().ToShortDateString()));
-            Displays.IfPropertyIs<DateTime?>().ModifyWith(m => m.CurrentTag.Text(m.Value<DateTime?>() == null ? null : m.Value<DateTime?>().Value.ToShortDateString()));
+            Displays.IfPropertyIs<DateTimeOffset>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTimeOffset?>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTime>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTime?>().BuildBy<DateTimeBuilder>();
+            
             Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
             Displays.IfPropertyIs<bool>().BuildBy<BoolDisplayBuilder>();
         }

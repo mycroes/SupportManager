@@ -271,6 +271,7 @@
     <Compile Include="Infrastructure\Mapping\MapperExtensions.cs" />
     <Compile Include="Infrastructure\MvcTransactionFilter.cs" />
     <Compile Include="Infrastructure\Tags\BoolDisplayBuilder.cs" />
+    <Compile Include="Infrastructure\Tags\DateTimeBuilder.cs" />
     <Compile Include="Infrastructure\Tags\DefaultAspNetMvcHtmlConventions.cs" />
     <Compile Include="Infrastructure\Tags\DefaultDisplayLabelBuilder.cs" />
     <Compile Include="Infrastructure\Tags\EntitySelectElementBuilder.cs" />
