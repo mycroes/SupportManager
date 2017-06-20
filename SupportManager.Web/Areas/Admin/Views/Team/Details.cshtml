@@ -9,25 +9,33 @@
 
 <h2>Team details</h2>
 <h3>@Model.TeamName</h3>
+
 <h4>Current forwarding status</h4>
-<table class="table">
-    <thead>
-    <tr>
-        <th class="col-md-1"></th>
-        <th class="col-md-4">User</th>
-        <th class="col-md-4">Phonenumber</th>
-        <th class="col-md-3">Since</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td></td>
-        <td>@(Model.CurrentStatus?.User)</td>
-        <td>@(Model.CurrentStatus?.PhoneNumber)</td>
-        <td>@(Model.CurrentStatus.When)</td>
-    </tr>
-    </tbody>
-</table>
+@if (Model.CurrentStatus != null)
+{    
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-md-1"></th>
+            <th class="col-md-4">User</th>
+            <th class="col-md-4">Phonenumber</th>
+            <th class="col-md-3">Since</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td>@Html.Display(m => m.CurrentStatus.User)</td>
+            <td>@Html.Display(m => m.CurrentStatus.PhoneNumber)</td>
+            <td>@Html.Display(m => m.CurrentStatus.When)</td>
+        </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="jumbotron">No current forwarding state.</div>
+}
 
 <h4>Team members</h4>
 <table class="table">
@@ -40,12 +48,13 @@
     </tr>
     </thead>
     <tbody>
+    @{ int i = 0; }
     @foreach (var member in Model.Members)
     {
         <tr>
             <td></td>
-            <td>@member.DisplayName</td>
-            <td>@member.PrimaryPhoneNumber</td>
+            <td>@Html.Display(m => m.Members[i].DisplayName)</td>
+            <td>@Html.Display(m => m.Members[i].PrimaryPhoneNumber)</td>
             <td>
                 @if (member.PrimaryPhoneNumberId != null)
                 {
@@ -53,6 +62,7 @@
                 }
             </td>
         </tr>
+        i++;
     }
     </tbody>
 </table>
@@ -68,16 +78,18 @@
     </tr>
     </thead>
     <tbody>
+    @{ i = 0; }
     @foreach (var schedule in Model.Schedule)
     {
         <tr>
             <td>
                 <a href="@Url.Action("EditForward", new {Model.TeamId, schedule.Id})"><span class="glyphicon glyphicon-pencil"></span></a>
             </td>
-            <td>@schedule.User</td>
-            <td>@schedule.PhoneNumber</td>
-            <td>@schedule.When</td>
+            <td>@Html.Display(m => m.Schedule[i].User)</td>
+            <td>@Html.Display(m => m.Schedule[i].PhoneNumber)</td>
+            <td>@Html.Display(m => m.Schedule[i].When)</td>
         </tr>
+        i++;
     }
     </tbody>
 </table>
@@ -94,14 +106,16 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var registration in Model.History)
-        {
-            <tr>
-                <td></td>
-                <td>@registration.User</td>
-                <td>@registration.PhoneNumber</td>
-                <td>@registration.When</td>
-            </tr>
-        }
+    @{ i = 0; }
+    @foreach (var registration in Model.History)
+    {
+        <tr>
+            <td></td>
+            <td>@Html.Display(m => m.History[i].User)</td>
+            <td>@Html.Display(m => m.History[i].PhoneNumber)</td>
+            <td>@Html.Display(m => m.History[i].When)</td>
+        </tr>
+        i++;
+    }
     </tbody>
 </table>
