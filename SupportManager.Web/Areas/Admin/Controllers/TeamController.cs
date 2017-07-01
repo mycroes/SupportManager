@@ -59,5 +59,19 @@ namespace SupportManager.Web.Areas.Admin.Controllers
             await mediator.Send(command);
             return this.RedirectToActionJson("Details");
         }
+
+        public async Task<ActionResult> DeleteForward(DeleteForward.Request request)
+        {
+            var model = await mediator.Send(request);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteForward(DeleteForward.Command command)
+        {
+            await mediator.Send(command);
+            return this.RedirectToActionJson("Details");
+        }
     }
 }
