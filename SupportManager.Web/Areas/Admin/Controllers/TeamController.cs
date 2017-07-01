@@ -27,7 +27,7 @@ namespace SupportManager.Web.Areas.Admin.Controllers
             return View(vm);
         }
 
-        public async Task<ActionResult> EditForward(int teamId, EditForward.Query query)
+        public async Task<ActionResult> EditForward(EditForward.Query query)
         {
             var command = await mediator.Send(query);
             return View(command);
@@ -35,16 +35,16 @@ namespace SupportManager.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditForward(int teamId, EditForward.Command command)
+        public async Task<ActionResult> EditForward(EditForward.Command command)
         {
             await mediator.Send(command);
-            return this.RedirectToActionJson(c => c.Details(new Details.Query {TeamId = teamId}));
+            return this.RedirectToActionJson("Details");
         }
 
         public async Task<ActionResult> SetForward(SetForward.Command command)
         {
             await mediator.Send(command);
-            return RedirectToAction("Details", new {command.TeamId});
+            return RedirectToAction("Details");
         }
 
         public ActionResult ScheduleForward()
@@ -57,7 +57,7 @@ namespace SupportManager.Web.Areas.Admin.Controllers
         public async Task<ActionResult> ScheduleForward(ScheduleForward.Command command)
         {
             await mediator.Send(command);
-            return this.RedirectToActionJson(c => c.Details(new Details.Query {TeamId = command.Team.Id}));
+            return this.RedirectToActionJson("Details");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SupportManager.Web.Features.Admin.Team
         public class Command : IRequest
         {
             public DateTimeOffset When { get; set; }
-            public SupportTeam Team { get; set; }
+            public int TeamId { get; set; }
             public UserPhoneNumber PhoneNumber { get; set; }
         }
 
@@ -28,7 +28,7 @@ namespace SupportManager.Web.Features.Admin.Team
             public async Task Handle(Command message)
             {
                 var scheduledForward =
-                    new ScheduledForward {Team = message.Team, PhoneNumber = message.PhoneNumber, When = message.When};
+                    new ScheduledForward {TeamId = message.TeamId, PhoneNumber = message.PhoneNumber, When = message.When};
 
                 db.BeginTransaction();
                 db.ScheduledForwards.Add(scheduledForward);
