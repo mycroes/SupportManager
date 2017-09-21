@@ -287,6 +287,7 @@
     <Compile Include="Features\PhoneNumber\PhoneNumberCreateCommand.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".bowerrc" />
     <Content Include="Content\bootstrap-darkly.css" />
     <Content Include="Content\bootstrap-flatly.css" />
     <Content Include="Content\bootstrap-paper.css" />
@@ -316,6 +317,7 @@
     <Content Include="Areas\Admin\Views\Team\ScheduleForward.cshtml" />
     <Content Include="Areas\Admin\Views\Team\EditForward.cshtml" />
     <Content Include="Areas\Admin\Views\Team\DeleteForward.cshtml" />
+    <Content Include="bower.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

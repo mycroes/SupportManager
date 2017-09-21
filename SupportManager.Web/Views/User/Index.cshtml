@@ -19,7 +19,7 @@
             <dt>Primary phonenumber</dt>
             @if (Model.PrimaryPhoneNumberValue != null)
             {
-                <dd>@Model.PrimaryPhoneNumberValue <span class="label label-default">@Model.PrimaryPhoneNumberLabel</span></dd>
+                <dd>@Model.PrimaryPhoneNumberValue</dd>
             }
             else
             {
@@ -55,7 +55,7 @@
                             <td>
                                 @if (Model.PrimaryEmailAddressId == Model.EmailAddresses[i].Id)
                                 {
-                                    <span class="label label-primary">Primary</span>
+                                    <span class="badge badge-primary">Primary</span>
                                 }
                                 else
                                 {
@@ -110,7 +110,7 @@
                                 <td>
                                     @if (Model.PrimaryPhoneNumberId == phone.Id)
                                     {
-                                        <span class="label label-primary">Primary</span>
+                                        <span class="badge badge-primary">Primary</span>
                                     }
                                     else
                                     {

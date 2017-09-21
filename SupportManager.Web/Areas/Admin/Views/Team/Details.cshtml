@@ -16,10 +16,10 @@
     <table class="table">
         <thead>
         <tr>
-            <th class="col-md-1"></th>
-            <th class="col-md-4">User</th>
-            <th class="col-md-4">Phonenumber</th>
-            <th class="col-md-3">Since</th>
+            <th class="w-10"></th>
+            <th class="w-25">User</th>
+            <th class="w-25">Phonenumber</th>
+            <th class="w-40">Since</th>
         </tr>
         </thead>
         <tbody>
@@ -41,10 +41,10 @@ else
 <table class="table">
     <thead>
     <tr>
-        <th class="col-md-1"></th>
-        <th class="col-md-4">Name</th>
-        <th class="col-md-4">Primary phonenumber</th>
-        <th class="col-md-3"></th>
+        <th class="w-10"></th>
+        <th class="w-25">Name</th>
+        <th class="w-25">Primary phonenumber</th>
+        <th class="w-40"></th>
     </tr>
     </thead>
     <tbody>
@@ -73,10 +73,10 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th class="col-md-1"></th>
-            <th class="col-md-4">User</th>
-            <th class="col-md-4">Phonenumber</th>
-            <th class="col-md-3">When</th>
+            <th class="w-10"></th>
+            <th class="w-25">User</th>
+            <th class="w-25">Phonenumber</th>
+            <th class="w-40">When</th>
         </tr>
         </thead>
         <tbody>
@@ -85,8 +85,8 @@ else
         {
             <tr>
                 <td>
-                    <a href="@Url.Action("EditForward", new {schedule.Id})"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("DeleteForward", new {schedule.Id})"><span class="glyhpicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("EditForward", new {schedule.Id})"><i class="fa fa-pencil fa-fw"></i></a>
+                    <a href="@Url.Action("DeleteForward", new {schedule.Id})"><i class="fa fa-trash-o fa-fw"></i></a>
                 </td>
                 <td>@Html.Display(m => m.Schedule[i].User)</td>
                 <td>@Html.Display(m => m.Schedule[i].PhoneNumber)</td>
@@ -113,10 +113,10 @@ else
 <table class="table">
     <thead>
     <tr>
-        <th class="col-md-1"></th>
-        <th class="col-md-4">User</th>
-        <th class="col-md-4">Phonenumber</th>
-        <th class="col-md-3">Since</th>
+        <th class="w-10"></th>
+        <th class="w-23">User</th>
+        <th class="w-25">Phonenumber</th>
+        <th class="w-40">Since</th>
     </tr>
     </thead>
     <tbody>

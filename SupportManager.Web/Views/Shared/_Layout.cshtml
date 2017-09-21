@@ -2,50 +2,46 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewBag.Title - SupportManager</title>
-    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css"/>
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("SupportManager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                <p class="nav navbar-text navbar-right">Hello, @User.Identity.Name!</p>
-            </div>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    @Html.ActionLink("SupportManager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav mr-auto">
+            <li>@Html.ActionLink("Home", "Index", "Home", new {@class = "nav-link"})</li>
+            <li>@Html.ActionLink("About", "About", "Home", new {@class = "nav-link"})</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home", new {@class = "nav-link"})</li>
+        </ul>
+        <div class="navbar-text navbar-right">Hello, @User.Identity.Name!</div>
+    </div>
+</nav>
+
+<div class="container">
+    @RenderBody()
+
+    <div class="row">
+        <div class="col-lg-12">
+            <hr />
+            <footer>
+                &copy; @DateTime.Now.Year - <a href="http://github.com/mycroes/">Michael Croes</a>
+            </footer>
         </div>
     </div>
-    <div class="container body-content">
-        <div class="row">
-            @RenderBody()
-        </div>
+</div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <hr />
-                <footer>
-                    &copy; @DateTime.Now.Year - <a href="http://github.com/mycroes/">Michael Croes</a>
-                </footer>
-            </div>
-        </div>
-    </div>
-    
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="~/lib/popper.js/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
 @RenderSection("scripts", required: false)
 <script type="text/javascript">
     var highlightFields = function (response) {
@@ -133,6 +129,12 @@
 
         return false;
     });
+</script>
+
+<script type="text/javascript">
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 </body>
 </html>
