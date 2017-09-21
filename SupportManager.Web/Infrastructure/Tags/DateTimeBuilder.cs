@@ -21,7 +21,7 @@ namespace SupportManager.Web.Infrastructure.Tags
         private HtmlTag RenderTag(DateTime? dateTime)
         {
             var text = dateTime == null ? "-" : GetDateTimeText(dateTime.Value);
-            return new HtmlTag("span").Text(text).Title(dateTime?.ToString("g"));
+            return new HtmlTag("span").Text(text).Title(dateTime?.ToString("g")).Data("toggle", "tooltip");
         }
 
         private static string GetDateTimeText(DateTime dateTime)
