@@ -125,7 +125,7 @@
             complete: function () {
                 submitBtn.prop('disabled', false);
             }
-        }).error(highlightErrors);
+        }).fail(highlightErrors);
 
         return false;
     });
