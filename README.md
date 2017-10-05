@@ -14,7 +14,7 @@ A lot. Authentication is not enforced, authorization is not implemented (althoug
 Yes! We've been using it for a while, mainly with scheduled forwarding. It works so well that development has somewhat stalled and that's why the code is here in it's current state.
 
 ## What's next?
-* Changing the web project to ASP.NET Core to allow self-hosting
+* Try to (self-)host the web project in the service
 * Enforcing authentication
 * Implementing authorization
 * Implementing a public status page
