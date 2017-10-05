@@ -1,4 +1,4 @@
-﻿@using SupportManager.Web.Infrastructure
+﻿@using SupportManager.Web.Features.Admin.Team
 @model SupportManager.Web.Features.Admin.Team.DeleteForward.Result
 
 @{
@@ -44,7 +44,7 @@
         <div class="col-md-12">
             <input type="submit" value="Delete" class="btn btn-danger" />
             
-            @Html.ActionLink("Cancel", "Details", null, new {@class = "btn btn-default"})
+            @Html.ActionLink("Cancel", "Details", null, null, new {@class = "btn btn-default"})
         </div>
     </div>
 }

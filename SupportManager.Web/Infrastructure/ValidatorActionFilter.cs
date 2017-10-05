@@ -1,5 +1,5 @@
-using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 
 namespace SupportManager.Web.Infrastructure
@@ -8,21 +8,18 @@ namespace SupportManager.Web.Infrastructure
     {
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (!filterContext.Controller.ViewData.ModelState.IsValid)
+            if (!filterContext.ModelState.IsValid)
             {
-                if (filterContext.HttpContext.Request.HttpMethod == "GET")
+                if (filterContext.HttpContext.Request.Method == "GET")
                 {
-                    var result = new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    var result = new BadRequestResult();
                     filterContext.Result = result;
                 }
                 else
                 {
                     var result = new ContentResult();
-                    string content = JsonConvert.SerializeObject(filterContext.Controller.ViewData.ModelState,
-                        new JsonSerializerSettings
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        });
+                    string content = JsonConvert.SerializeObject(filterContext.ModelState,
+                        new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
                     result.Content = content;
                     result.ContentType = "application/json";
 

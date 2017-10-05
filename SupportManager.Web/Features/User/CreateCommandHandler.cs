@@ -1,9 +1,9 @@
-﻿using SupportManager.DAL;
-using SupportManager.Web.Infrastructure.CommandProcessing;
+﻿using MediatR;
+using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.User
 {
-    public class CreateCommandHandler : RequestHandler<CreateCommand>
+    public class CreateCommandHandler : IRequestHandler<CreateCommand>
     {
         private readonly SupportManagerContext db;
 
@@ -12,7 +12,7 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        protected override void HandleCore(CreateCommand message)
+        public void Handle(CreateCommand message)
         {
             var user = new DAL.User {DisplayName = message.Name, Login = message.Name};
 

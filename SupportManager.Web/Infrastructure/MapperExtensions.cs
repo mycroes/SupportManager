@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
-using PagedList;
+using X.PagedList;
 
-namespace SupportManager.Web.Infrastructure.Mapping
+namespace SupportManager.Web.Infrastructure
 {
     public static class MapperExtensions
     {

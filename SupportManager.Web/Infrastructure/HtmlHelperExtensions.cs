@@ -1,84 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using System.Web.Routing;
 using HtmlTags;
 using HtmlTags.Conventions;
-using HtmlTags.Conventions.Elements;
-using SupportManager.Web.App_Start;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SupportManager.Web.Infrastructure
 {
     public static class HtmlHelperExtensions
     {
-        public static string RequireJs(this HtmlHelper helper)
-        {
-            var values = helper.ViewContext.RouteData.Values;
-            var controllerName = values["controller"].ToString();
-            var viewContext = (RazorView)helper.ViewContext.View;
-            var viewName = Path.GetFileNameWithoutExtension(viewContext.ViewPath);
-            var requirePath = VirtualPathUtility.ToAbsolute("~/Content/js/lib/require-2.1.18.js");
-
-            var loc = string.Format("~/Features/{0}/{1}.js", controllerName, viewName);
-
-            if (File.Exists(helper.ViewContext.HttpContext.Server.MapPath(loc)))
-            {
-                var scriptBlock = "<script data-main='{0}' src='{1}'></script>";
-
-                return string.Format(scriptBlock, VirtualPathUtility.ToAbsolute(loc), requirePath);
-            }
-
-            return string.Empty;
-        }
-
-        public static HtmlTag Input<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression)
             where T : class
         {
-            var generator = GetGenerator(helper.ViewData.Model);
-            return generator.InputFor(expression);
+            return helper.Tag(expression, "DisplayLabels");
         }
 
-        public static HtmlTag Label<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<IList<T>> helper, Expression<Func<T, object>> expression)
             where T : class
         {
-            var generator = GetGenerator(helper.ViewData.Model);
-            return generator.LabelFor(expression);
-        }
-
-        public static HtmlTag Display<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression)
-            where T : class
-        {
-            var generator = GetGenerator(helper.ViewData.Model);
-            return generator.DisplayFor(expression);
-        }
-
-        public static HtmlTag DisplayLabel<T>(this HtmlHelper<T> helper, Expression<Func<T, object>> expression)
-            where T : class
-        {
-            var generator = GetGenerator(helper.ViewData.Model);
+            var library = helper.ViewContext.HttpContext.RequestServices.GetService<HtmlConventionLibrary>();
+            var generator = ElementGenerator<T>.For(library,
+                t => helper.ViewContext.HttpContext.RequestServices.GetService(t));
             return generator.TagFor(expression, "DisplayLabels");
         }
 
-        public static HtmlTag DisplayLabel<T>(this HtmlHelper<IList<T>> helper, Expression<Func<T, object>> expression)
-            where T : class
+        public static HtmlTag ValidationDiv(this IHtmlHelper helper)
         {
-            var generator = GetGenerator(default(T));
-            return generator.TagFor(expression, "DisplayLabels");
+            return new HtmlTag("div").Id("validationSummary")
+                .AddClass("alert")
+                .AddClass("alert-danger")
+                .AddClass("hidden");
         }
 
-        public static MvcHtmlString DisplayNameFor<TModel, TValue>(this HtmlHelper<IList<TModel>> html,
-            Expression<Func<TModel, TValue>> expression)
-        {
-            return new HtmlHelper<IEnumerable<TModel>>(html.ViewContext, html.ViewDataContainer).DisplayNameFor(expression);
-        }
-
-        public static HtmlTag InputBlock<T>(this HtmlHelper<T> helper,
-            Expression<Func<T, object>> expression,
+        public static HtmlTag InputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression,
             Action<HtmlTag> inputModifier = null) where T : class
         {
             inputModifier = inputModifier ?? (_ => { });
@@ -94,12 +49,9 @@ namespace SupportManager.Web.Infrastructure
             return divTag;
         }
 
-        public static HtmlTag FormBlock<T>(this HtmlHelper<T> helper,
-            Expression<Func<T, object>> expression,
-            Action<HtmlTag> labelModifier = null,
-            Action<HtmlTag> inputBlockModifier = null,
-            Action<HtmlTag> inputModifier = null
-            ) where T : class
+        public static HtmlTag FormBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression,
+            Action<HtmlTag> labelModifier = null, Action<HtmlTag> inputBlockModifier = null,
+            Action<HtmlTag> inputModifier = null) where T : class
         {
             labelModifier = labelModifier ?? (_ => { });
             inputBlockModifier = inputBlockModifier ?? (_ => { });
@@ -110,74 +62,13 @@ namespace SupportManager.Web.Infrastructure
             var labelTag = helper.Label(expression);
             labelModifier(labelTag);
 
-            var inputBlockTag = helper.InputBlock(
-                expression,
-                inputModifier);
+            var inputBlockTag = helper.InputBlock(expression, inputModifier);
             inputBlockModifier(inputBlockTag);
 
             divTag.Append(labelTag);
             divTag.Append(inputBlockTag);
 
             return divTag;
-        }
-
-        public static HtmlTag ValidationDiv(this HtmlHelper helper)
-        {
-            return new HtmlTag("div")
-                .Id("validationSummary")
-                .AddClass("alert")
-                .AddClass("alert-danger")
-                .AddClass("hidden");
-        }
-
-        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Action<TController>> action) where TController : Controller
-        {
-            var linkText = ((MethodCallExpression)action.Body).Method.Name;
-
-            return helper.Link(action, linkText);
-        }
-
-        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Action<TController>> action, string linkText) where TController : Controller
-        {
-            var url = LinkBuilder.BuildUrlFromExpression(helper.ViewContext.RequestContext, RouteTable.Routes,
-                action);
-
-            return Link(helper, linkText, url);
-        }
-
-        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Func<TController, Task>> func)
-            where TController : Controller
-        {
-            var linkText = ((MethodCallExpression) func.Body).Method.Name;
-
-            return helper.Link(func, linkText);
-        }
-
-        public static HtmlTag Link<TController>(this HtmlHelper helper, Expression<Func<TController, Task>> func,
-            string linkText) where TController : Controller
-        {
-            var action = Expression.Lambda<Action<TController>>(func.Body, func.Parameters);
-
-            return helper.Link(action, linkText);
-        }
-
-        private static HtmlTag Link(HtmlHelper helper, string linkText, string url)
-        {
-            url = "~/" + url;
-            url = UrlHelper.GenerateContentUrl(url, helper.ViewContext.HttpContext);
-
-            return new HtmlTag("a", t =>
-            {
-                t.Text(linkText);
-                t.Attr("href", url);
-            });
-        }
-
-        private static IElementGenerator<T> GetGenerator<T>(T model) where T : class
-        {
-            var library =
-                StructuremapMvc.StructureMapDependencyScope.CurrentNestedContainer.GetInstance<HtmlConventionLibrary>();
-            return ElementGenerator<T>.For(library, t => StructuremapMvc.StructureMapDependencyScope.CurrentNestedContainer.GetInstance(t), model);
         }
     }
 }

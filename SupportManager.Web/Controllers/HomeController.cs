@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using System.Web.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Features.User;
 
 namespace SupportManager.Web.Controllers
@@ -14,7 +14,7 @@ namespace SupportManager.Web.Controllers
             this.mediator = mediator;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var result = await mediator.Send(new UserExistsQuery {UserName = User.Identity.Name});
             return RedirectToAction(result.IsExistingUser ? "Index" : "Welcome", "User");

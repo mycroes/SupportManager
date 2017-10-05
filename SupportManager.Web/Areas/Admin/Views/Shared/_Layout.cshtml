@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - SupportManager</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Content/Site.css" />
+    <link rel="stylesheet" href="~/css/Site.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -17,9 +16,9 @@
     </button>
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav mr-auto">
-            <li>@Html.ActionLink("Home", "Index", "Home", new {@class = "nav-link"})</li>
-            <li>@Html.ActionLink("About", "About", "Home", new {@class = "nav-link"})</li>
-            <li>@Html.ActionLink("Contact", "Contact", "Home", new {@class = "nav-link"})</li>
+            <li>@Html.ActionLink("Home", "Index", "Home", null, new {@class = "nav-link"})</li>
+            <li>@Html.ActionLink("About", "About", "Home", null, new {@class = "nav-link"})</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home", null, new {@class = "nav-link"})</li>
         </ul>
         <div class="navbar-text navbar-right">Hello, @User.Identity.Name!</div>
     </div>

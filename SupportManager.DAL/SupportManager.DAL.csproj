@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ScheduledForward.cs" />
+    <Compile Include="SupportManagerDbConfiguration.cs" />
     <Compile Include="TeamMember.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserEmailAddress.cs" />

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace SupportManager.DAL
 {
+    [DbConfigurationType(typeof(SupportManagerDbConfiguration))]
     public class SupportManagerContext : DbContext
     {
         private DbContextTransaction _currentTransaction;
@@ -14,7 +16,6 @@ namespace SupportManager.DAL
 
         public SupportManagerContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
-
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<SupportManagerContext, Migrations.Configuration>());
         }
 
@@ -35,54 +36,42 @@ namespace SupportManager.DAL
 
         public void BeginTransaction()
         {
-            try
+            if (_currentTransaction != null)
             {
-                if (_currentTransaction != null)
-                {
-                    return;
-                }
+                return;
+            }
 
-                _currentTransaction = Database.BeginTransaction(IsolationLevel.ReadCommitted);
-            }
-            catch (Exception)
-            {
-                // todo: log transaction exception
-                throw;
-            }
+            _currentTransaction = Database.BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
-        public void CloseTransaction()
-        {
-            CloseTransaction(exception: null);
-        }
-
-        public void CloseTransaction(Exception exception)
+        public async Task CommitTransactionAsync()
         {
             try
             {
-                if (_currentTransaction != null && exception != null)
-                {
-                    // todo: log exception
-                    _currentTransaction.Rollback();
-                    return;
-                }
+                await SaveChangesAsync();
 
-                SaveChanges();
-
+                _currentTransaction?.Commit();
+            }
+            catch
+            {
+                RollbackTransaction();
+                throw;
+            }
+            finally
+            {
                 if (_currentTransaction != null)
                 {
-                    _currentTransaction.Commit();
+                    _currentTransaction.Dispose();
+                    _currentTransaction = null;
                 }
             }
-            catch (Exception)
-            {
-                // todo: log exception
-                if (_currentTransaction != null && _currentTransaction.UnderlyingTransaction.Connection != null)
-                {
-                    _currentTransaction.Rollback();
-                }
+        }
 
-                throw;
+        public void RollbackTransaction()
+        {
+            try
+            {
+                _currentTransaction?.Rollback();
             }
             finally
             {

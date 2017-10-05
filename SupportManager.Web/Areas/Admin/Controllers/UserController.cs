@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
-using System.Web.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SupportManager.DAL;
 using SupportManager.Web.Features.Admin.User;
 using SupportManager.Web.Infrastructure;
 
 namespace SupportManager.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class UserController : Controller
     {
         private readonly IMediator mediator;
@@ -30,10 +31,10 @@ namespace SupportManager.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Create.Command command)
+        public async Task<IActionResult> Create(Create.Command command)
         {
             await mediator.Send(command);
-            return this.RedirectToActionJson(c => c.Index(null));
+            return this.RedirectToActionJson("Index");
         }
 
         public ActionResult Detail(User user)

@@ -2,11 +2,10 @@ using System.Linq;
 using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
-using SupportManager.Web.Infrastructure.CommandProcessing;
 
 namespace SupportManager.Web.Features.User
 {
-    public class AddPhoneNumberCommandHandler : RequestHandler<AddPhoneNumberCommand>
+    public class AddPhoneNumberCommandHandler : IRequestHandler<AddPhoneNumberCommand>
     {
         private readonly SupportManagerContext db;
 
@@ -15,7 +14,7 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        protected override void HandleCore(AddPhoneNumberCommand message)
+        public void Handle(AddPhoneNumberCommand message)
         {
             var user = db.Users.WhereUserLoginIs(message.UserName).Single();
             var phoneNumber = Mapper.Map<UserPhoneNumber>(message.PhoneNumber);

@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using MediatR;
-using PagedList;
+﻿using MediatR;
 using SupportManager.DAL;
-using SupportManager.Web.Infrastructure.Mapping;
+using X.PagedList;
 
 namespace SupportManager.Web.Features.PhoneNumber
 {

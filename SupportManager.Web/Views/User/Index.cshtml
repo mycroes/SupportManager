@@ -1,4 +1,4 @@
-﻿@using Microsoft.Web.Mvc.Html
+﻿@using SupportManager.Web.Features.User
 @using SupportManager.Web.Infrastructure
 @model SupportManager.Web.Features.User.DetailsModel
 
@@ -77,7 +77,7 @@
             }
 
             <div class="panel-footer">
-                @Html.ActionLink("Add emailaddress", "AddEmailAddress", null, new { @class = "btn btn-default" })
+                @Html.ActionLink("Add emailaddress", "AddEmailAddress", null, null, new { @class = "btn btn-default" })
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
             }
 
             <div class="panel-footer">
-                @Html.ActionLink("Add phonenumber", "AddPhoneNumber", null, new { @class = "btn btn-default" })
+                @Html.ActionLink("Add phonenumber", "AddPhoneNumber", null, null, new { @class = "btn btn-default" })
             </div>
         </div>
     </div>

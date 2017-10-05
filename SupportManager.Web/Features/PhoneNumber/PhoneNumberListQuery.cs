@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using PagedList;
+using X.PagedList;
 
 namespace SupportManager.Web.Features.PhoneNumber
 {

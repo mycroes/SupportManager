@@ -1,5 +1,5 @@
-﻿using System.Web.Mvc;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Features.PhoneNumber;
 using SupportManager.Web.Infrastructure;
 
@@ -14,20 +14,20 @@ namespace SupportManager.Web.Controllers
             this.mediator = mediator;
         }
 
-        public ActionResult Index(PhoneNumberListQuery query)
+        public IActionResult Index(PhoneNumberListQuery query)
         {
             var results = mediator.Send(query);
 
             return View(results);
         }
 
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(PhoneNumberCreateCommand command)
+        public IActionResult Create(PhoneNumberCreateCommand command)
         {
             mediator.Send(command);
 

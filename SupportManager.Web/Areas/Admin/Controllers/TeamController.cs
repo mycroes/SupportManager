@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
-using System.Web.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Features.Admin.Team;
 using SupportManager.Web.Infrastructure;
 
 namespace SupportManager.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class TeamController : Controller
     {
         private readonly IMediator mediator;
@@ -35,13 +36,13 @@ namespace SupportManager.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditForward(EditForward.Command command)
+        public async Task<IActionResult> EditForward(EditForward.Command command)
         {
             await mediator.Send(command);
             return this.RedirectToActionJson("Details");
         }
 
-        public async Task<ActionResult> SetForward(SetForward.Command command)
+        public async Task<IActionResult> SetForward(SetForward.Command command)
         {
             await mediator.Send(command);
             return RedirectToAction("Details");
@@ -54,13 +55,13 @@ namespace SupportManager.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ScheduleForward(ScheduleForward.Command command)
+        public async Task<IActionResult> ScheduleForward(ScheduleForward.Command command)
         {
             await mediator.Send(command);
             return this.RedirectToActionJson("Details");
         }
 
-        public async Task<ActionResult> DeleteForward(DeleteForward.Request request)
+        public async Task<IActionResult> DeleteForward(DeleteForward.Request request)
         {
             var model = await mediator.Send(request);
             return View(model);
@@ -68,7 +69,7 @@ namespace SupportManager.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteForward(DeleteForward.Command command)
+        public async Task<IActionResult> DeleteForward(DeleteForward.Command command)
         {
             await mediator.Send(command);
             return this.RedirectToActionJson("Details");

@@ -1,13 +1,11 @@
 using System.Linq;
-using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
-using SupportManager.Web.Infrastructure.CommandProcessing;
 using SupportManager.Web.Mailers;
 
 namespace SupportManager.Web.Features.User
 {
-    public class AddEmailAddressCommandHandler : RequestHandler<AddEmailAddressCommand>
+    public class AddEmailAddressCommandHandler : IRequestHandler<AddEmailAddressCommand>
     {
         private readonly SupportManagerContext db;
         private readonly UserMailer mailer;
@@ -18,7 +16,7 @@ namespace SupportManager.Web.Features.User
             this.mailer = mailer;
         }
 
-        protected override void HandleCore(AddEmailAddressCommand message)
+        public void Handle(AddEmailAddressCommand message)
         {
             var user = db.Users.WhereUserLoginIs(message.UserName).Single();
             var emailAddress = new UserEmailAddress {Value = message.EmailAddress};

@@ -35,6 +35,8 @@ namespace SupportManager.Web.Infrastructure.Tags
             
             Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
             Displays.IfPropertyIs<bool>().BuildBy<BoolDisplayBuilder>();
+
+            this.Defaults();
         }
 
         public ElementCategoryExpression DisplayLabels

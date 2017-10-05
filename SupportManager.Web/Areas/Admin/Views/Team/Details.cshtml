@@ -1,7 +1,5 @@
-﻿@using SupportManager.Web.Areas.Admin.Controllers
-@using SupportManager.Web.Features.Admin.Team
-@using SupportManager.Web.Infrastructure
-@model Details.Result
+﻿@using SupportManager.Web.Features.Admin.Team
+@model SupportManager.Web.Features.Admin.Team.Details.Result
 
 @{
     ViewBag.Title = "Team details";
@@ -58,7 +56,7 @@ else
             <td>
                 @if (member.PrimaryPhoneNumberId != null)
                 {
-                    @(Html.Link<TeamController>(c => c.SetForward(new SetForward.Command {TeamId = Model.TeamId, PhoneNumberId = member.PrimaryPhoneNumberId.Value}), "Forward now"))
+                    @Html.ActionLink("Forward now", "SetForward", null, new SetForward.Command{TeamId = Model.TeamId, PhoneNumberId = member.PrimaryPhoneNumberId.Value})
                 }
             </td>
         </tr>
@@ -96,7 +94,7 @@ else
         }
         </tbody>
     </table>
-    @(Html.Link<TeamController>(c => c.ScheduleForward(), "Schedule forward"))
+    @Html.ActionLink("Schedule forward", "ScheduleForward");
 }
 else
 {
@@ -105,7 +103,7 @@ else
         <p>
             There are no actions scheduled yet, use the button below to add a new entry.
         </p>
-        @(Html.ActionLink("Schedule forward", "ScheduleForward", null, new { @class = "btn btn-primary btn-lg"}))
+        @(Html.ActionLink("Schedule forward", "ScheduleForward", null, null, new { @class = "btn btn-primary btn-lg"}))
     </div>
 }
 

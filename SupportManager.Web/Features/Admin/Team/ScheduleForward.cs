@@ -38,7 +38,7 @@ namespace SupportManager.Web.Features.Admin.Team
                     BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id), message.When);
 
                 await db.SaveChangesAsync();
-                db.CloseTransaction();
+                await db.CommitTransactionAsync();
             }
         }
     }
