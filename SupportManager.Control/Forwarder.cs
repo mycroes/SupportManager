@@ -9,18 +9,18 @@ namespace SupportManager.Control
 {
     public class Forwarder : IForwarder
     {
-        private readonly SupportManagerContext context;
+        private readonly SupportManagerContext db;
         private readonly TaskFactory exclusiveTaskFactory;
 
-        public Forwarder(SupportManagerContext context, TaskFactory exclusiveTaskFactory)
+        public Forwarder(SupportManagerContext db, TaskFactory exclusiveTaskFactory)
         {
-            this.context = context;
+            this.db = db;
             this.exclusiveTaskFactory = exclusiveTaskFactory;
         }
 
         public async Task ApplyScheduledForward(int scheduledForwardId)
         {
-            var scheduledForward = context.ScheduledForwards.Include(fwd => fwd.Team)
+            var scheduledForward = db.ScheduledForwards.Include(fwd => fwd.Team)
                 .Include(fwd => fwd.PhoneNumber)
                 .Single(fwd => fwd.Id == scheduledForwardId);
 
@@ -35,8 +35,8 @@ namespace SupportManager.Control
 
         public async Task ApplyForward(int teamId, int userPhoneNumberId)
         {
-            var team = context.Teams.Find(teamId);
-            var userPhoneNumber = context.UserPhoneNumbers.Find(userPhoneNumberId);
+            var team = db.Teams.Find(teamId);
+            var userPhoneNumber = db.UserPhoneNumbers.Find(userPhoneNumberId);
 
             if (team == null || userPhoneNumber == null) return;
 
@@ -49,14 +49,14 @@ namespace SupportManager.Control
 
         public async Task ReadAllTeamStatus()
         {
-            foreach (var team in context.Teams.ToList())
+            foreach (var team in db.Teams.ToList())
             {
                 var number = await exclusiveTaskFactory.StartNew(() =>
                 {
                     using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
                 });
 
-                var state = await context.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
+                var state = await db.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
                 if (state?.RawPhoneNumber == number) continue;
 
                 var newState = new ForwardingState
@@ -64,12 +64,12 @@ namespace SupportManager.Control
                     Team = team,
                     When = DateTimeOffset.Now,
                     RawPhoneNumber = number,
-                    DetectedPhoneNumber = context.UserPhoneNumbers
+                    DetectedPhoneNumber = db.UserPhoneNumbers
                         .FirstOrDefault(p => p.Value == number)
                 };
 
-                context.ForwardingStates.Add(newState);
-                context.SaveChanges();
+                db.ForwardingStates.Add(newState);
+                db.SaveChanges();
             }
         }
     }
