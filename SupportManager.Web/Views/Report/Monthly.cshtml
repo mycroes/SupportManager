@@ -1,0 +1,57 @@
+﻿@using HtmlTags
+@model SupportManager.Web.Features.Report.Monthly.Result
+
+@{
+    ViewBag.Title = "Monthly result";
+}
+
+@{
+    int w = 0, s = 0;
+    double totalSeconds;
+}
+<table class="table">
+    <thead>
+    <tr>
+        <th>Week</th>
+        <th>Participation</th>
+        <th>Weekend</th>
+        <th>Participation</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var week in Model.Weeks)
+    {
+        {
+            s = 0;
+        }
+        <tr>
+        @foreach (var slot in week.Slots)
+        {
+            {
+                totalSeconds = slot.EndTime.Subtract(slot.StartTime).TotalSeconds;
+            }
+            
+            <td>@Html.Display(m => m.Weeks[w].Slots[s].StartTime) - @Html.Display(m => m.Weeks[w].Slots[s].EndTime)</td>
+            <td>
+                @slot.Participations[0].UserName <span class="text-secondary">@(Math.Round(slot.Participations[0].Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
+
+                <!--<dl>
+                    @foreach (var p in slot.Participations)
+                    {
+                        <dt>@p.UserName</dt>
+                        <dd>@p.Duration</dd>
+                        <dd>@(Math.Round(p.Duration.TotalSeconds / totalSeconds * 100, 1))%</dd>
+                    }
+                </dl>-->
+            </td>
+            {
+                s++;
+            }
+    }
+        </tr>
+        {
+            w++;
+        }
+    }
+    </tbody>
+</table>
