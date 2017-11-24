@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.HttpSys;
 
 namespace SupportManager.Web
 {
@@ -13,12 +12,6 @@ namespace SupportManager.Web
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseHttpSys(options =>
-                {
-                    options.Authentication.Schemes = 
-                        AuthenticationSchemes.Negotiate | AuthenticationSchemes.NTLM;
-                    options.Authentication.AllowAnonymous = false;
-                })
                 .UseStartup<Startup>()
                 .Build();
     }
