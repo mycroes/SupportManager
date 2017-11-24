@@ -51,7 +51,7 @@ namespace SupportManager.Web.Features.Admin.Team
                 original.When = message.When;
                 await db.SaveChangesAsync();
 
-                original.ScheduleId = BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(original.Id), message.When);
+                original.ScheduleId = BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(original.Id, null), message.When);
                 await db.SaveChangesAsync();
             }
         }

@@ -2,6 +2,8 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire.Console;
+using Hangfire.Server;
 using SupportManager.Contracts;
 using SupportManager.DAL;
 
@@ -12,42 +14,63 @@ namespace SupportManager.Control
         private readonly SupportManagerContext db;
         private readonly TaskFactory exclusiveTaskFactory;
 
+        private static readonly ConsoleTextColor Debug = ConsoleTextColor.Green;
+        private static readonly ConsoleTextColor Info = ConsoleTextColor.White;
+        private static readonly ConsoleTextColor Warning = ConsoleTextColor.Yellow;
+        private static readonly ConsoleTextColor Error = ConsoleTextColor.Red;
+
         public Forwarder(SupportManagerContext db, TaskFactory exclusiveTaskFactory)
         {
             this.db = db;
             this.exclusiveTaskFactory = exclusiveTaskFactory;
         }
 
-        public async Task ApplyScheduledForward(int scheduledForwardId)
+        public async Task ApplyScheduledForward(int scheduledForwardId, PerformContext context)
         {
-            var scheduledForward = db.ScheduledForwards.Include(fwd => fwd.Team)
+            context.WriteLine(Debug, $"Looking up scheduledForward with Id {scheduledForwardId}");
+            var scheduledForward = await db.ScheduledForwards.Include(fwd => fwd.Team)
                 .Include(fwd => fwd.PhoneNumber)
-                .Single(fwd => fwd.Id == scheduledForwardId);
+                .SingleAsync(fwd => fwd.Id == scheduledForwardId)
+                .ConfigureAwait(false);
 
-            if (scheduledForward.Deleted || scheduledForward.ScheduleId == null) return;
+            context.WriteLine(Info,
+                $"Found entry for team {scheduledForward.Team.Name}, forward to {scheduledForward.PhoneNumber.Value}");
 
-            await exclusiveTaskFactory.StartNew(() =>
+            if (scheduledForward.Deleted || scheduledForward.ScheduleId == null)
             {
-                using (var helper = new ATHelper(scheduledForward.Team.ComPort))
-                    helper.ForwardTo(scheduledForward.PhoneNumber.Value);
-            });
+                context.WriteLine(Warning,
+                    $"Entry was deleted (Deleted = {scheduledForward.Deleted}, ScheduleId = {scheduledForward.ScheduleId})");
+                return;
+            }
+
+            await ForwardImpl(context, scheduledForward.Team.ComPort, scheduledForward.PhoneNumber.Value)
+                .ConfigureAwait(false);
         }
 
-        public async Task ApplyForward(int teamId, int userPhoneNumberId)
+        public async Task ApplyForward(int teamId, int userPhoneNumberId, PerformContext context)
         {
-            var team = db.Teams.Find(teamId);
-            var userPhoneNumber = db.UserPhoneNumbers.Find(userPhoneNumberId);
+            context.WriteLine(Debug, $"Looking up team {teamId} and userPhoneNumber {userPhoneNumberId}");
+            var team = await db.Teams.FindAsync(teamId).ConfigureAwait(false);
+            var userPhoneNumber = await db.UserPhoneNumbers.FindAsync(userPhoneNumberId).ConfigureAwait(false);
 
-            if (team == null || userPhoneNumber == null) return;
-
-            await exclusiveTaskFactory.StartNew(() =>
+            if (team == null)
             {
-                using (var helper = new ATHelper(team.ComPort))
-                    helper.ForwardTo(userPhoneNumber.Value);
-            });
+                context.WriteLine(Warning, "Team not found, aborting.");
+                return;
+            }
+
+            if (userPhoneNumber == null)
+            {
+                context.WriteLine(Warning, "UserPhoneNumber not found, aborting.");
+                return;
+            }
+
+            context.WriteLine(Info, $"Found team {team.Name}, forward to {userPhoneNumber.Value}");
+
+            await ForwardImpl(context, team.ComPort, userPhoneNumber.Value).ConfigureAwait(false);
         }
 
-        public async Task ReadAllTeamStatus()
+        public async Task ReadAllTeamStatus(PerformContext context)
         {
             foreach (var team in db.Teams.ToList())
             {
@@ -71,6 +94,28 @@ namespace SupportManager.Control
                 db.ForwardingStates.Add(newState);
                 db.SaveChanges();
             }
+        }
+
+        private async Task ForwardImpl(PerformContext context, string comPort, string phoneNumber)
+        {
+            await exclusiveTaskFactory.StartNew(() =>
+            {
+                context.WriteLine(Debug, "Forwarding ...");
+                using (var helper = new ATHelper(comPort))
+                {
+                    helper.ForwardTo(phoneNumber);
+                    context.WriteLine(Info, "Applied forward");
+
+                    context.WriteLine(Debug, "Verifying ...");
+                    var res = helper.GetForwardedPhoneNumber();
+                    if (res != phoneNumber)
+                    {
+                        context.WriteLine(Error, $"Verification returned {res}, expected {phoneNumber}");
+                        throw new Exception("Verification failed after applying forward");
+                    }
+                    context.WriteLine(Info, $"Verified forward to {phoneNumber}");
+                }
+            }).ConfigureAwait(false);
         }
     }
 }

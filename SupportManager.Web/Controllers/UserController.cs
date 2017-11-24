@@ -65,7 +65,7 @@ namespace SupportManager.Web.Controllers
 
         public IActionResult Send(int id, DateTime when)
         {
-            BackgroundJob.Schedule<IForwarder>(x => x.ApplyScheduledForward(id), when);
+            BackgroundJob.Schedule<IForwarder>(x => x.ApplyScheduledForward(id, null), when);
 
             return new ContentResult {Content = "OK"};
         }

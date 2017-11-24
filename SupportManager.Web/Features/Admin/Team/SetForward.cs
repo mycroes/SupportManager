@@ -16,7 +16,7 @@ namespace SupportManager.Web.Features.Admin.Team
         {
             public void Handle(Command message)
             {
-                BackgroundJob.Enqueue<IForwarder>(f => f.ApplyForward(message.TeamId, message.PhoneNumberId));
+                BackgroundJob.Enqueue<IForwarder>(f => f.ApplyForward(message.TeamId, message.PhoneNumberId, null));
             }
         }
     }
