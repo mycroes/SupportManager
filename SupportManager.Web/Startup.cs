@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using Hangfire.Console;
 using HtmlTags;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +38,11 @@ namespace SupportManager.Web
             services.AddMediatR(typeof(Startup));
             services.AddScoped(_ => new SupportManagerContext(Configuration["Connections:SupportManager"]));
             services.AddHtmlTags(new DefaultAspNetMvcHtmlConventions());
-            services.AddHangfire(hangfire => hangfire.UseSqlServerStorage(Configuration["Connections:hangfire"]));
+            services.AddHangfire(hangfire =>
+            {
+                hangfire.UseSqlServerStorage(Configuration["Connections:hangfire"]);
+                hangfire.UseConsole();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
