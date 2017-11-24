@@ -60,7 +60,8 @@ namespace SupportManager.Web
 
             app.UseStaticFiles();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard(
+                options: new DashboardOptions {Authorization = new[] {new HangfireAuthorizationFilter()}});
 
             app.UseMvc(routes =>
             {

@@ -14,6 +14,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.2.1" />
     <PackageReference Include="Hangfire.ASpNetCore" Version="1.6.17" />
     <PackageReference Include="Hangfire.Console" Version="1.3.10" />
+    <PackageReference Include="Hangfire.Dashboard.authorization" Version="2.1.0" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.6.17" />
     <PackageReference Include="HtmlTags.AspNetCore" Version="6.0.0" />
     <PackageReference Include="MediatR" Version="3.0.1" />
