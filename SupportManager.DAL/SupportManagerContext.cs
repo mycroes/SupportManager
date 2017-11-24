@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace SupportManager.DAL
 {
-    [DbConfigurationType(typeof(SupportManagerDbConfiguration))]
     public class SupportManagerContext : DbContext
     {
         private DbContextTransaction _currentTransaction;
@@ -16,7 +15,7 @@ namespace SupportManager.DAL
 
         public SupportManagerContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SupportManagerContext, Migrations.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SupportManagerContext, Migrations.Configuration>(true));
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
