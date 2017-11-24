@@ -57,7 +57,7 @@ namespace MYCroes.ATCommands
 
                 if (line == AT_OK) yield break;
 
-                if (line.EndsWith(AT_ERROR))
+                if (line.Contains(AT_ERROR))
                 {
                     throw new ATCommandException(lines);
                 }
