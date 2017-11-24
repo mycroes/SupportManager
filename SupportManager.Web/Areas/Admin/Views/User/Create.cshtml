@@ -28,5 +28,5 @@
 }
 
 <div>
-    @(Html.Link<UserController>(c => c.Index(null), "Back to List"))
+    @Html.ActionLink("Back to list", "Index", "User")
 </div>
