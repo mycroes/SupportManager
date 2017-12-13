@@ -82,6 +82,7 @@
     <Compile Include="Infrastructure\NestedContainerActivator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialPortFactory.cs" />
     <Compile Include="SupportManagerService.cs" />
   </ItemGroup>
   <ItemGroup>
