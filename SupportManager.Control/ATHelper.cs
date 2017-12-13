@@ -9,10 +9,16 @@ namespace SupportManager.Control
     {
         private readonly SerialPort serialPort;
 
-        public ATHelper(string port)
+        public ATHelper(string portConnectionString)
         {
-            serialPort = new SerialPort(port);
+            serialPort = SerialPortFactory.CreateFromConnectionString(portConnectionString);
             serialPort.Open();
+        }
+
+        public ATHelper(SerialPort port)
+        {
+            serialPort = port;
+            port.Open();
         }
 
         public void ForwardTo(string phoneNumberWithInternationalAccessCode)
