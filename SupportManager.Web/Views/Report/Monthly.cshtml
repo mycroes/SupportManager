@@ -4,50 +4,44 @@
 @{
     ViewBag.Title = "Monthly result";
 }
-
 @{
-    int w = 0, s = 0;
-    double totalSeconds;
+    int w = 0;
 }
 <table class="table">
     <thead>
     <tr>
         <th>Week</th>
-        <th>Participation</th>
-        <th>Weekend</th>
-        <th>Participation</th>
+        @foreach (var summary in Model.Weeks[0].Summaries)
+        {
+            <th>@summary.GroupingKey</th>
+        }
     </tr>
     </thead>
     <tbody>
     @foreach (var week in Model.Weeks)
     {
-        {
-            s = 0;
-        }
         <tr>
-        @foreach (var slot in week.Slots)
-        {
+            <td>@Html.Display(m => m.Weeks[w].Start) - @Html.Display(m => m.Weeks[w].End)</td>
+            @foreach (var summary in week.Summaries)
             {
-                totalSeconds = slot.EndTime.Subtract(slot.StartTime).TotalSeconds;
-            }
-            
-            <td>@Html.Display(m => m.Weeks[w].Slots[s].StartTime) - @Html.Display(m => m.Weeks[w].Slots[s].EndTime)</td>
-            <td>
-                @slot.Participations[0].UserName <span class="text-secondary">@(Math.Round(slot.Participations[0].Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
+                double totalSeconds;
+                {
+                    totalSeconds = summary.Duration.TotalSeconds;
+                }
 
-                <!--<dl>
-                    @foreach (var p in slot.Participations)
-                    {
-                        <dt>@p.UserName</dt>
-                        <dd>@p.Duration</dd>
-                        <dd>@(Math.Round(p.Duration.TotalSeconds / totalSeconds * 100, 1))%</dd>
-                    }
-                </dl>-->
-            </td>
-            {
-                s++;
+                <td>
+                    @summary.Participations[0].UserName <span class="text-secondary">@(Math.Round(summary.Participations[0].Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
+
+                    <!--<dl>
+                        @foreach (var p in summary.Participations)
+                        {
+                            <dt>@p.UserName</dt>
+                            <dd>@p.Duration</dd>
+                            <dd>@(Math.Round(p.Duration.TotalSeconds / totalSeconds * 100, 1))%</dd>
+                        }
+                    </dl>-->
+                </td>
             }
-    }
         </tr>
         {
             w++;

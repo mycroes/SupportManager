@@ -26,6 +26,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.0" />
     <PackageReference Include="morelinq" Version="2.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="NodaTime" Version="2.2.5" />
     <PackageReference Include="X.PagedList" Version="7.1.7" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="1.0.7-beta" />
   </ItemGroup>
