@@ -12,11 +12,11 @@ namespace SupportManager.Web.Features.Admin.Team
             public int PhoneNumberId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : RequestHandler<Command>
         {
-            public void Handle(Command message)
+            protected override void HandleCore(Command request)
             {
-                BackgroundJob.Enqueue<IForwarder>(f => f.ApplyForward(message.TeamId, message.PhoneNumberId, null));
+                BackgroundJob.Enqueue<IForwarder>(f => f.ApplyForward(request.TeamId, request.PhoneNumberId, null));
             }
         }
     }

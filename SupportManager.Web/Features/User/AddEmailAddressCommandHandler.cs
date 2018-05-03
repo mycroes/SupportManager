@@ -1,11 +1,12 @@
-using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
 using SupportManager.Web.Mailers;
 
 namespace SupportManager.Web.Features.User
 {
-    public class AddEmailAddressCommandHandler : IRequestHandler<AddEmailAddressCommand>
+    public class AddEmailAddressCommandHandler : AsyncRequestHandler<AddEmailAddressCommand>
     {
         private readonly SupportManagerContext db;
         private readonly UserMailer mailer;
@@ -16,15 +17,15 @@ namespace SupportManager.Web.Features.User
             this.mailer = mailer;
         }
 
-        public void Handle(AddEmailAddressCommand message)
+        protected override async Task HandleCore(AddEmailAddressCommand message)
         {
-            var user = db.Users.WhereUserLoginIs(message.UserName).Single();
+            var user = await db.Users.WhereUserLoginIs(message.UserName).SingleAsync();
             var emailAddress = new UserEmailAddress {Value = message.EmailAddress};
             var code = VerificationCodeManager.GenerateCode();
             emailAddress.VerificationToken = VerificationCodeManager.GetHash(emailAddress.Value + code);
 
             user.EmailAddresses.Add(emailAddress);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             var urlCommand = new VerifyEmailAddressCommand
             {

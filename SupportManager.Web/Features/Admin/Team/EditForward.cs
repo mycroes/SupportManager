@@ -21,24 +21,18 @@ namespace SupportManager.Web.Features.Admin.Team
             public DateTimeOffset When { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>, IRequestHandler<Query, Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SupportManagerContext db;
 
-            public Handler(SupportManagerContext db)
+            public CommandHandler(SupportManagerContext db)
             {
                 this.db = db;
             }
 
-            public Command Handle(Query message)
+            protected override async Task HandleCore(Command request)
             {
-                var original = db.ScheduledForwards.Find(message.Id);
-                return new Command {Id = message.Id, PhoneNumber = original.PhoneNumber, When = original.When};
-            }
-
-            public async Task Handle(Command message)
-            {
-                var original = db.ScheduledForwards.Find(message.Id);
+                var original = db.ScheduledForwards.Find(request.Id);
 
                 if (original.ScheduleId != null)
                 {
@@ -47,12 +41,29 @@ namespace SupportManager.Web.Features.Admin.Team
                     await db.SaveChangesAsync();
                 }
 
-                original.PhoneNumber = message.PhoneNumber;
-                original.When = message.When;
+                original.PhoneNumber = request.PhoneNumber;
+                original.When = request.When;
                 await db.SaveChangesAsync();
 
-                original.ScheduleId = BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(original.Id, null), message.When);
+                original.ScheduleId =
+                    BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(original.Id, null), request.When);
                 await db.SaveChangesAsync();
+            }
+        }
+
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        {
+            private readonly SupportManagerContext db;
+
+            public QueryHandler(SupportManagerContext db)
+            {
+                this.db = db;
+            }
+
+            protected override async Task<Command> HandleCore(Query message)
+            {
+                var original = await db.ScheduledForwards.FindAsync(message.Id);
+                return new Command {Id = message.Id, PhoneNumber = original.PhoneNumber, When = original.When};
             }
         }
     }

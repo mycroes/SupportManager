@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.User
 {
-    public class DetailsQueryHandler : IRequestHandler<DetailsQuery, DetailsModel>
+    public class DetailsQueryHandler : AsyncRequestHandler<DetailsQuery, DetailsModel>
     {
         private readonly SupportManagerContext db;
 
@@ -14,10 +15,9 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        public DetailsModel Handle(DetailsQuery message)
+        protected override async Task<DetailsModel> HandleCore(DetailsQuery request)
         {
-            return db.Users.WhereUserLoginIs(message.UserName)
-                .ProjectTo<DetailsModel>().Single();
+            return await db.Users.WhereUserLoginIs(request.UserName).ProjectTo<DetailsModel>().SingleAsync();
         }
     }
 }

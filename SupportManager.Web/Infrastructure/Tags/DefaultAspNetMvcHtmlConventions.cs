@@ -11,7 +11,9 @@ namespace SupportManager.Web.Infrastructure.Tags
         {
             Editors.Always.AddClass("form-control");
 
-            Editors.IfPropertyIs<DateTimeOffset>().ModifyWith(m => m.CurrentTag.Attr("type", "datetime-local").Value(m.Value<DateTimeOffset?>()?.ToLocalTime().DateTime.ToString("s")));
+            Editors.IfPropertyIs<DateTimeOffset>().ModifyWith(m =>
+                m.CurrentTag.Attr("type", "datetime-local")
+                    .Value(m.Value<DateTimeOffset?>()?.ToLocalTime().DateTime.ToString("yyyy-MM-ddTHH:mm")));
             Editors.IfPropertyIs<DateTime?>().ModifyWith(m => m.CurrentTag
                 .AddPattern("9{1,2}/9{1,2}/9999")
                 .AddPlaceholder("MM/DD/YYYY")
@@ -28,6 +30,7 @@ namespace SupportManager.Web.Infrastructure.Tags
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
             DisplayLabels.Always.BuildBy<DefaultDisplayLabelBuilder>();
             DisplayLabels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
+
             Displays.IfPropertyIs<DateTimeOffset>().BuildBy<DateTimeBuilder>();
             Displays.IfPropertyIs<DateTimeOffset?>().BuildBy<DateTimeBuilder>();
             Displays.IfPropertyIs<DateTime>().BuildBy<DateTimeBuilder>();
@@ -35,8 +38,6 @@ namespace SupportManager.Web.Infrastructure.Tags
             
             Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
             Displays.IfPropertyIs<bool>().BuildBy<BoolDisplayBuilder>();
-
-            this.Defaults();
         }
 
         public ElementCategoryExpression DisplayLabels

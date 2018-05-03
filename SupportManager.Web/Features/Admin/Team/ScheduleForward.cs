@@ -16,7 +16,7 @@ namespace SupportManager.Web.Features.Admin.Team
             public UserPhoneNumber PhoneNumber { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly SupportManagerContext db;
 
@@ -25,17 +25,22 @@ namespace SupportManager.Web.Features.Admin.Team
                 this.db = db;
             }
 
-            public async Task Handle(Command message)
+            protected override async Task HandleCore(Command request)
             {
-                var scheduledForward =
-                    new ScheduledForward {TeamId = message.TeamId, PhoneNumber = message.PhoneNumber, When = message.When};
+                var scheduledForward = new ScheduledForward
+                {
+                    TeamId = request.TeamId,
+                    PhoneNumber = request.PhoneNumber,
+                    When = request.When
+                };
 
                 db.BeginTransaction();
                 db.ScheduledForwards.Add(scheduledForward);
                 await db.SaveChangesAsync();
 
                 scheduledForward.ScheduleId =
-                    BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id, null), message.When);
+                    BackgroundJob.Schedule<IForwarder>(f => f.ApplyScheduledForward(scheduledForward.Id, null),
+                        request.When);
 
                 await db.SaveChangesAsync();
                 await db.CommitTransactionAsync();

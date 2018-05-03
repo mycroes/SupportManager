@@ -65,7 +65,7 @@ namespace SupportManager.Web.Features.Report
             public string GroupingKey { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, Result>
+        public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -74,7 +74,7 @@ namespace SupportManager.Web.Features.Report
                 this.db = db;
             }
 
-            public async Task<Result> Handle(Query message)
+            protected override async Task<Result> HandleCore(Query request)
             {
                 TimeSlot BuildSlot(DayOfWeek day, double hours, string groupingKey)
                 {
@@ -95,7 +95,7 @@ namespace SupportManager.Web.Features.Report
                 weekSlots.Add(BuildSlot(DayOfWeek.Friday, 7.5, WORK));
                 weekSlots.Add(BuildSlot(DayOfWeek.Friday, 16.5, WEEKEND));
 
-                var dt = new DateTime(message.Year, message.Month, 1);
+                var dt = new DateTime(request.Year, request.Month, 1);
                 int dayOfWeek = (int) dt.DayOfWeek;
                 var resultStart = dt.AddDays(-dayOfWeek).Add(weekSlots[0].Start);
                 var nextMonth = dt.AddMonths(1);
@@ -129,7 +129,7 @@ namespace SupportManager.Web.Features.Report
 
                 slots.Add((null, resultEnd, null)); // Add end
 
-                var registrations = db.ForwardingStates.AsNoTracking().Where(s => s.TeamId == message.TeamId);
+                var registrations = db.ForwardingStates.AsNoTracking().Where(s => s.TeamId == request.TeamId);
                 var lastBefore = await registrations.Where(s => s.When < resultStart)
                     .OrderByDescending(s => s.When)
                     .FirstOrDefaultAsync();

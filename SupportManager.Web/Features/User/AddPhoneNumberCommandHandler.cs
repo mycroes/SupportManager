@@ -1,11 +1,12 @@
-using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.User
 {
-    public class AddPhoneNumberCommandHandler : IRequestHandler<AddPhoneNumberCommand>
+    public class AddPhoneNumberCommandHandler : AsyncRequestHandler<AddPhoneNumberCommand>
     {
         private readonly SupportManagerContext db;
 
@@ -14,15 +15,15 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        public void Handle(AddPhoneNumberCommand message)
+        protected override async Task HandleCore(AddPhoneNumberCommand message)
         {
-            var user = db.Users.WhereUserLoginIs(message.UserName).Single();
+            var user = await db.Users.WhereUserLoginIs(message.UserName).SingleAsync();
             var phoneNumber = Mapper.Map<UserPhoneNumber>(message.PhoneNumber);
             var code = VerificationCodeManager.GenerateCode();
             phoneNumber.VerificationToken = VerificationCodeManager.GetHash(phoneNumber.Value + code);
 
             user.PhoneNumbers.Add(Mapper.Map<UserPhoneNumber>(message.PhoneNumber));
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

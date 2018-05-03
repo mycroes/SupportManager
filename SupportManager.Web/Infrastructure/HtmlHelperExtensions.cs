@@ -10,13 +10,13 @@ namespace SupportManager.Web.Infrastructure
 {
     public static class HtmlHelperExtensions
     {
-        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T, TValue>(this IHtmlHelper<T> helper, Expression<Func<T, TValue>> expression)
             where T : class
         {
             return helper.Tag(expression, "DisplayLabels");
         }
 
-        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<IList<T>> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T, TValue>(this IHtmlHelper<IList<T>> helper, Expression<Func<T, TValue>> expression)
             where T : class
         {
             var library = helper.ViewContext.HttpContext.RequestServices.GetService<HtmlConventionLibrary>();
@@ -33,7 +33,7 @@ namespace SupportManager.Web.Infrastructure
                 .AddClass("hidden");
         }
 
-        public static HtmlTag InputBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression,
+        public static HtmlTag InputBlock<T, TValue>(this IHtmlHelper<T> helper, Expression<Func<T, TValue>> expression,
             Action<HtmlTag> inputModifier = null) where T : class
         {
             inputModifier = inputModifier ?? (_ => { });
@@ -49,7 +49,7 @@ namespace SupportManager.Web.Infrastructure
             return divTag;
         }
 
-        public static HtmlTag FormBlock<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression,
+        public static HtmlTag FormBlock<T, TValue>(this IHtmlHelper<T> helper, Expression<Func<T, TValue>> expression,
             Action<HtmlTag> labelModifier = null, Action<HtmlTag> inputBlockModifier = null,
             Action<HtmlTag> inputModifier = null) where T : class
         {

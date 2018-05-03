@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
 using SupportManager.Web.Infrastructure;
@@ -26,7 +27,7 @@ namespace SupportManager.Web.Features.Admin.User
             }
         }
 
-        public class Handler : IRequestHandler<Query, Result>
+        public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -35,10 +36,10 @@ namespace SupportManager.Web.Features.Admin.User
                 this.db = db;
             }
 
-            public Result Handle(Query message)
+            protected override async Task<Result> HandleCore(Query message)
             {
-                var users = db.Users.OrderBy(u => u.DisplayName)
-                    .ProjectToPagedList<Result.User>(message.PageNumber ?? 1, Pagination.PageSize);
+                var users = await db.Users.OrderBy(u => u.DisplayName)
+                    .ProjectToPagedListAsync<Result.User>(message.PageNumber ?? 1, Pagination.PageSize);
                 return new Result {Users = users};
             }
         }

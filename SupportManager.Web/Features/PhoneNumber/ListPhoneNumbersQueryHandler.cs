@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure;
 using X.PagedList;
 
 namespace SupportManager.Web.Features.PhoneNumber
 {
-    public class ListPhoneNumbersQueryHandler : IRequestHandler<PhoneNumberListQuery, IPagedList<PhoneNumberListItem>>
+    public class ListPhoneNumbersQueryHandler : AsyncRequestHandler<PhoneNumberListQuery, IPagedList<PhoneNumberListItem>>
     {
         private readonly SupportManagerContext db;
 
@@ -13,11 +16,10 @@ namespace SupportManager.Web.Features.PhoneNumber
             this.db = db;
         }
 
-        public IPagedList<PhoneNumberListItem> Handle(PhoneNumberListQuery message)
+        protected override async Task<IPagedList<PhoneNumberListItem>> HandleCore(PhoneNumberListQuery message)
         {
-            return null;
-            //return db.PhoneNumbers.OrderBy(p => p.Label)
-            //    .ProjectToPagedList<PhoneNumberListItem>(message.PageNumber ?? 1, 5);
+            return await db.UserPhoneNumbers.OrderBy(p => p.Label)
+                .ProjectToPagedListAsync<PhoneNumberListItem>(message.PageNumber ?? 1, 5);
         }
     }
 }

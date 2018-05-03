@@ -40,7 +40,7 @@ namespace SupportManager.Web.Features.Admin.Team
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, Result>
+        public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -49,7 +49,7 @@ namespace SupportManager.Web.Features.Admin.Team
                 this.db = db;
             }
 
-            public async Task<Result> Handle(Query message)
+            protected override async Task<Result> HandleCore(Query message)
             {
                 var team = await db.Teams.FindAsync(message.TeamId);
                 var members = from t in db.Teams

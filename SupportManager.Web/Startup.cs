@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.Console;
@@ -6,6 +7,7 @@ using HtmlTags;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SupportManager.DAL;
@@ -33,6 +35,8 @@ namespace SupportManager.Web
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                 })
                 .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup));

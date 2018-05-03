@@ -28,18 +28,18 @@ namespace SupportManager.Web.Features.Admin.Team
             public int Id { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>, IAsyncRequestHandler<Request, Result>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SupportManagerContext db;
 
-            public Handler(SupportManagerContext db)
+            public CommandHandler(SupportManagerContext db)
             {
                 this.db = db;
             }
 
-            public async Task Handle(Command message)
+            protected override async Task HandleCore(Command message)
             {
-                var scheduled = db.ScheduledForwards.Find(message.Id);
+                var scheduled = await db.ScheduledForwards.FindAsync(message.Id);
                 if (scheduled.ScheduleId != null)
                 {
                     BackgroundJob.Delete(scheduled.ScheduleId);
@@ -47,19 +47,29 @@ namespace SupportManager.Web.Features.Admin.Team
                 db.ScheduledForwards.Remove(scheduled);
                 await db.SaveChangesAsync();
             }
+        }
 
-            public async Task<Result> Handle(Request message)
+        public class RequestHandler : AsyncRequestHandler<Request, Result>
+        {
+            private readonly SupportManagerContext db;
+
+            public RequestHandler(SupportManagerContext db)
             {
-                return await db.ScheduledForwards.Where(s => s.Id == message.Id)
-                    .Select(s => new Result
+                this.db = db;
+            }
+
+            protected override async Task<Result> HandleCore(Request request)
+            {
+                return await db.ScheduledForwards.Where(s => s.Id == request.Id).Select(s =>
+                    new Result
                     {
                         Id = s.Id,
                         PhoneNumber = s.PhoneNumber.Value,
                         UserName = s.PhoneNumber.User.DisplayName,
                         When = s.When
-                    })
-                    .SingleAsync();
+                    }).SingleAsync();
             }
         }
+
     }
 }

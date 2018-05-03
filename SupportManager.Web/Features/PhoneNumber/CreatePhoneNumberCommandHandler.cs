@@ -1,10 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.PhoneNumber
 {
-    public class CreatePhoneNumberCommandHandler : IRequestHandler<PhoneNumberCreateCommand>
+    public class CreatePhoneNumberCommandHandler : AsyncRequestHandler<PhoneNumberCreateCommand>
     {
         private readonly SupportManagerContext db;
 
@@ -13,10 +14,11 @@ namespace SupportManager.Web.Features.PhoneNumber
             this.db = db;
         }
 
-        public void Handle(PhoneNumberCreateCommand message)
+        protected override async Task HandleCore(PhoneNumberCreateCommand message)
         {
             var phoneNumberEntity = Mapper.Map<UserPhoneNumber>(message);
             //db.PhoneNumbers.Add(phoneNumberEntity);
+            await db.SaveChangesAsync();
         }
     }
 }

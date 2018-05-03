@@ -3,7 +3,7 @@ using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.User
 {
-    public class CreateCommandHandler : IRequestHandler<CreateCommand>
+    public class CreateCommandHandler : RequestHandler<CreateCommand>
     {
         private readonly SupportManagerContext db;
 
@@ -12,9 +12,9 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        public void Handle(CreateCommand message)
+        protected override void HandleCore(CreateCommand request)
         {
-            var user = new DAL.User {DisplayName = message.Name, Login = message.Name};
+            var user = new DAL.User {DisplayName = request.Name, Login = request.Name};
 
             db.Users.Add(user);
         }

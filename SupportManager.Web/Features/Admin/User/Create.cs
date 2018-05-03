@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using SupportManager.DAL;
 
@@ -23,7 +24,7 @@ namespace SupportManager.Web.Features.Admin.User
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly SupportManagerContext db;
 
@@ -32,11 +33,11 @@ namespace SupportManager.Web.Features.Admin.User
                 this.db = db;
             }
 
-            public void Handle(Command message)
+            protected override async Task HandleCore(Command message)
             {
                 var user = new DAL.User {DisplayName = message.DisplayName, Login = message.Login};
                 db.Users.Add(user);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 if (message.PrimaryEmailAddress != null)
                 {
