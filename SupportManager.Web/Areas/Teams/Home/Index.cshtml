@@ -1,0 +1,132 @@
+﻿@using SupportManager.Web.Areas.Teams.Home
+@model SupportManager.Web.Areas.Teams.Home.Index.Result
+
+@{
+    ViewBag.Title = $"Team {Model.TeamName}";
+}
+
+<h2>Team @Model.TeamName</h2>
+
+<h4>Current forwarding status</h4>
+@if (Model.CurrentStatus != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-10"></th>
+                <th class="w-25">User</th>
+                <th class="w-25">Phonenumber</th>
+                <th class="w-40">Since</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.CurrentStatus.User)</td>
+                <td>@Html.Display(m => m.CurrentStatus.PhoneNumber)</td>
+                <td>@Html.Display(m => m.CurrentStatus.When)</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="jumbotron">No current forwarding state.</div>
+}
+
+<h4>Team members</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="w-10"></th>
+            <th class="w-25">Name</th>
+            <th class="w-25">Primary phonenumber</th>
+            <th class="w-40"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var member in Model.Members)
+        {
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Members[i].DisplayName)</td>
+                <td>@Html.Display(m => m.Members[i].PrimaryPhoneNumber)</td>
+                <td>
+                    @if (member.PrimaryPhoneNumberId != null)
+                    {
+                        @Html.ActionLink("Forward now", "SetForward", null, new SetForward.Command { TeamId = Model.TeamId, PhoneNumberId = member.PrimaryPhoneNumberId.Value })
+                    }
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+<h4>Schedule</h4>
+@if (@Model.Schedule.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-10"></th>
+                <th class="w-25">User</th>
+                <th class="w-25">Phonenumber</th>
+                <th class="w-40">When</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ i = 0; }
+            @foreach (var schedule in Model.Schedule)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("EditForward", new {schedule.Id})"><i class="fa fa-pencil fa-fw"></i></a>
+                        <a href="@Url.Action("DeleteForward", new {schedule.Id})"><i class="fa fa-trash-o fa-fw"></i></a>
+                    </td>
+                    <td>@Html.Display(m => m.Schedule[i].User)</td>
+                    <td>@Html.Display(m => m.Schedule[i].PhoneNumber)</td>
+                    <td>@Html.Display(m => m.Schedule[i].When)</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+    @Html.ActionLink("Schedule forward", "ScheduleForward");
+}
+else
+{
+    <div class="jumbotron">
+        <h5>Nothing scheduled yet!</h5>
+        <p>
+            There are no actions scheduled yet, use the button below to add a new entry.
+        </p>
+        @(Html.ActionLink("Schedule forward", "ScheduleForward", null, null, new { @class = "btn btn-primary btn-lg" }))
+    </div>
+}
+
+<h4>History</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="w-10"></th>
+            <th class="w-23">User</th>
+            <th class="w-25">Phonenumber</th>
+            <th class="w-40">Since</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ i = 0; }
+        @foreach (var registration in Model.History)
+        {
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.History[i].User)</td>
+                <td>@Html.Display(m => m.History[i].PhoneNumber)</td>
+                <td>@Html.Display(m => m.History[i].When)</td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

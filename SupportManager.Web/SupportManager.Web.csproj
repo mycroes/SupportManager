@@ -17,6 +17,7 @@
     <PackageReference Include="Hangfire.Dashboard.authorization" Version="2.1.0" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.6.19" />
     <PackageReference Include="HtmlTags.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="MediatR" Version="4.1.0" />
     <PackageReference Include="Mediatr.Extensions.Microsoft.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.3" />
@@ -27,6 +28,7 @@
     <PackageReference Include="morelinq" Version="2.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="NodaTime" Version="2.2.6" />
+    <PackageReference Include="OdeToCode.AddFeatureFolders" Version="2.0.1" />
     <PackageReference Include="X.PagedList" Version="7.2.4" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.2.4" />
   </ItemGroup>
@@ -38,10 +40,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SupportManager.Contracts\SupportManager.Contracts.csproj" />
     <ProjectReference Include="..\SupportManager.DAL\SupportManager.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
 
 </Project>

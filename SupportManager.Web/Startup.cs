@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.Console;
 using HtmlTags;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,14 @@ using Microsoft.Extensions.DependencyInjection;
 using SupportManager.DAL;
 using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.Tags;
+
+[assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
+[assembly: AspMvcViewLocationFormat(@"~\Features\{0}.cshtml")]
+[assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
+
+[assembly: AspMvcAreaViewLocationFormat(@"~\Areas\{2}\{1}\{0}.cshtml")]
+[assembly: AspMvcAreaViewLocationFormat(@"~\Areas\{2}\{0}.cshtml")]
+[assembly: AspMvcAreaViewLocationFormat(@"~\Areas\{2}\Shared\{0}.cshtml")]
 
 namespace SupportManager.Web
 {
@@ -34,6 +43,8 @@ namespace SupportManager.Web
                     opt.Filters.Add<ValidatorActionFilter>();
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                 })
+                .AddFeatureFolders()
+                .AddAreaFeatureFolders()
                 .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -69,13 +80,11 @@ namespace SupportManager.Web
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute("Team", "Admin/Team/{teamId:int}/{action}", new {area = "Admin", controller = "Team"});
+                routes.MapRoute("Teams", "Teams/{teamId:int}/{controller=Home}/{action=Index}", new {area = "Teams"});
 
                 routes.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}");
 
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

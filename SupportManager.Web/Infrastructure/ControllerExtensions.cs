@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace SupportManager.Web.Infrastructure
 {
     public static class ControllerExtensions
     {
-        public static IActionResult RedirectToActionJson<TController>(this TController controller, string action)
+        public static IActionResult RedirectToActionJson<TController>(this TController controller, [AspMvcAction] string action)
             where TController : Controller
         {
             return controller.JsonNet(new {redirect = controller.Url.Action(action)});
