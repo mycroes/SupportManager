@@ -41,7 +41,7 @@ namespace SupportManager.Web
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup));
             services.AddScoped(_ => new SupportManagerContext(Configuration["Connections:SupportManager"]));
-            services.AddHtmlTags(new DefaultAspNetMvcHtmlConventions());
+            services.AddHtmlTags(new SupportManagerHtmlConventions());
             services.AddHangfire(hangfire =>
             {
                 hangfire.UseSqlServerStorage(Configuration["Connections:hangfire"]);

@@ -5,9 +5,9 @@ using HtmlTags.Conventions;
 
 namespace SupportManager.Web.Infrastructure.Tags
 {
-    public class DefaultAspNetMvcHtmlConventions : HtmlConventionRegistry
+    public class SupportManagerHtmlConventions : HtmlConventionRegistry
     {
-        public DefaultAspNetMvcHtmlConventions()
+        public SupportManagerHtmlConventions()
         {
             Editors.Always.AddClass("form-control");
 
