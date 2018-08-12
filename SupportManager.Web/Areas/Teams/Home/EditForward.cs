@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
@@ -30,7 +31,7 @@ namespace SupportManager.Web.Areas.Teams.Home
                 this.db = db;
             }
 
-            protected override async Task HandleCore(Command request)
+            protected override async Task Handle(Command request, CancellationToken canellationToken)
             {
                 var original = db.ScheduledForwards.Find(request.Id);
 
@@ -51,7 +52,7 @@ namespace SupportManager.Web.Areas.Teams.Home
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SupportManagerContext db;
 
@@ -60,7 +61,7 @@ namespace SupportManager.Web.Areas.Teams.Home
                 this.db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query message)
+            public async Task<Command> Handle(Query message, CancellationToken cancellationToken)
             {
                 var original = await db.ScheduledForwards.FindAsync(message.Id);
                 return new Command {Id = message.Id, PhoneNumber = original.PhoneNumber, When = original.When};

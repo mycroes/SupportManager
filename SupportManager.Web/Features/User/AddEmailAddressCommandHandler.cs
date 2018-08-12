@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
@@ -17,7 +18,7 @@ namespace SupportManager.Web.Features.User
             this.mailer = mailer;
         }
 
-        protected override async Task HandleCore(AddEmailAddressCommand message)
+        protected override async Task Handle(AddEmailAddressCommand message, CancellationToken cancellationToken)
         {
             var user = await db.Users.WhereUserLoginIs(message.UserName).SingleAsync();
             var emailAddress = new UserEmailAddress {Value = message.EmailAddress};

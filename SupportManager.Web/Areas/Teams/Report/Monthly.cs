@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using MoreLinq;
@@ -95,7 +96,7 @@ namespace SupportManager.Web.Features.Report
             public string GroupingKey { get; set; }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -104,7 +105,7 @@ namespace SupportManager.Web.Features.Report
                 this.db = db;
             }
 
-            protected override async Task<Result> HandleCore(Query request)
+            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
             {
                 TimeSlot BuildSlot(DayOfWeek day, double hours, string groupingKey)
                 {

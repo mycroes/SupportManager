@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
@@ -37,7 +38,7 @@ namespace SupportManager.Web.Features.Admin.Team
                 this.db = db;
             }
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var scheduled = await db.ScheduledForwards.FindAsync(message.Id);
                 if (scheduled.ScheduleId != null)
@@ -49,7 +50,7 @@ namespace SupportManager.Web.Features.Admin.Team
             }
         }
 
-        public class RequestHandler : AsyncRequestHandler<Request, Result>
+        public class RequestHandler : IRequestHandler<Request, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -58,7 +59,7 @@ namespace SupportManager.Web.Features.Admin.Team
                 this.db = db;
             }
 
-            protected override async Task<Result> HandleCore(Request request)
+            public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
             {
                 return await db.ScheduledForwards.Where(s => s.Id == request.Id).Select(s =>
                     new Result

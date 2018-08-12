@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
@@ -27,7 +28,7 @@ namespace SupportManager.Web.Areas.Admin.User
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -36,7 +37,7 @@ namespace SupportManager.Web.Areas.Admin.User
                 this.db = db;
             }
 
-            protected override async Task<Result> HandleCore(Query message)
+            public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
                 var users = await db.Users.OrderBy(u => u.DisplayName)
                     .ProjectToPagedListAsync<Result.User>(message.PageNumber ?? 1, Pagination.PageSize);

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
@@ -25,7 +26,7 @@ namespace SupportManager.Web.Areas.Teams.Home
                 this.db = db;
             }
 
-            protected override async Task HandleCore(Command request)
+            protected override async Task Handle(Command request, CancellationToken cancellationToken)
             {
                 var scheduledForward = new ScheduledForward
                 {

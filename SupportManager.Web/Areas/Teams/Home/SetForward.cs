@@ -14,7 +14,7 @@ namespace SupportManager.Web.Areas.Teams.Home
 
         public class Handler : RequestHandler<Command>
         {
-            protected override void HandleCore(Command request)
+            protected override void Handle(Command request)
             {
                 BackgroundJob.Enqueue<IForwarder>(f => f.ApplyForward(request.TeamId, request.PhoneNumberId, null));
             }

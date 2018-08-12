@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -8,7 +9,7 @@ using SupportManager.DAL;
 
 namespace SupportManager.Web.Features.User
 {
-    public class UserExistsHandler : AsyncRequestHandler<UserExistsQuery, UserExistsResponse>
+    public class UserExistsHandler : IRequestHandler<UserExistsQuery, UserExistsResponse>
     {
         private readonly SupportManagerContext db;
 
@@ -17,7 +18,7 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        protected override async Task<UserExistsResponse> HandleCore(UserExistsQuery request)
+        public async Task<UserExistsResponse> Handle(UserExistsQuery request, CancellationToken cancellationToken)
         {
             return await db.Users.Where(user => user.Login == request.UserName).ProjectTo<UserExistsResponse>()
                 .SingleOrDefaultAsync() ?? Mapper.Map<UserExistsResponse>(request);

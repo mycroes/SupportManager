@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
 
@@ -16,7 +17,7 @@ namespace SupportManager.Web.Features.User
         public int EmailAddressId { get; set; }
     }
 
-    public class VerifyEmailAddressCommandHandler : AsyncRequestHandler<VerifyEmailAddressCommand, EmailAddressVerificationResult>
+    public class VerifyEmailAddressCommandHandler : IRequestHandler<VerifyEmailAddressCommand, EmailAddressVerificationResult>
     {
         private readonly SupportManagerContext db;
 
@@ -25,7 +26,8 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        protected override async Task<EmailAddressVerificationResult> HandleCore(VerifyEmailAddressCommand message)
+        public async Task<EmailAddressVerificationResult> Handle(VerifyEmailAddressCommand message,
+            CancellationToken cancellationToken)
         {
             var emailAddress = await db.UserEmailAddresses.FindAsync(message.Id);
             var hash =

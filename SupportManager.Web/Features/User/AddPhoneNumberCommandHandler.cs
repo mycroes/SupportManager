@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -15,7 +16,7 @@ namespace SupportManager.Web.Features.User
             this.db = db;
         }
 
-        protected override async Task HandleCore(AddPhoneNumberCommand message)
+        protected override async Task Handle(AddPhoneNumberCommand message, CancellationToken cancellationToken)
         {
             var user = await db.Users.WhereUserLoginIs(message.UserName).SingleAsync();
             var phoneNumber = Mapper.Map<UserPhoneNumber>(message.PhoneNumber);

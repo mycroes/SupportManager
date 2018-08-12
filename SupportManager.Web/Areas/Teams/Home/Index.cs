@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
@@ -40,7 +41,7 @@ namespace SupportManager.Web.Areas.Teams.Home
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
 
@@ -49,7 +50,7 @@ namespace SupportManager.Web.Areas.Teams.Home
                 this.db = db;
             }
 
-            protected override async Task<Result> HandleCore(Query message)
+            public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
                 var team = await db.Teams.FindAsync(message.TeamId);
                 var members = from t in db.Teams

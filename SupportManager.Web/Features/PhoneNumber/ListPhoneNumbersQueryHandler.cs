@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SupportManager.DAL;
@@ -7,7 +8,7 @@ using X.PagedList;
 
 namespace SupportManager.Web.Features.PhoneNumber
 {
-    public class ListPhoneNumbersQueryHandler : AsyncRequestHandler<PhoneNumberListQuery, IPagedList<PhoneNumberListItem>>
+    public class ListPhoneNumbersQueryHandler : IRequestHandler<PhoneNumberListQuery, IPagedList<PhoneNumberListItem>>
     {
         private readonly SupportManagerContext db;
 
@@ -16,7 +17,8 @@ namespace SupportManager.Web.Features.PhoneNumber
             this.db = db;
         }
 
-        protected override async Task<IPagedList<PhoneNumberListItem>> HandleCore(PhoneNumberListQuery message)
+        public async Task<IPagedList<PhoneNumberListItem>> Handle(PhoneNumberListQuery message,
+            CancellationToken cancellationToken)
         {
             return await db.UserPhoneNumbers.OrderBy(p => p.Label)
                 .ProjectToPagedListAsync<PhoneNumberListItem>(message.PageNumber ?? 1, 5);

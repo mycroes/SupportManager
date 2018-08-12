@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using SupportManager.DAL;
@@ -33,7 +34,7 @@ namespace SupportManager.Web.Areas.Admin.User
                 this.db = db;
             }
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var user = new DAL.User {DisplayName = message.DisplayName, Login = message.Login};
                 db.Users.Add(user);

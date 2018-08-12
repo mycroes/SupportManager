@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
@@ -14,7 +15,7 @@ namespace SupportManager.Web.Features.PhoneNumber
             this.db = db;
         }
 
-        protected override async Task HandleCore(PhoneNumberCreateCommand message)
+        protected override async Task Handle(PhoneNumberCreateCommand message, CancellationToken cancellationToken)
         {
             var phoneNumberEntity = Mapper.Map<UserPhoneNumber>(message);
             //db.PhoneNumbers.Add(phoneNumberEntity);
