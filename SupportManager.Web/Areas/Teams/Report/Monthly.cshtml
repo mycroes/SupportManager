@@ -35,16 +35,25 @@
                 }
 
                 <td>
-                    @summary.Participations[0].UserName <span class="text-secondary">@(Math.Round(summary.Participations[0].Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
+                    @if(totalSeconds > 0)
+                    {
+                        @:@{ var mostParticipated = summary.Participations.OrderByDescending(p => p.Duration).First(); }
+                    
+                        @mostParticipated.UserName <span class="text-secondary">@(Math.Round(mostParticipated.Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
 
-                    <!--<dl>
-                        @foreach (var p in summary.Participations)
-                        {
-                            <dt>@p.UserName</dt>
-                            <dd>@p.Duration</dd>
-                            <dd>@(Math.Round(p.Duration.TotalSeconds / totalSeconds * 100, 1))%</dd>
-                        }
-                    </dl>-->
+                        <!--<dl>
+                            @foreach (var p in summary.Participations)
+                            {
+                                <dt>@p.UserName</dt>
+                                <dd>@p.Duration</dd>
+                                <dd>@(Math.Round(p.Duration.TotalSeconds / totalSeconds * 100, 1))%</dd>
+                            }
+                        </dl>-->
+                    }
+                    else
+                    {
+                        @:No data yet
+                    }
                 </td>
             }
         </tr>
