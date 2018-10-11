@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using SupportManager.DAL;
 using SupportManager.Web.Infrastructure;
@@ -31,16 +32,18 @@ namespace SupportManager.Web.Areas.Admin.User
         public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SupportManagerContext db;
+            private readonly IMapper mapper;
 
-            public Handler(SupportManagerContext db)
+            public Handler(SupportManagerContext db, IMapper mapper)
             {
                 this.db = db;
+                this.mapper = mapper;
             }
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
                 var users = await db.Users.OrderBy(u => u.DisplayName)
-                    .ProjectToPagedListAsync<Result.User>(message.PageNumber ?? 1, Pagination.PageSize);
+                    .ProjectToPagedListAsync<Result.User>(mapper.ConfigurationProvider, message.PageNumber ?? 1, Pagination.PageSize);
                 return new Result {Users = users};
             }
         }
