@@ -1,0 +1,53 @@
+﻿@page
+@model SupportManager.Web.Pages.User.ApiKeys.ListModel
+@{
+    Layout = "/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "API Keys";
+}
+
+<h2>API Keys</h2>
+
+@if (!Model.Data.ApiKeys.Any())
+{
+    <div class="jumbotron">
+        <p>
+            No API keys created yet.
+        </p>
+
+        <p>
+            <a class="btn btn-primary btn-lg" asp-page="Create">Create API key</a>
+        </p>
+    </div>
+}
+else
+{
+    <p>
+        <a asp-page="Create">Create API key</a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>
+                Key
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @{ int i = 0;}
+        @foreach (var item in Model.Data.ApiKeys)
+        {
+            <tr>
+                <td>
+                    <code>@Model.Data.ApiKeys[i].Value</code>
+                </td>
+                <td>
+                    <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
+        </tbody>
+    </table>
+}

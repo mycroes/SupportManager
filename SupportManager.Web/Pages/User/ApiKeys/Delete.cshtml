@@ -1,0 +1,18 @@
+﻿@page
+@model SupportManager.Web.Pages.User.ApiKeys.DeleteModel
+@{
+    Layout = "/Features/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete API Key";
+}
+
+<h2>Delete API Key</h2>
+
+<p>
+    Are you sure you want to delete API Key <code>@Model.Data.Value</code>?
+</p>
+
+<form method="post" class="no-ajax">
+    <input-tag for="Data.Id"/>
+    <input type="submit" value="Delete" class="btn btn-danger"/> |
+    <a asp-page="List">Back to List</a>
+</form>

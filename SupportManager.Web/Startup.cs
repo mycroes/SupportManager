@@ -44,9 +44,9 @@ namespace SupportManager.Web
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                     opt.ModelBinderProviders.Insert(0, new LoggedInUserModelBinderProvider());
                 })
-                .AddFeatureFolders()
-                .AddAreaFeatureFolders()
-                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddFeatureFolders().AddAreaFeatureFolders()
+                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/User"));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
