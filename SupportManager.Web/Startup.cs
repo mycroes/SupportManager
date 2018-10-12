@@ -42,6 +42,7 @@ namespace SupportManager.Web
                     opt.Filters.Add<DbContextTransactionFilter>();
                     opt.Filters.Add<ValidatorActionFilter>();
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
+                    opt.ModelBinderProviders.Insert(0, new LoggedInUserModelBinderProvider());
                 })
                 .AddFeatureFolders()
                 .AddAreaFeatureFolders()
