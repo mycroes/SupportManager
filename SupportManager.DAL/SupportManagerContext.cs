@@ -32,6 +32,7 @@ namespace SupportManager.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<UserEmailAddress> UserEmailAddresses { get; set; }
         public DbSet<UserPhoneNumber> UserPhoneNumbers { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
 
         public void BeginTransaction()
         {

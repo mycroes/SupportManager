@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiKey.cs" />
     <Compile Include="Configuration\UserConfiguration.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ForwardingState.cs" />
@@ -66,6 +67,10 @@
     <Compile Include="Migrations\201704290919201_Add_ScheduleId_To_ScheduledForward.cs" />
     <Compile Include="Migrations\201704290919201_Add_ScheduleId_To_ScheduledForward.Designer.cs">
       <DependentUpon>201704290919201_Add_ScheduleId_To_ScheduledForward.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810121923059_Add_ApiKey.cs" />
+    <Compile Include="Migrations\201810121923059_Add_ApiKey.Designer.cs">
+      <DependentUpon>201810121923059_Add_ApiKey.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ScheduledForward.cs" />
@@ -87,6 +92,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704290919201_Add_ScheduleId_To_ScheduledForward.resx">
       <DependentUpon>201704290919201_Add_ScheduleId_To_ScheduledForward.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810121923059_Add_ApiKey.resx">
+      <DependentUpon>201810121923059_Add_ApiKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
