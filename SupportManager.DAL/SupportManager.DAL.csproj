@@ -59,7 +59,6 @@
     <Compile Include="Configuration\UserConfiguration.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ForwardingState.cs" />
-    <Compile Include="ForwardRegistration.cs" />
     <Compile Include="Migrations\201704202036164_InitialCreate.cs" />
     <Compile Include="Migrations\201704202036164_InitialCreate.Designer.cs">
       <DependentUpon>201704202036164_InitialCreate.cs</DependentUpon>
