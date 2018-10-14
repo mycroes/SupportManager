@@ -13,5 +13,6 @@ namespace SupportManager.DAL
         public virtual ICollection<ApiKey> ApiKeys { get; set; }
         public virtual UserEmailAddress PrimaryEmailAddress { get; set; }
         public virtual UserPhoneNumber PrimaryPhoneNumber { get; set; }
+        public virtual ICollection<TeamMember> Memberships { get; set; }
     }
 }
