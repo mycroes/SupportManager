@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201810142046398_Add_PhoneNumberId_To_ScheduledForward.Designer.cs">
       <DependentUpon>201810142046398_Add_PhoneNumberId_To_ScheduledForward.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810142052249_Fix_TeamMember_Keys.cs" />
+    <Compile Include="Migrations\201810142052249_Fix_TeamMember_Keys.Designer.cs">
+      <DependentUpon>201810142052249_Fix_TeamMember_Keys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ScheduledForward.cs" />
     <Compile Include="TeamMember.cs" />
@@ -102,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810142046398_Add_PhoneNumberId_To_ScheduledForward.resx">
       <DependentUpon>201810142046398_Add_PhoneNumberId_To_ScheduledForward.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810142052249_Fix_TeamMember_Keys.resx">
+      <DependentUpon>201810142052249_Fix_TeamMember_Keys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
