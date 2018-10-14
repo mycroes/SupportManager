@@ -9,10 +9,12 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SupportManager.DAL;
 using SupportManager.Web.Infrastructure;
+using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Web.Infrastructure.Tags;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
@@ -59,6 +61,8 @@ namespace SupportManager.Web
                 hangfire.UseSqlServerStorage(Configuration["Connections:hangfire"]);
                 hangfire.UseConsole();
             });
+
+            services.AddAuthentication(IISDefaults.AuthenticationScheme).AddApiKeyAuthentication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
