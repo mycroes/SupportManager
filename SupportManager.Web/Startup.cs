@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,8 @@ namespace SupportManager.Web
                 })
                 .AddFeatureFolders().AddAreaFeatureFolders()
                 .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/User"));
+                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/User"))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
