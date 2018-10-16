@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -15,7 +12,9 @@ namespace SupportManager.Web.Api.User
     {
         public class Query : IRequest<UserDetails>
         {
-            public string UserName { get; set; }
+            public Query(string userName) => UserName = userName;
+
+            public string UserName { get; }
         }
 
         public class MappingProfile : Profile

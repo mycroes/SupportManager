@@ -19,6 +19,6 @@ namespace SupportManager.Web.Api
 
         [HttpGet]
         public async Task<ActionResult<UserDetails>> MyDetails() =>
-            await mediator.Send(new MyDetails.Query {UserName = User.Identity.Name});
+            await mediator.Send(new MyDetails.Query(User.Identity.Name));
     }
 }
