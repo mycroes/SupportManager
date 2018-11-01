@@ -21,9 +21,11 @@ namespace SupportManager.Web.Infrastructure.ApiKey
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (Request.Query["apikey"].Count != 1) return AuthenticateResult.Fail("Invalid request");
+            string key;
+            if (Request.Headers["X-API-Key"].Count == 1) key = Request.Headers["X-API-Key"][0];
+            else if (Request.Query["apikey"].Count == 1) key = Request.Query["apikey"][0];
+            else return AuthenticateResult.Fail("Invalid request");
 
-            var key = Request.Query["apikey"][0];
             var user = await db.ApiKeys.Where(apiKey => apiKey.Value == key).Select(apiKey => apiKey.User)
                 .SingleOrDefaultAsync();
 
