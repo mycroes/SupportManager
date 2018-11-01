@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Api.Teams;
+using SupportManager.Api.Users;
 using SupportManager.Web.Api.Team;
 
 namespace SupportManager.Web.Api
@@ -32,6 +33,19 @@ namespace SupportManager.Web.Api
 
         [HttpPost("schedule")]
         public async Task<IActionResult> Schedule([FromBody] Schedule.Command command)
+        {
+            await mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpGet("members/{id}")]
+        public async Task<ActionResult<List<UserDetails>>> GetMembers(int id)
+        {
+            return await mediator.Send(new Members.Query(id));
+        }
+
+        [HttpPost("forward")]
+        public async Task<IActionResult> Forward([FromBody] Forward.Command command)
         {
             await mediator.Send(command);
             return Ok();

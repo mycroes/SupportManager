@@ -41,6 +41,13 @@ namespace SupportManager.Web.Api.Team
 
         public class Command : IRequest
         {
+            public Command(int teamId, int phoneNumberId, DateTimeOffset @when)
+            {
+                TeamId = teamId;
+                PhoneNumberId = phoneNumberId;
+                When = when;
+            }
+
             public int TeamId { get; }
             public int PhoneNumberId { get; }
             public DateTimeOffset When { get; }
