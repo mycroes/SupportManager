@@ -31,6 +31,9 @@ else
             <th>
                 Key
             </th>
+            <th>
+                Callback URL
+            </th>
             <th></th>
         </tr>
         </thead>
@@ -43,6 +46,10 @@ else
                     <code>@Model.Data.ApiKeys[i].Value</code>
                 </td>
                 <td>
+                    @Model.Data.ApiKeys[i].CallbackUrl
+                </td>
+                <td>
+                    <a asp-page="Test" asp-route-id="@item.Id">Test</a>
                     <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>

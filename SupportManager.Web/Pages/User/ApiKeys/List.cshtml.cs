@@ -29,6 +29,7 @@ namespace SupportManager.Web.Pages.User.ApiKeys
             {
                 public int Id { get; set; }
                 public string Value { get; set; }
+                public string CallbackUrl { get; set; }
             }
         }
 
