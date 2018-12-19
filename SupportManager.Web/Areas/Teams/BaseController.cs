@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SupportManager.DAL;
@@ -6,6 +7,7 @@ using SupportManager.DAL;
 namespace SupportManager.Web.Areas.Teams
 {
     [Area("Teams")]
+    [Authorize]
     public abstract class BaseController : Controller
     {
         protected int TeamId => int.Parse((string) ControllerContext.RouteData.Values["teamId"]);

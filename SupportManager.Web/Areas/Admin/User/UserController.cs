@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Infrastructure;
 
 namespace SupportManager.Web.Areas.Admin.User
 {
     [Area("Admin")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IMediator mediator;
