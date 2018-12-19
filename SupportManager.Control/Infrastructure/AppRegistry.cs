@@ -12,6 +12,7 @@ namespace SupportManager.Control.Infrastructure
         public AppRegistry()
         {
             For<IForwarder>().Use<Forwarder>();
+            For<IPublisher>().Use<Publisher>();
 
             Scan(
                 scan => {

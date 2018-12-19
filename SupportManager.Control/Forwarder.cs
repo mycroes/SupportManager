@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
 using SupportManager.Contracts;
@@ -107,6 +108,15 @@ namespace SupportManager.Control
 
             db.ForwardingStates.Add(newState);
             await db.SaveChangesAsync();
+
+            var prevStateId = state?.Id;
+            await db.Teams.Where(t => t.Id == team.Id).SelectMany(t => t.Members).Select(m => m.User)
+                .SelectMany(u => u.ApiKeys).Where(a => a.CallbackUrl != null).ForEachAsync(apiKey =>
+                {
+                    context.WriteLine($"Scheduling notification to {apiKey.CallbackUrl}.");
+                    BackgroundJob.Enqueue<IPublisher>(p =>
+                        p.NotifyStateChange(prevStateId, newState.Id, apiKey.CallbackUrl, null));
+                });
         }
 
         private async Task ForwardImpl(PerformContext context, string comPort, string phoneNumber)
