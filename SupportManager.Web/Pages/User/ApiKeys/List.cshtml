@@ -49,7 +49,10 @@ else
                     @Model.Data.ApiKeys[i].CallbackUrl
                 </td>
                 <td>
-                    <a asp-page="Test" asp-route-id="@item.Id">Test</a>
+                    @if (@Model.Data.ApiKeys[i].CallbackUrl != null)
+                    {
+                        <a asp-page="Test" asp-route-id="@item.Id">Test</a>
+                    }
                     <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
