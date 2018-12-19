@@ -9,14 +9,15 @@ namespace SupportManager.Web.Api.Shared
     {
         public MappingProfile()
         {
-            CreateMap<SupportTeam, TeamDto>();
+            CreateMap<SupportTeam, SupportManager.Api.Teams.Team>();
             CreateMap<UserEmailAddress, EmailAddress>();
             CreateMap<UserPhoneNumber, PhoneNumber>();
             CreateMap<DAL.User, UserDetails>();
-            CreateMap<ScheduledForward, ForwardRegistration>().ForMember(dst => dst.UserName,
-                opt => opt.MapFrom(src => src.PhoneNumber.User.DisplayName));
-            CreateMap<ForwardingState, ForwardRegistration>().ForMember(dst => dst.UserName,
-                opt => opt.MapFrom(src => src.DetectedPhoneNumber.User.DisplayName));
+            CreateMap<DAL.User, SupportManager.Api.Users.User>();
+            CreateMap<ScheduledForward, ForwardRegistration>().ForMember(dst => dst.User,
+                opt => opt.MapFrom(src => src.PhoneNumber.User));
+            CreateMap<ForwardingState, ForwardRegistration>().ForMember(dst => dst.User,
+                opt => opt.MapFrom(src => src.DetectedPhoneNumber.User));
         }
     }
 }

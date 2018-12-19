@@ -79,6 +79,10 @@
     <Compile Include="Migrations\201810142052249_Fix_TeamMember_Keys.Designer.cs">
       <DependentUpon>201810142052249_Fix_TeamMember_Keys.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812122121014_Add_CallbackUrl_To_ApiKey.cs" />
+    <Compile Include="Migrations\201812122121014_Add_CallbackUrl_To_ApiKey.Designer.cs">
+      <DependentUpon>201812122121014_Add_CallbackUrl_To_ApiKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ScheduledForward.cs" />
     <Compile Include="TeamMember.cs" />
@@ -108,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810142052249_Fix_TeamMember_Keys.resx">
       <DependentUpon>201810142052249_Fix_TeamMember_Keys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812122121014_Add_CallbackUrl_To_ApiKey.resx">
+      <DependentUpon>201812122121014_Add_CallbackUrl_To_ApiKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

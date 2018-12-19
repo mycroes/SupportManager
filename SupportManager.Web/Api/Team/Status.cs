@@ -43,7 +43,11 @@ namespace SupportManager.Web.Api.Team
                                         Value = s.DetectedPhoneNumber.Value
                                     },
                                 When = s.When,
-                                UserName = s.DetectedPhoneNumber.User.DisplayName
+                                User = new SupportManager.Api.Users.User
+                                {
+                                    DisplayName = s.DetectedPhoneNumber.User.DisplayName,
+                                    Id = s.DetectedPhoneNumber.UserId
+                                }
                             }).OrderByDescending(s => s.When).FirstOrDefaultAsync(),
                     ScheduledForward = await db.ScheduledForwards
                         .Where(s => s.TeamId == request.TeamId && s.When > DateTimeOffset.Now).Select(s =>
@@ -52,7 +56,10 @@ namespace SupportManager.Web.Api.Team
                                 PhoneNumber =
                                     new PhoneNumber {Label = s.PhoneNumber.Label, Value = s.PhoneNumber.Value},
                                 When = s.When,
-                                UserName = s.PhoneNumber.User.DisplayName
+                                User = new SupportManager.Api.Users.User
+                                {
+                                    DisplayName = s.PhoneNumber.User.DisplayName, Id = s.PhoneNumber.UserId
+                                }
                             }).OrderBy(s => s.When).FirstOrDefaultAsync()
                 };
             }

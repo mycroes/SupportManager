@@ -59,7 +59,7 @@ namespace SupportManager.Telegram.Handlers
 
         private static string FormatRegistration(ForwardRegistration registration)
         {
-            return $"*{registration.When.ToHumanReadable()}*:\n{registration.UserName}\n{registration.PhoneNumber.Value}";
+            return $"*{registration.When.ToHumanReadable()}*:\n{registration.User.DisplayName}\n{registration.PhoneNumber.Value}";
         }
     }
 }

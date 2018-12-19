@@ -13,14 +13,14 @@ namespace SupportManager.Web.Api.User
 {
     public static class MyTeams
     {
-        public class Query : IRequest<List<TeamDto>>
+        public class Query : IRequest<List<SupportManager.Api.Teams.Team>>
         {
             public Query(string userName) => UserName = userName;
 
             public string UserName { get; }
         }
 
-        public class Handler : IRequestHandler<Query, List<TeamDto>>
+        public class Handler : IRequestHandler<Query, List<SupportManager.Api.Teams.Team>>
         {
             private readonly SupportManagerContext db;
             private readonly IMapper mapper;
@@ -31,10 +31,10 @@ namespace SupportManager.Web.Api.User
                 this.mapper = mapper;
             }
 
-            public async Task<List<TeamDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<SupportManager.Api.Teams.Team>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await db.Users.WhereUserLoginIs(request.UserName).SelectMany(u => u.Memberships)
-                    .Select(m => m.Team).ProjectToListAsync<TeamDto>(mapper.ConfigurationProvider);
+                    .Select(m => m.Team).ProjectToListAsync<SupportManager.Api.Teams.Team>(mapper.ConfigurationProvider);
             }
         }
     }

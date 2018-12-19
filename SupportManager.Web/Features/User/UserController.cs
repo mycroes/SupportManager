@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.Contracts;
 using SupportManager.Web.Infrastructure;
+using SupportManager.Web.Infrastructure.ApiKey;
 
 namespace SupportManager.Web.Features.User
 {
@@ -17,6 +19,7 @@ namespace SupportManager.Web.Features.User
             this.mediator = mediator;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var query = new DetailsQuery { UserName = User.Identity.Name };
@@ -29,6 +32,7 @@ namespace SupportManager.Web.Features.User
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Register()
         {
             var command = new CreateCommand {Name = User.Identity.Name};

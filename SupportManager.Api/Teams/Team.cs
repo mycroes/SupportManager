@@ -1,6 +1,6 @@
 ﻿namespace SupportManager.Api.Teams
 {
-    public class TeamDto
+    public class Team
     {
         public int Id { get; set; }
         public string Name { get; set; }

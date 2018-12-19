@@ -12,7 +12,10 @@ namespace SupportManager.Telegram.Infrastructure
         Task<UserDetails> MyDetails();
 
         [Get("/user/teams")]
-        Task<List<TeamDto>> MyTeams();
+        Task<List<Team>> MyTeams();
+
+        [Post("/user/subscribe")]
+        Task Subscribe(string callbackUrl);
 
         [Get("/team/status/{id}")]
         Task<TeamStatus> GetTeamStatus(int id);

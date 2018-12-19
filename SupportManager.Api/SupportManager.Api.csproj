@@ -4,4 +4,7 @@
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.48" />
+  </ItemGroup>
 </Project>

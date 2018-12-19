@@ -13,7 +13,7 @@ namespace SupportManager.Telegram.Infrastructure
 {
     internal class CallbackQueryContext : IDisposable
     {
-        private readonly Uri supportManagerUri;
+        public Configuration Configuration { get; }
 
         private readonly ITelegramBotClient bot;
         private readonly Message botMessage;
@@ -25,9 +25,9 @@ namespace SupportManager.Telegram.Infrastructure
         private ISupportManagerApi api;
         private User user;
 
-        public CallbackQueryContext(Uri supportManagerUri, ITelegramBotClient bot, Message botMessage, string input)
+        public CallbackQueryContext(Configuration configuration, ITelegramBotClient bot, Message botMessage, string input)
         {
-            this.supportManagerUri = supportManagerUri;
+            Configuration = configuration;
             this.bot = bot;
             this.botMessage = botMessage;
             this.input = input;
@@ -55,7 +55,7 @@ namespace SupportManager.Telegram.Infrastructure
             }
 
             var httpClient =
-                new HttpClient(new AuthenticatedHttpClientHandler(apiKey)) {BaseAddress = supportManagerUri};
+                new HttpClient(new AuthenticatedHttpClientHandler(apiKey)) {BaseAddress = Configuration.SupportManagerUri};
             api = RestService.For<ISupportManagerApi>(httpClient);
 
             return api;

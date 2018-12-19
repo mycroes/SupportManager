@@ -6,5 +6,6 @@ namespace SupportManager.Telegram
     {
         public string BotKey { get; set; }
         public Uri SupportManagerUri { get; set; }
+        public Uri HostUri { get; set; }
     }
 }

@@ -20,12 +20,12 @@ namespace SupportManager.Telegram
         private readonly Dictionary<string, CommandHandler> commandHandlers;
         private readonly Action<object> log;
 
-        private readonly Uri supportManagerUri;
+        private readonly Configuration configuration;
         private readonly ITelegramBotClient botClient;
 
-        public SupportManagerBot(Uri supportManagerUri, ITelegramBotClient botClient, Dictionary<string, CommandHandler> commandHandlers, Action<object> log)
+        public SupportManagerBot(Configuration configuration, ITelegramBotClient botClient, Dictionary<string, CommandHandler> commandHandlers, Action<object> log)
         {
-            this.supportManagerUri = supportManagerUri;
+            this.configuration = configuration;
             this.botClient = botClient;
             this.commandHandlers = commandHandlers;
             this.log = log;
@@ -49,7 +49,7 @@ namespace SupportManager.Telegram
 
         private async Task ProcessCommand(Message message, string input)
         {
-            using (var context = new CallbackQueryContext(supportManagerUri, botClient, message, input))
+            using (var context = new CallbackQueryContext(configuration, botClient, message, input))
             {
                 if (!commandHandlers.TryGetValue(context.Command, out var handler)) return;
                 try
@@ -118,7 +118,7 @@ namespace SupportManager.Telegram
                 case "apikey":
                     var key = args.First();
 
-                    using (var context = new CallbackQueryContext(supportManagerUri, botClient,
+                    using (var context = new CallbackQueryContext(configuration, botClient,
                         await botClient.SendTextMessageAsync(message.Chat.Id, "Trying to authenticate ..."), ""))
                     {
                         try
@@ -131,6 +131,7 @@ namespace SupportManager.Telegram
 
                             user.ApiKey = key;
                             user.ChatId = message.Chat.Id;
+                            user.SupportManagerUserId = details.Id;
 
                             await context.Db.SaveChangesAsync();
                             await context.Interaction.Write($"Authenticated as *{details.DisplayName}*");

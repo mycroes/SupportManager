@@ -50,7 +50,7 @@ namespace SupportManager.Telegram.Infrastructure
             }
 
             throw await QueryInput(text,
-                new SelectListMarkup<TeamDto>(BuildQuery(), teams, team => team.Name, team => team.Id));
+                new SelectListMarkup<Team>(BuildQuery(), teams, team => team.Name, team => team.Id));
         }
 
         public async Task<int> ReadPhoneNumber(string text, int teamId)
@@ -67,6 +67,18 @@ namespace SupportManager.Telegram.Infrastructure
             throw await QueryInput(text,
                 Select(BuildQuery(), users.SelectMany(u => u.PhoneNumbers.Select(p => (user: u, phoneNumber: p))),
                     x => $"{x.user.DisplayName} - {x.phoneNumber.Value}", x => x.phoneNumber.Id));
+        }
+
+        public async Task<int> ReadOption<T>(string text, IEnumerable<T> options, Func<T, string> labelSelector,
+            Func<T, int> idSelector)
+        {
+            if (index < segments.Count && int.TryParse(segments[index], out var id))
+            {
+                index++;
+                return id;
+            }
+
+            throw await QueryInput(text, Select(BuildQuery(), options, labelSelector, idSelector));
         }
 
         public async Task<TimeSpan> ReadTime(string text, TimeSpan? minTime = null)

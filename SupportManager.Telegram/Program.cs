@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using SupportManager.Telegram.DAL;
@@ -23,6 +22,7 @@ namespace SupportManager.Telegram
             {
                 cfg.AddCommandLineDefinition("botkey", v => config.BotKey = v);
                 cfg.AddCommandLineDefinition("url", v => config.SupportManagerUri = new Uri(v));
+                cfg.AddCommandLineDefinition("hostUrl", v => config.HostUri = new Uri(v));
 
                 cfg.Service<Service>(svc =>
                 {
@@ -39,7 +39,6 @@ namespace SupportManager.Telegram
 
                 cfg.StartAutomatically();
             });
-            Debugger.Break();
         }
     }
 }
