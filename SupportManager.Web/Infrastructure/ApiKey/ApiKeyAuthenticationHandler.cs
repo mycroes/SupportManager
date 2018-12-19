@@ -31,7 +31,7 @@ namespace SupportManager.Web.Infrastructure.ApiKey
 
             if (user == null) return AuthenticateResult.Fail("Invalid API Key");
 
-            var claims = new[] {new Claim(ClaimTypes.Name, user.Login)};
+            var claims = new[] {new Claim(ClaimTypes.Name, user.Login), new Claim(ApiKeyAuthenticationDefaults.AuthenticationScheme, key)};
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 
 namespace SupportManager.Web.Infrastructure.ApiKey
@@ -12,5 +13,8 @@ namespace SupportManager.Web.Infrastructure.ApiKey
             string authenticationScheme, Action<ApiKeyAuthenticationOptions> configureOptions) =>
             builder.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(authenticationScheme,
                 configureOptions);
+
+        public static string GetApiKey(this ClaimsPrincipal principal) =>
+            principal.FindFirst(ApiKeyAuthenticationDefaults.AuthenticationScheme)?.Value;
     }
 }
