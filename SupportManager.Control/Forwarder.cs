@@ -45,6 +45,7 @@ namespace SupportManager.Control
 
             await ForwardImpl(context, scheduledForward.Team.ComPort, scheduledForward.PhoneNumber.Value)
                 .ConfigureAwait(false);
+            await ReadTeamStatus(scheduledForward.Team, context);
         }
 
         public async Task ApplyForward(int teamId, int userPhoneNumberId, PerformContext context)
@@ -68,32 +69,44 @@ namespace SupportManager.Control
             context.WriteLine(Info, $"Found team {team.Name}, forward to {userPhoneNumber.Value}");
 
             await ForwardImpl(context, team.ComPort, userPhoneNumber.Value).ConfigureAwait(false);
+            await ReadTeamStatus(team, context);
         }
 
         public async Task ReadAllTeamStatus(PerformContext context)
         {
             foreach (var team in db.Teams.ToList())
             {
-                var number = await exclusiveTaskFactory.StartNew(() =>
-                {
-                    using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
-                });
-
-                var state = await db.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
-                if (state?.RawPhoneNumber == number) continue;
-
-                var newState = new ForwardingState
-                {
-                    Team = team,
-                    When = DateTimeOffset.Now,
-                    RawPhoneNumber = number,
-                    DetectedPhoneNumber = db.UserPhoneNumbers
-                        .FirstOrDefault(p => p.Value == number)
-                };
-
-                db.ForwardingStates.Add(newState);
-                db.SaveChanges();
+                await ReadTeamStatus(team, context);
             }
+        }
+
+        private async Task ReadTeamStatus(SupportTeam team, PerformContext context)
+        {
+            var number = await exclusiveTaskFactory.StartNew(() =>
+            {
+                using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
+            });
+
+            context.WriteLine($"Team {team.Name} is forwarding to '{number}'.");
+
+            var state = await db.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
+            if (state?.RawPhoneNumber == number)
+            {
+                context.WriteLine("No state change, completed check.");
+                return;
+            }
+
+            context.WriteLine($"Change detected from '{state?.RawPhoneNumber}' to '{number}'.");
+            var newState = new ForwardingState
+            {
+                Team = team,
+                When = DateTimeOffset.Now,
+                RawPhoneNumber = number,
+                DetectedPhoneNumber = db.UserPhoneNumbers.FirstOrDefault(p => p.Value == number)
+            };
+
+            db.ForwardingStates.Add(newState);
+            await db.SaveChangesAsync();
         }
 
         private async Task ForwardImpl(PerformContext context, string comPort, string phoneNumber)
