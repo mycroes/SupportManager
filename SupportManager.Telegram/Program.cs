@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using SupportManager.Telegram.DAL;
 using Topshelf;
 
 namespace SupportManager.Telegram
@@ -8,6 +11,13 @@ namespace SupportManager.Telegram
     {
         static void Main(string[] args)
         {
+            if (args.Any() && args[0].EndsWith("migrate", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var db = new UserDbContext();
+                db.Database.Migrate();
+                return;
+            }
+
             var config = new Configuration();
             var exitCode = HostFactory.Run(cfg =>
             {
