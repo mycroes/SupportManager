@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Topshelf;
 
 namespace SupportManager.Web
 {
@@ -7,12 +6,18 @@ namespace SupportManager.Web
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
-        }
+            HostFactory.Run(cfg =>
+            {
+                cfg.Service<Service>();
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                cfg.SetServiceName("SupportManager.Web");
+                cfg.SetDisplayName("SupportManager.Web");
+                cfg.SetDescription("SupportManager Web Interface");
+
+                cfg.RunAsNetworkService();
+
+                cfg.StartAutomatically();
+            });
+        }
     }
 }
