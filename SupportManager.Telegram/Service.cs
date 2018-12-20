@@ -50,7 +50,7 @@ namespace SupportManager.Telegram
             webHost.Dispose();
             bot.Dispose();
             botClient.StopReceiving();
-            return false;
+            return true;
         }
 
         private static Dictionary<string, SupportManagerBot.CommandHandler> BuildCommandHandlers()
