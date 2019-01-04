@@ -8,7 +8,9 @@ namespace SupportManager.Web
         {
             HostFactory.Run(cfg =>
             {
-                cfg.Service<Service>();
+                cfg.Service<Service>(() => new Service(args));
+
+                cfg.AddCommandLineDefinition("aspnetcoreargs", v => args = v.Split(' '));
 
                 cfg.SetServiceName("SupportManager.Web");
                 cfg.SetDisplayName("SupportManager.Web");

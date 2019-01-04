@@ -9,11 +9,18 @@ namespace SupportManager.Web
 {
     public class Service : ServiceControl
     {
+        private readonly string[] args;
         private IWebHost webHost;
+
+        public Service(params string[] args)
+        {
+            this.args = args;
+        }
 
         public bool Start(HostControl hostControl)
         {
-            webHost = WebHost.CreateDefaultBuilder().UseHttpSys(options =>
+            webHost = WebHost.CreateDefaultBuilder(args)
+                .UseHttpSys(options =>
                 {
                     options.Authentication.Schemes = AuthenticationSchemes.NTLM | AuthenticationSchemes.Negotiate;
                     options.Authentication.AllowAnonymous = true;
