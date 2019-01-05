@@ -12,7 +12,7 @@ using User = SupportManager.Api.Users.User;
 
 namespace SupportManager.Control
 {
-    internal class Publisher : IPublisher
+    public class Publisher : IPublisher
     {
         private readonly SupportManagerContext db;
 

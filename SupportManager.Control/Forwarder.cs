@@ -13,17 +13,18 @@ namespace SupportManager.Control
     public class Forwarder : IForwarder
     {
         private readonly SupportManagerContext db;
-        private readonly TaskFactory exclusiveTaskFactory;
+
+        private static readonly TaskFactory ExclusiveTaskFactory =
+            new TaskFactory(new ConcurrentExclusiveSchedulerPair().ExclusiveScheduler);
 
         private static readonly ConsoleTextColor Debug = ConsoleTextColor.Green;
         private static readonly ConsoleTextColor Info = ConsoleTextColor.White;
         private static readonly ConsoleTextColor Warning = ConsoleTextColor.Yellow;
         private static readonly ConsoleTextColor Error = ConsoleTextColor.Red;
 
-        public Forwarder(SupportManagerContext db, TaskFactory exclusiveTaskFactory)
+        public Forwarder(SupportManagerContext db)
         {
             this.db = db;
-            this.exclusiveTaskFactory = exclusiveTaskFactory;
         }
 
         public async Task ApplyScheduledForward(int scheduledForwardId, PerformContext context)
@@ -83,7 +84,7 @@ namespace SupportManager.Control
 
         private async Task ReadTeamStatus(SupportTeam team, PerformContext context)
         {
-            var number = await exclusiveTaskFactory.StartNew(() =>
+            var number = await ExclusiveTaskFactory.StartNew(() =>
             {
                 using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
             });
@@ -121,7 +122,7 @@ namespace SupportManager.Control
 
         private async Task ForwardImpl(PerformContext context, string comPort, string phoneNumber)
         {
-            await exclusiveTaskFactory.StartNew(() =>
+            await ExclusiveTaskFactory.StartNew(() =>
             {
                 context.WriteLine(Debug, "Forwarding ...");
                 using (var helper = new ATHelper(comPort))

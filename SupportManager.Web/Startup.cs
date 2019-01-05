@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Hangfire;
@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SupportManager.Contracts;
+using SupportManager.Control;
 using SupportManager.DAL;
 using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.ApiKey;
@@ -65,6 +67,9 @@ namespace SupportManager.Web
             });
 
             services.AddAuthentication(IISDefaults.AuthenticationScheme).AddApiKeyAuthentication();
+
+            services.AddScoped<IForwarder, Forwarder>();
+            services.AddScoped<IPublisher, Publisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +89,7 @@ namespace SupportManager.Web
 
             app.UseHangfireDashboard(
                 options: new DashboardOptions {Authorization = new[] {new HangfireAuthorizationFilter()}});
+            app.UseHangfireServer();
 
             app.UseMvc(routes =>
             {

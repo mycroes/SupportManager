@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using Hangfire;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.HttpSys;
+using SupportManager.Contracts;
 using Topshelf;
 
 namespace SupportManager.Web
@@ -24,7 +26,11 @@ namespace SupportManager.Web
                 cfg.Service<IWebHost>(svc =>
                 {
                     svc.ConstructUsing(CreateWebHost);
-                    svc.WhenStarted(webHost => webHost.Start());
+                    svc.WhenStarted(webHost =>
+                    {
+                        RecurringJob.AddOrUpdate<IForwarder>(f => f.ReadAllTeamStatus(null), Cron.Minutely);
+                        webHost.Start();
+                    });
                     svc.WhenStopped(webHost => webHost.Dispose());
                 });
 

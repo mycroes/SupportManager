@@ -44,6 +44,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SupportManager.Api\SupportManager.Api.csproj" />
     <ProjectReference Include="..\SupportManager.Contracts\SupportManager.Contracts.csproj" />
+    <ProjectReference Include="..\SupportManager.Control\SupportManager.Control.csproj" />
     <ProjectReference Include="..\SupportManager.DAL\SupportManager.DAL.csproj" />
   </ItemGroup>
 </Project>
