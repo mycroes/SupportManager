@@ -37,6 +37,19 @@ namespace SupportManager.Web.Areas.Admin.User
             return this.RedirectToActionJson("Index");
         }
 
+        public async Task<ActionResult> Edit(Edit.Query query)
+        {
+            return View(await mediator.Send(query));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Edit.Command command)
+        {
+            await mediator.Send(command);
+            return this.RedirectToActionJson("Index");
+        }
+
         public ActionResult Detail(DAL.User user)
         {
             return View();
