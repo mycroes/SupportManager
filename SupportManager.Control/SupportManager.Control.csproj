@@ -12,8 +12,6 @@
     <PackageReference Include="Hangfire.SqlServer" Version="1.6.20" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Refit" Version="4.6.48" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
-    <PackageReference Include="TopShelf" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
