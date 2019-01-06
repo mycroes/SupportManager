@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
-    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <UserSecretsId>aspnet-SupportManager.Web-53072795-9AEF-46DB-B332-4A3F998652FA</UserSecretsId>
   </PropertyGroup>
 
