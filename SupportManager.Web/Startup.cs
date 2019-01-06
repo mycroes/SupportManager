@@ -51,7 +51,11 @@ namespace SupportManager.Web
                 })
                 .AddFeatureFolders().AddAreaFeatureFolders()
                 .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddRazorPagesOptions(options => options.Conventions.AuthorizeFolder("/User"))
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeFolder("/User");
+                    options.Conventions.Add(new TeamIdPageRouteModelConvention());
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
