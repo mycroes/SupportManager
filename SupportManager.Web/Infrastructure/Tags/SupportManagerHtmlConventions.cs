@@ -32,9 +32,13 @@ namespace SupportManager.Web.Infrastructure.Tags
             DisplayLabels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
 
             Displays.IfPropertyIs<DateTimeOffset>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTimeOffset>().ModifyWith(SetDateTimeText);
             Displays.IfPropertyIs<DateTimeOffset?>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTimeOffset?>().ModifyWith(SetDateTimeText);
             Displays.IfPropertyIs<DateTime>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTime>().ModifyWith(SetDateTimeText);
             Displays.IfPropertyIs<DateTime?>().BuildBy<DateTimeBuilder>();
+            Displays.IfPropertyIs<DateTime?>().ModifyWith(SetDateTimeText);
             
             Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
             Displays.IfPropertyIs<bool>().BuildBy<BoolDisplayBuilder>();
@@ -45,5 +49,9 @@ namespace SupportManager.Web.Infrastructure.Tags
             get { return new ElementCategoryExpression(Library.TagLibrary.Category("DisplayLabels").Profile(TagConstants.Default)); }
         }
 
+        private static void SetDateTimeText(ElementRequest request)
+        {
+            request.CurrentTag.Text(DateTimeBuilder.GetText(DateTimeBuilder.GetLocalDateTime(request.RawValue)));
+        }
     }
 }

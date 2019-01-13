@@ -9,19 +9,31 @@ namespace SupportManager.Web.Infrastructure.Tags
     {
         public HtmlTag Build(ElementRequest request)
         {
-            switch (request.RawValue)
+            return RenderTag(GetLocalDateTime(request.RawValue));
+        }
+
+        public static DateTime? GetLocalDateTime(object value)
+        {
+            switch (value)
             {
-                case DateTimeOffset dt: return RenderTag(dt.LocalDateTime);
-                case DateTime dt when dt.Kind == DateTimeKind.Utc: return RenderTag(dt.ToLocalTime());
-                case DateTime dt: return RenderTag(dt);
-                default: return RenderTag(null);
+                case DateTimeOffset dt: return dt.LocalDateTime;
+                case DateTime dt when dt.Kind == DateTimeKind.Utc: return dt.ToLocalTime();
+                case DateTime dt: return dt;
+                default: return null;
             }
         }
 
-        private HtmlTag RenderTag(DateTime? dateTime)
+        public static string GetText(DateTime? dateTime)
         {
-            var text = dateTime == null ? "-" : GetDateTimeText(dateTime.Value);
-            return new HtmlTag("span").Text(text).Title(dateTime?.ToString("g")).Data("toggle", "tooltip");
+            return dateTime == null ? "-" : GetDateTimeText(dateTime.Value);
+        }
+
+        private static HtmlTag RenderTag(DateTime? dateTime)
+        {
+            var text = GetText(dateTime);
+            var tag = new HtmlTag("span").Text(text);
+
+            return dateTime == null ? tag : tag.Title(dateTime.Value.ToString("g")).Data("toggle", "tooltip");
         }
 
         private static string GetDateTimeText(DateTime dateTime)
