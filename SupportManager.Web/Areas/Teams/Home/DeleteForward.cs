@@ -7,7 +7,7 @@ using Hangfire;
 using MediatR;
 using SupportManager.DAL;
 
-namespace SupportManager.Web.Features.Admin.Team
+namespace SupportManager.Web.Areas.Teams.Home
 {
     public static class DeleteForward
     {
