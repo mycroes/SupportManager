@@ -35,5 +35,18 @@ namespace SupportManager.Telegram.Handlers
 
             await interaction.Write("Subscription level changed");
         }
+
+        [Command("help")]
+        public async Task Help(Interaction interaction, User user)
+        {
+            if (user == null)
+                await interaction.Write("Use '/apikey [API Key]' to authenticate");
+            else
+                await interaction.Write(
+                    "The following options are available:\n/get\\_status: get current and next scheduled entry\n" +
+                    "/get\\_schedule: get entire forwarding schedule\n/schedule: add a new entry\n" +
+                    "/forward: change forwarding status right away\n/delete: delete a scheduled entry\n" +
+                    "/subscribe: subscribe to forwarding changes (or change subscription level)");
+        }
     }
 }

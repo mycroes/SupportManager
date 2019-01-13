@@ -142,10 +142,6 @@ namespace SupportManager.Telegram
                         }
                     }
                     break;
-                case "help":
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Use '/apikey [API Key]' to authenticate or /get_status, /get_schedule, /schedule or /forward to query or adjust team schedules.");
-                    break;
-
                 default:
                     if (commandHandlers.ContainsKey(verb))
                         await ProcessCommand(
