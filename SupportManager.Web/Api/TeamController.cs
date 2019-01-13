@@ -7,6 +7,7 @@ using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Api.Teams;
 using SupportManager.Api.Users;
 using SupportManager.Web.Api.Team;
+using SupportManager.Web.Areas.Teams.Home;
 
 namespace SupportManager.Web.Api
 {
@@ -29,6 +30,13 @@ namespace SupportManager.Web.Api
         public async Task<ActionResult<List<ForwardRegistration>>> GetSchedule(int id)
         {
             return await mediator.Send(new Schedule.Query(id));
+        }
+
+        [HttpDelete("forward/{id}")]
+        public async Task<IActionResult> DeleteForward(int id)
+        {
+            await mediator.Send(new DeleteForward.Command {Id = id});
+            return Ok();
         }
 
         [HttpPost("schedule")]

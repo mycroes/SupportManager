@@ -23,6 +23,9 @@ namespace SupportManager.Telegram.Infrastructure
         [Get("/team/schedule/{id}")]
         Task<List<ForwardRegistration>> GetTeamSchedule(int id);
 
+        [Delete("/team/forward/{id}")]
+        Task DeleteForward(int id);
+
         [Post("/team/schedule")]
         Task ScheduleForward([Body] ScheduleForward forward);
 

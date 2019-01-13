@@ -57,6 +57,22 @@ namespace SupportManager.Telegram.Handlers
             await interaction.Write("Queued redirect, please allow up to a minute for the status to update.");
         }
 
+        [Command("delete")]
+        public async Task Delete(ISupportManagerApi api, Interaction interaction)
+        {
+            var teamId = await interaction.ReadTeam("For which *team* do you want to delete an entry?");
+            var forwards = await api.GetTeamSchedule(teamId);
+            var id = await interaction.ReadOption("Which entry do you want to delete?",
+                forwards.OrderBy(fwd => fwd.When), fwd => $"{fwd.When.ToHumanReadable()} {fwd.User.DisplayName}",
+                fwd => fwd.Id);
+
+            var selected = forwards.Single(x => x.Id == id);
+
+            await api.DeleteForward(id);
+            await interaction.Write(
+                $"Deleted schedule entry *{selected.When.ToHumanReadable()}* {selected.User.DisplayName}.");
+        }
+
         private static string FormatRegistration(ForwardRegistration registration)
         {
             return $"*{registration.When.ToHumanReadable()}*:\n{registration.User.DisplayName}\n{registration.PhoneNumber.Value}";
