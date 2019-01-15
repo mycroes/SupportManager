@@ -33,7 +33,10 @@ namespace MYCroes.ATCommands
                 switch (state)
                 {
                     case ParseState.FieldStart:
-                        @char = reader.Read();
+                        do
+                            @char = reader.Read();
+                        while (@char == ' ');
+
                         switch (@char)
                         {
                             case '"':
@@ -127,7 +130,10 @@ namespace MYCroes.ATCommands
                 switch (state)
                 {
                     case ParseState.FieldStart:
-                        @char = reader.Read();
+                        do
+                            @char = reader.Read();
+                        while (@char == ' ');
+
                         switch (@char)
                         {
                             case '"':
