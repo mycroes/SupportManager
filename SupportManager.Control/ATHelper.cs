@@ -1,5 +1,6 @@
 using System;
 using System.IO.Ports;
+using System.Linq;
 using MYCroes.ATCommands;
 using MYCroes.ATCommands.Forwarding;
 
@@ -35,7 +36,8 @@ namespace SupportManager.Control
             var cmd = ForwardingStatus.Query(ForwardingReason.Unconditional);
             var res = Execute(cmd);
 
-            return ForwardingStatus.Parse(res[0]).Number;
+            return res.Select(ForwardingStatus.Parse)
+                .FirstOrDefault(s => s.Active && s.Class.HasFlag(ForwardingClass.Voice))?.Number;
         }
 
         private string[] Execute(ATCommand command)
