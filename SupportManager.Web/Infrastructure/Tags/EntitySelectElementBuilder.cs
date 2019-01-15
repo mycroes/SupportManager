@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using HtmlTags;
 using HtmlTags.Conventions;
 using HtmlTags.Conventions.Elements;
@@ -48,37 +47,6 @@ namespace SupportManager.Web.Infrastructure.Tags
         protected virtual IEnumerable<T> Source(ElementRequest request)
         {
             return request.Get<SupportManagerContext>().Set<T>();
-        }
-    }
-
-    public class UserPhoneNumberSelectElementBuilder : EntitySelectElementBuilder<UserPhoneNumber>
-    {
-        protected override int GetValue(UserPhoneNumber instance)
-        {
-            return instance.Id;
-        }
-
-        protected override string GetDisplayValue(UserPhoneNumber instance)
-        {
-            return instance.User.DisplayName + " - " + instance.Value;
-        }
-
-        protected override IEnumerable<UserPhoneNumber> Source(ElementRequest request)
-        {
-            return request.Get<SupportManagerContext>().Set<UserPhoneNumber>().Include(upn => upn.User);
-        }
-    }
-
-    public class TeamSelectElementBuilder : EntitySelectElementBuilder<SupportTeam>
-    {
-        protected override int GetValue(SupportTeam instance)
-        {
-            return instance.Id;
-        }
-
-        protected override string GetDisplayValue(SupportTeam instance)
-        {
-            return instance.Name;
         }
     }
 }
