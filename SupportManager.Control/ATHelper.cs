@@ -37,7 +37,7 @@ namespace SupportManager.Control
             var res = Execute(cmd);
 
             return res.Select(ForwardingStatus.Parse)
-                .FirstOrDefault(s => s.Active && s.Class.HasFlag(ForwardingClass.Voice))?.Number;
+                .FirstOrDefault(s => (s.Status & 1) == 1 && s.Class.HasFlag(ForwardingClass.Voice))?.Number;
         }
 
         private string[] Execute(ATCommand command)
