@@ -36,8 +36,13 @@ namespace SupportManager.Control
             var cmd = ForwardingStatus.Query(ForwardingReason.Unconditional);
             var res = Execute(cmd);
 
-            return res.Select(ForwardingStatus.Parse)
-                .FirstOrDefault(s => (s.Status & 1) == 1 && s.Class.HasFlag(ForwardingClass.Voice))?.Number;
+            var active = res.Select(ForwardingStatus.Parse)
+                .FirstOrDefault(s => (s.Status & 1) == 1 && s.Class == ForwardingClass.Voice);
+            if (active == null) return null;
+
+            return active.NumberType == ForwardingPhoneNumberType.InternationalWithoutPlus
+                ? '+' + active.Number
+                : active.Number;
         }
 
         private string[] Execute(ATCommand command)
