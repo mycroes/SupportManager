@@ -45,7 +45,7 @@ namespace SupportManager.Control
                 return;
             }
 
-            await ForwardImpl(context, scheduledForward.Team.ComPort, scheduledForward.PhoneNumber.Value)
+            await ForwardImpl(context, scheduledForward.Team.ConnectionString, scheduledForward.PhoneNumber.Value)
                 .ConfigureAwait(false);
             await ReadTeamStatus(scheduledForward.Team, context);
         }
@@ -70,7 +70,7 @@ namespace SupportManager.Control
 
             context.WriteLine(Info, $"Found team {team.Name}, forward to {userPhoneNumber.Value}");
 
-            await ForwardImpl(context, team.ComPort, userPhoneNumber.Value).ConfigureAwait(false);
+            await ForwardImpl(context, team.ConnectionString, userPhoneNumber.Value).ConfigureAwait(false);
             await ReadTeamStatus(team, context);
         }
 
@@ -86,7 +86,7 @@ namespace SupportManager.Control
         {
             var number = await ExclusiveTaskFactory.StartNew(() =>
             {
-                using (var helper = new ATHelper(team.ComPort)) return helper.GetForwardedPhoneNumber();
+                using (var helper = new ATHelper(team.ConnectionString)) return helper.GetForwardedPhoneNumber();
             });
 
             context.WriteLine($"Team {team.Name} is forwarding to '{number}'.");
@@ -120,12 +120,12 @@ namespace SupportManager.Control
                 });
         }
 
-        private async Task ForwardImpl(PerformContext context, string comPort, string phoneNumber)
+        private async Task ForwardImpl(PerformContext context, string connectionString, string phoneNumber)
         {
             await ExclusiveTaskFactory.StartNew(() =>
             {
                 context.WriteLine(Debug, "Forwarding ...");
-                using (var helper = new ATHelper(comPort))
+                using (var helper = new ATHelper(connectionString))
                 {
                     helper.ForwardTo(phoneNumber);
                     context.WriteLine(Info, "Applied forward");

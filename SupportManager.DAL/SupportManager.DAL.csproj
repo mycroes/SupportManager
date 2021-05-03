@@ -83,6 +83,10 @@
     <Compile Include="Migrations\201812122121014_Add_CallbackUrl_To_ApiKey.Designer.cs">
       <DependentUpon>201812122121014_Add_CallbackUrl_To_ApiKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105031905066_Rename_ComPort_To_ConnectionString.cs" />
+    <Compile Include="Migrations\202105031905066_Rename_ComPort_To_ConnectionString.Designer.cs">
+      <DependentUpon>202105031905066_Rename_ComPort_To_ConnectionString.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ScheduledForward.cs" />
     <Compile Include="TeamMember.cs" />
@@ -115,6 +119,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812122121014_Add_CallbackUrl_To_ApiKey.resx">
       <DependentUpon>201812122121014_Add_CallbackUrl_To_ApiKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105031905066_Rename_ComPort_To_ConnectionString.resx">
+      <DependentUpon>202105031905066_Rename_ComPort_To_ConnectionString.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
