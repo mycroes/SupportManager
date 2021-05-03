@@ -29,7 +29,7 @@ namespace SupportManager.Web
                     svc.WhenStarted(webHost =>
                     {
                         webHost.Start();
-                        RecurringJob.AddOrUpdate<IForwarder>(f => f.ReadAllTeamStatus(null), Cron.Minutely);
+                        RecurringJob.AddOrUpdate<IForwarder>(f => f.ReadAllTeamStatus(null), Cron.MinuteInterval(10));
                     });
                     svc.WhenStopped(webHost => webHost.Dispose());
                 });
