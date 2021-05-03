@@ -196,17 +196,17 @@ namespace SupportManager.Web.Features.Report
                         var pEnd = thisSlot[j + 1].When;
                         if (pEnd > end) pEnd = end;
 
-                        results.Add((thisSlot[j].DetectedPhoneNumber.User.DisplayName, pEnd - pStart));
+                        if (thisSlot[j].DetectedPhoneNumber != null) results.Add((thisSlot[j].DetectedPhoneNumber.User.DisplayName, pEnd - pStart));
                     }
 
                     var last = thisSlot[thisSlot.Count - 1];
                     if (last.When < end)
                     {
-                        
+
                         var pStart = last.When;
                         if (pStart < start) pStart = start;
 
-                        results.Add((last.DetectedPhoneNumber.User.DisplayName, end - pStart));
+                        if (last.DetectedPhoneNumber != null) results.Add((last.DetectedPhoneNumber.User.DisplayName, end - pStart));
                     }
 
                     week.Slots.Add(new Result.TimeSlot
