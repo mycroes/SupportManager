@@ -44,9 +44,11 @@ namespace SupportManager.Control
             ForwardingStatus active = null;
             await foreach (var line in Execute(cmd))
             {
+                if (active != null) continue;
+
                 active = ForwardingStatus.Parse(line);
-                if ((active.Status & 1) == 1 && active.Class == ForwardingClass.Voice)
-                    break;
+                if ((active.Status & 1) != 1 || active.Class != ForwardingClass.Voice)
+                    active = null;
             }
 
             if (active == null) return null;
