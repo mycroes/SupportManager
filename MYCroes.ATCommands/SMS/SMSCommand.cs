@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MYCroes.ATCommands.SMS
 {
@@ -16,21 +17,21 @@ namespace MYCroes.ATCommands.SMS
             this.message = message;
         }
 
-        protected override IEnumerable<string> ExecuteCore(ATChat chat)
+        protected override async IAsyncEnumerable<string> ExecuteCore(ATChat chat)
         {
-            WriteCommand(chat);
-            var res = chat.Read();
+            await WriteCommand(chat);
+            var res = await chat.Read();
             if (res.Trim().StartsWith(MESSAGE_PROMPT))
             {
-                chat.Write(message);
-                chat.Write(new string((char) 26, 1));
+                await chat.Write(message);
+                await chat.Write(new string((char) 26, 1));
             }
             else
             {
                 throw new UnexpectedATResponseException(res, MESSAGE_PROMPT, 0);
             }
 
-            return ReadResponse(chat);
+            await foreach (var line in ReadResponse(chat)) yield return line;
         }
 
         public static ATCommand SetMode(SMSMode mode)

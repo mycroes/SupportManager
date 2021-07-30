@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
+using System.Threading.Tasks;
 using MYCroes.ATCommands;
 using MYCroes.ATCommands.Forwarding;
 
@@ -8,36 +9,46 @@ namespace SupportManager.Control
 {
     public class ATHelper : IDisposable
     {
-        private readonly SerialPort serialPort;
+        private readonly IConnection connection;
 
         public ATHelper(string portConnectionString)
         {
-            serialPort = SerialPortFactory.CreateFromConnectionString(portConnectionString);
-            serialPort.Open();
+            connection = ConnectionFactory.CreateConnection(portConnectionString);
         }
 
         public ATHelper(SerialPort port)
         {
-            serialPort = port;
-            port.Open();
+            connection = new SerialPortConnection(port);
         }
 
-        public void ForwardTo(string phoneNumberWithInternationalAccessCode)
+        public async Task OpenAsync()
+        {
+            await connection.OpenAsync();
+        }
+
+        public async Task ForwardTo(string phoneNumberWithInternationalAccessCode)
         {
             var cmd = ForwardingStatus.Set(ForwardingReason.Unconditional, ForwardingMode.Registration,
                 phoneNumberWithInternationalAccessCode, ForwardingPhoneNumberType.WithInternationalAccessCode,
                 ForwardingClass.Voice);
 
-            Execute(cmd);
+            await foreach (var _ in Execute(cmd))
+            {
+            }
         }
 
-        public string GetForwardedPhoneNumber()
+        public async Task<string> GetForwardedPhoneNumber()
         {
             var cmd = ForwardingStatus.Query(ForwardingReason.Unconditional);
-            var res = Execute(cmd);
 
-            var active = res.Select(ForwardingStatus.Parse)
-                .FirstOrDefault(s => (s.Status & 1) == 1 && s.Class == ForwardingClass.Voice);
+            ForwardingStatus active = null;
+            await foreach (var line in Execute(cmd))
+            {
+                active = ForwardingStatus.Parse(line);
+                if ((active.Status & 1) == 1 && active.Class == ForwardingClass.Voice)
+                    break;
+            }
+
             if (active == null) return null;
 
             return active.NumberType == ForwardingPhoneNumberType.InternationalWithoutPlus
@@ -45,20 +56,17 @@ namespace SupportManager.Control
                 : active.Number;
         }
 
-        private string[] Execute(ATCommand command)
+        private IAsyncEnumerable<string> Execute(ATCommand command)
         {
-            var stream = serialPort.BaseStream;
-            stream.ReadTimeout = 10000;
-            stream.WriteTimeout = 10000;
+            var stream = connection.GetStream();
 
             return command.Execute(stream);
         }
 
         public void Dispose()
         {
-            if (serialPort.IsOpen) serialPort.Close();
-
-            serialPort.Dispose();
+            connection.Close();
+            if (connection is IDisposable disposable) disposable.Dispose();
         }
     }
 }

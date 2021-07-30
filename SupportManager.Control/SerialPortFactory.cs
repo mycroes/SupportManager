@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace SupportManager.Control
 {
-    public class SerialPortFactory
+    public static class SerialPortFactory
     {
         private static readonly Regex ConnectionStringRegex = new Regex(@"^(?:(?:(\w+)=)?(\w+))(?:;(\w+)=(\w+))*$");
 

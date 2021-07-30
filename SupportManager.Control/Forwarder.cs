@@ -6,6 +6,7 @@ using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
 using SupportManager.Contracts;
+using SupportManager.Control.Internal;
 using SupportManager.DAL;
 
 namespace SupportManager.Control
@@ -14,8 +15,7 @@ namespace SupportManager.Control
     {
         private readonly SupportManagerContext db;
 
-        private static readonly TaskFactory ExclusiveTaskFactory =
-            new TaskFactory(new ConcurrentExclusiveSchedulerPair().ExclusiveScheduler);
+        private static readonly TaskQueue TaskQueue = new TaskQueue();
 
         private static readonly ConsoleTextColor Debug = ConsoleTextColor.Green;
         private static readonly ConsoleTextColor Info = ConsoleTextColor.White;
@@ -84,9 +84,13 @@ namespace SupportManager.Control
 
         private async Task ReadTeamStatus(SupportTeam team, PerformContext context)
         {
-            var number = await ExclusiveTaskFactory.StartNew(() =>
+            var number = await TaskQueue.Enqueue(async () =>
             {
-                using (var helper = new ATHelper(team.ConnectionString)) return helper.GetForwardedPhoneNumber();
+                using (var helper = new ATHelper(team.ConnectionString))
+                {
+                    await helper.OpenAsync();
+                    return await helper.GetForwardedPhoneNumber();
+                }
             });
 
             context.WriteLine($"Team {team.Name} is forwarding to '{number}'.");
@@ -122,16 +126,17 @@ namespace SupportManager.Control
 
         private async Task ForwardImpl(PerformContext context, string connectionString, string phoneNumber)
         {
-            await ExclusiveTaskFactory.StartNew(() =>
+            await TaskQueue.Enqueue(async () =>
             {
                 context.WriteLine(Debug, "Forwarding ...");
                 using (var helper = new ATHelper(connectionString))
                 {
-                    helper.ForwardTo(phoneNumber);
+                    await helper.OpenAsync();
+                    await helper.ForwardTo(phoneNumber);
                     context.WriteLine(Info, "Applied forward");
 
                     context.WriteLine(Debug, "Verifying ...");
-                    var res = helper.GetForwardedPhoneNumber();
+                    var res = await helper.GetForwardedPhoneNumber();
                     if (res != phoneNumber)
                     {
                         context.WriteLine(Error, $"Verification returned {res}, expected {phoneNumber}");

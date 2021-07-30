@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MYCroes.ATCommands
 {
@@ -28,25 +29,25 @@ namespace MYCroes.ATCommands
             return atCommand.Command + "=" + string.Join(",", atCommand.Arguments);
         }
 
-        public string[] Execute(Stream stream)
+        public IAsyncEnumerable<string> Execute(Stream stream)
         {
             var chat = new ATChat(stream);
 
-            return ExecuteCore(chat).ToArray();
+            return ExecuteCore(chat);
         }
 
-        protected virtual IEnumerable<string> ExecuteCore(ATChat chat)
+        protected virtual async IAsyncEnumerable<string> ExecuteCore(ATChat chat)
         {
-            WriteCommand(chat);
+            await WriteCommand(chat);
 
-            return ReadResponse(chat);
+            await foreach (var line in ReadResponse(chat)) yield return line;
         }
 
-        protected IEnumerable<string> ReadResponse(ATChat chat)
+        protected async IAsyncEnumerable<string> ReadResponse(ATChat chat)
         {
             string responsePrefix = Command + ": ";
             var lines = new List<string>();
-            foreach (var line in chat.ReadLines())
+            await foreach (var line in chat.ReadLines())
             {
                 lines.Add(line);
                 if (line.StartsWith(responsePrefix))
@@ -66,9 +67,9 @@ namespace MYCroes.ATCommands
             throw new ATCommandException(lines);
         }
 
-        protected void WriteCommand(ATChat chat)
+        protected async Task WriteCommand(ATChat chat)
         {
-            chat.WriteLine("AT" + Command + "=" + string.Join(",", Arguments));
+            await chat.WriteLine("AT" + Command + "=" + string.Join(",", Arguments));
         }
     }
 }

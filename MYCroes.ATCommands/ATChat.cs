@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MYCroes.ATCommands
 {
@@ -15,44 +16,44 @@ namespace MYCroes.ATCommands
             writer = new StreamWriter(stream) {AutoFlush = true};
         }
 
-        public string Read()
+        public async Task<string> Read()
         {
             char[] buffer = new char[1024];
-            int length = reader.Read(buffer, 0, buffer.Length);
+            int length = await reader.ReadAsync(buffer, 0, buffer.Length);
             string text = new string(buffer, 0, length);
             LogRead(text);
 
             return text;
         }
 
-        public string ReadLine()
+        public async Task<string> ReadLine()
         {
-            string line = reader.ReadLine();
+            string line = await reader.ReadLineAsync();
             LogRead(line);
 
             return line;
         }
 
-        public IEnumerable<string> ReadLines()
+        public async IAsyncEnumerable<string> ReadLines()
         {
             string line;
             do
             {
-                line = ReadLine();
+                line = await ReadLine();
                 yield return line;
             } while (line != null);
         }
 
-        public void Write(string text)
+        public Task Write(string text)
         {
             LogWrite(text);
-            writer.Write(text);
+            return writer.WriteAsync(text);
         }
 
-        public void WriteLine(string line)
+        public Task WriteLine(string line)
         {
             LogWrite(line);
-            writer.WriteLine(line);
+            return writer.WriteLineAsync(line);
         }
 
         private void LogRead(string line)

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="microsoft.bcl.asyncinterfaces" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
