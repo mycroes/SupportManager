@@ -72,8 +72,16 @@ namespace SupportManager.Proxy.VoiceBlue
 
             await LoginToVoiceBlue(stream);
 
-            Task.Factory.StartNew(() => ProcessLinesAsync(client.Client, ProcessVoiceBlue(socket)));
+            _ = Task.Factory.StartNew(async () =>
+            {
+                await ProcessLinesAsync(client.Client, ProcessVoiceBlue(socket));
+                if (socket.Connected) socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            });
             await ProcessLinesAsync(socket, ForwardToVoiceBlue(stream));
+            if (client.Client.Connected) client.Client.Shutdown(SocketShutdown.Both);
+            client.Client.Close();
+        }
 
         private async Task LoginToVoiceBlue(NetworkStream stream)
         {
