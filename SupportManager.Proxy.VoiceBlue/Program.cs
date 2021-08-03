@@ -40,6 +40,7 @@ catch (Exception e)
 
 var hostBuilder = Host.CreateDefaultBuilder(args.Skip(6).ToArray())
     .UseWindowsService()
+    .ConfigureLogging(cfg => cfg.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Information))
     .ConfigureServices((context, services) => services.AddHostedService(s =>
         new ProxyService(remoteHost, remotePort, remoteUserName, remotePassword, simSlot, localPort)));
 await hostBuilder.Build().RunAsync();
