@@ -40,8 +40,9 @@ catch (Exception e)
 
 var hostBuilder = Host.CreateDefaultBuilder(args.Skip(6).ToArray())
     .UseWindowsService()
-    .ConfigureLogging(cfg => cfg.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Information))
-    .ConfigureServices((context, services) => services.AddHostedService(s =>
-        new ProxyService(remoteHost, remotePort, remoteUserName, remotePassword, simSlot, localPort)));
+    .ConfigureLogging(cfg => cfg.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Debug))
+    .ConfigureServices((context, services) => services.AddHostedService(s => new ProxyService(remoteHost, remotePort,
+        remoteUserName, remotePassword, simSlot, localPort, s.GetService<ILogger<ProxyService>>())));
 await hostBuilder.Build().RunAsync();
+
 return 0;

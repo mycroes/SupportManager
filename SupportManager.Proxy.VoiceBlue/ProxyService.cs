@@ -10,11 +10,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace SupportManager.Proxy.VoiceBlue
 {
     internal class ProxyService : BackgroundService
     {
+        private readonly ILogger<ProxyService> logger;
         private static readonly Regex LoginRegex = new(@"Login:\s*");
         private static readonly Regex PasswordRegex = new(@"Password:\s*");
         private static readonly MemoryPool<byte> MemoryPool = MemoryPool<byte>.Shared;
@@ -30,8 +32,9 @@ namespace SupportManager.Proxy.VoiceBlue
         public int SimSlot { get; }
         public int LocalPort { get; }
 
-        public ProxyService(string remoteHost, int remotePort, string remoteUserName, string remotePassword, int simSlot, int localPort)
+        public ProxyService(string remoteHost, int remotePort, string remoteUserName, string remotePassword, int simSlot, int localPort, ILogger<ProxyService> logger)
         {
+            this.logger = logger;
             RemoteHost = remoteHost;
             RemotePort = remotePort;
             RemoteUserName = remoteUserName;
@@ -47,7 +50,7 @@ namespace SupportManager.Proxy.VoiceBlue
             var listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, LocalPort));
 
-            Console.WriteLine($"Listening on port {LocalPort}");
+            logger.Log(LogLevel.Information, $"Listening on port {LocalPort}");
 
             listenSocket.Listen(10);
 
@@ -66,7 +69,7 @@ namespace SupportManager.Proxy.VoiceBlue
             var client = new TcpClient();
             await client.ConnectAsync(RemoteHost, RemotePort);
 
-            Console.WriteLine($"Connected to {RemoteHost}:{RemotePort}");
+            logger.Log(LogLevel.Debug, $"Connected to {RemoteHost}:{RemotePort}");
 
             var stream = client.GetStream();
 
@@ -139,7 +142,7 @@ namespace SupportManager.Proxy.VoiceBlue
                 offset += len;
             }
 
-            Console.WriteLine("Logged in");
+            logger.Log(LogLevel.Debug, "Logged in");
         }
 
         private delegate ValueTask Process(in ReadOnlySequence<byte> line);
@@ -150,14 +153,12 @@ namespace SupportManager.Proxy.VoiceBlue
             {
                 stream.Write(prefix.AsSpan());
 
-                Console.Write("Forwarding: ");
+                logger.Log(LogLevel.Debug, $"Forwarding: {Encoding.UTF8.GetString(buffer)}");
+
                 foreach (var segment in buffer)
                 {
-                    Console.Write(Encoding.UTF8.GetString(segment.Span));
                     stream.Write(segment.Span);
                 }
-
-                Console.WriteLine();
 
                 stream.Write(NewLine.AsSpan());
 
@@ -165,7 +166,7 @@ namespace SupportManager.Proxy.VoiceBlue
             };
         }
 
-        private static Process ProcessVoiceBlue(Socket clientSocket)
+        private Process ProcessVoiceBlue(Socket clientSocket)
         {
             async ValueTask ProxyLine(string line)
             {
@@ -189,25 +190,22 @@ namespace SupportManager.Proxy.VoiceBlue
                 }
                 else
                 {
-                    Console.WriteLine($"Dropping response: {line}");
+                    logger.Log(LogLevel.Debug, $"Dropping response: {line}");
                 }
             }
 
             return (in ReadOnlySequence<byte> line) =>
             {
-                Console.Write("From VoiceBlue: ");
-                Console.Write(Encoding.UTF8.GetString(line));
-                Console.WriteLine();
-
-                Console.WriteLine($"Hex: {string.Join(",", line.ToArray().Select(c => $"{c:X}"))}");
+                logger.Log(LogLevel.Debug, $"From VoiceBlue: {Encoding.UTF8.GetString(line)}");
+                logger.Log(LogLevel.Debug, $"Hex: {string.Join(",", line.ToArray().Select(c => $"{c:X}"))}");
 
                 return ProxyLine(Encoding.UTF8.GetString(line).TrimStart());
             };
         }
 
-        private static async Task ProcessLinesAsync(Socket socket, Process callback)
+        private async Task ProcessLinesAsync(Socket socket, Process callback)
         {
-            Console.WriteLine($"[{socket.RemoteEndPoint}]: connected");
+            logger.Log(LogLevel.Debug, $"[{socket.RemoteEndPoint}]: connected");
 
             // Create a PipeReader over the network stream
             var stream = new NetworkStream(socket);
@@ -237,10 +235,10 @@ namespace SupportManager.Proxy.VoiceBlue
             // Mark the PipeReader as complete.
             await reader.CompleteAsync();
 
-            Console.WriteLine($"[{socket.RemoteEndPoint}]: disconnected");
+            logger.Log(LogLevel.Debug, $"[{socket.RemoteEndPoint}]: disconnected");
         }
 
-        private static bool TryReadLine(ref ReadOnlySequence<byte> buffer, out ReadOnlySequence<byte> line)
+        private bool TryReadLine(ref ReadOnlySequence<byte> buffer, out ReadOnlySequence<byte> line)
         {
             // Look for a EOL in the buffer.
             var cr = buffer.PositionOf((byte) '\r');
