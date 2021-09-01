@@ -48,7 +48,7 @@ namespace SupportManager.Proxy.VoiceBlue
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, LocalPort));
+            listenSocket.Bind(new IPEndPoint(IPAddress.Any, LocalPort));
 
             logger.Log(LogLevel.Information, $"Listening on port {LocalPort}");
 
