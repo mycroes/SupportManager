@@ -19,6 +19,12 @@ namespace SupportManager.Web.Areas.Teams
             var db = (SupportManagerContext) context.HttpContext.RequestServices.GetService(typeof(SupportManagerContext));
             Team = await db.Teams.FindAsync(TeamId);
 
+            if (Team == null)
+            {
+                context.Result = NotFound();
+                return;
+            }
+
             ViewData["TeamName"] = Team.Name;
 
             await base.OnActionExecutionAsync(context, next);
