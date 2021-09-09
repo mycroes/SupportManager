@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -20,6 +21,13 @@ namespace SupportManager.Web.Areas.Teams
             Team = await db.Teams.FindAsync(TeamId);
 
             if (Team == null)
+            {
+                context.Result = NotFound();
+                return;
+            }
+
+            var userName = context.HttpContext.User.Identity.Name;
+            if (!await db.TeamMembers.AnyAsync(x => x.TeamId == Team.Id && x.User.Login == userName))
             {
                 context.Result = NotFound();
                 return;
