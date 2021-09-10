@@ -19,7 +19,7 @@ namespace SupportManager.Telegram.Infrastructure
         private readonly Message botMessage;
         private readonly string input;
 
-        private readonly Lazy<UserDbContext> dbContext = new Lazy<UserDbContext>();
+        private readonly Lazy<UserDbContext> dbContext;
         private readonly Lazy<Interaction> inputReader;
 
         private ISupportManagerApi api;
@@ -32,6 +32,7 @@ namespace SupportManager.Telegram.Infrastructure
             this.botMessage = botMessage;
             this.input = input;
 
+            dbContext = new Lazy<UserDbContext>(() => DbContextFactory.Create(configuration.DbFileName));
             inputReader = new Lazy<Interaction>(BuildInputReader);
         }
 

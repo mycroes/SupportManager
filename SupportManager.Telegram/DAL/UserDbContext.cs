@@ -6,9 +6,8 @@ namespace SupportManager.Telegram.DAL
     {
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
-            optionsBuilder.UseSqlite("Data Source=users.db");
         }
     }
 }
