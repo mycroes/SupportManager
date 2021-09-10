@@ -95,7 +95,8 @@ namespace SupportManager.Control
 
             context.WriteLine($"Team {team.Name} is forwarding to '{number}'.");
 
-            var state = await db.ForwardingStates.OrderByDescending(s => s.When).FirstOrDefaultAsync();
+            var state = await db.ForwardingStates.Where(s => s.TeamId == team.Id).OrderByDescending(s => s.When)
+                .FirstOrDefaultAsync();
             if (state?.RawPhoneNumber == number)
             {
                 context.WriteLine("No state change, completed check.");
