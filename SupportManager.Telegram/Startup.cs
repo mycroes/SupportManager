@@ -24,7 +24,8 @@ namespace SupportManager.Telegram
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(cfg => cfg.MapControllers());
         }
 
         private void ConfigureDbContext(IServiceProvider services, DbContextOptionsBuilder builder)
