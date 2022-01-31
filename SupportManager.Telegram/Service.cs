@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -29,7 +30,7 @@ namespace SupportManager.Telegram
 
         public bool Start(HostControl hostControl)
         {
-            botClient.StartReceiving();
+            botClient.TestApiAsync().GetAwaiter().GetResult();
             bot = new SupportManagerBot(configuration, botClient, BuildCommandHandlers(),
                 Console.WriteLine);
 
@@ -48,8 +49,8 @@ namespace SupportManager.Telegram
         public bool Stop(HostControl hostControl)
         {
             webHost.Dispose();
-            bot.Dispose();
-            botClient.StopReceiving();
+            botClient.CloseAsync().GetAwaiter().GetResult();
+
             return true;
         }
 

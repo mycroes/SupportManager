@@ -15,7 +15,7 @@ namespace SupportManager.Telegram.KeyboardMarkups
             Func<T, string> labelSelector, Func<T, int> idSelector)
         {
             InlineKeyboardButton Button(T entry) =>
-                new InlineKeyboardButton {Text = labelSelector(entry), CallbackData = prefix + idSelector(entry)};
+                new(labelSelector(entry)) { CallbackData = prefix + idSelector(entry) };
 
             IEnumerable<InlineKeyboardButton> Row(T entry)
             {

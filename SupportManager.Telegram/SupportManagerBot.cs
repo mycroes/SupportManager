@@ -5,15 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SupportManager.Telegram.Infrastructure;
 using Telegram.Bot;
-using Telegram.Bot.Args;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using User = SupportManager.Telegram.DAL.User;
 
 namespace SupportManager.Telegram
 {
-    internal class SupportManagerBot : IDisposable
+    internal class SupportManagerBot
     {
         public delegate Task CommandHandler(CallbackQueryContext context);
 
@@ -30,21 +28,29 @@ namespace SupportManager.Telegram
             this.commandHandlers = commandHandlers;
             this.log = log;
 
-            botClient.OnMessage += BotClientOnOnMessage;
-            botClient.OnCallbackQuery += BotClientOnOnCallbackQuery;
+            botClient.StartReceiving(async (client, update, ct) =>
+            {
+                if (update.CallbackQuery is {} cq)
+                {
+                    await BotClientOnOnCallbackQuery(cq);
+                }
+
+                if (update.Message is { } msg)
+                {
+                    await BotClientOnOnMessage(msg);
+                }
+
+            }, (client, exception, ct) =>
+            {
+                log.Invoke(exception);
+            });
         }
 
-        public void Dispose()
+        private async Task BotClientOnOnCallbackQuery(CallbackQuery callbackQuery)
         {
-            botClient.OnMessage -= BotClientOnOnMessage;
-            botClient.OnCallbackQuery -= BotClientOnOnCallbackQuery;
-        }
+            if (callbackQuery.Data == Constants.Ignore) return;
 
-        private async void BotClientOnOnCallbackQuery(object sender, CallbackQueryEventArgs e)
-        {
-            if (e.CallbackQuery.Data == Constants.Ignore) return;
-
-            await ProcessCommand(e.CallbackQuery.Message, e.CallbackQuery.Data);
+            await ProcessCommand(callbackQuery.Message, callbackQuery.Data);
         }
 
         private async Task ProcessCommand(Message message, string input)
@@ -57,9 +63,6 @@ namespace SupportManager.Telegram
                     await handler(context);
                 }
                 catch (IncompleteDataException)
-                {
-                }
-                catch (MessageIsNotModifiedException)
                 {
                 }
                 catch (AuthenticationRequiredException)
@@ -80,11 +83,11 @@ namespace SupportManager.Telegram
             }
         }
 
-        private async void BotClientOnOnMessage(object sender, MessageEventArgs e)
+        private async Task BotClientOnOnMessage(Message message)
         {
             try
             {
-                await ProcessMessage(e.Message);
+                await ProcessMessage(message);
             }
             catch (IncompleteDataException)
             {

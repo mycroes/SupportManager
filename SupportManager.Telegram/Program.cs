@@ -68,9 +68,9 @@ if (args.Length > 0)
                             user.SupportManagerUserId = newId;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        Console.WriteLine($"Failed to verify user {user.UserId}");
+                        Console.WriteLine($"Failed to verify user {user.UserId}: {e}");
                     }
                 };
 

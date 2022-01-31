@@ -15,7 +15,7 @@ namespace SupportManager.Telegram.KeyboardMarkups
         {
             InlineKeyboardButton Button(string text, DateTime date)
             {
-                return new InlineKeyboardButton {Text = text, CallbackData = prefix + date.ToBinary()};
+                return new InlineKeyboardButton(text) { CallbackData = prefix + date.ToBinary() };
             }
 
             IEnumerable<InlineKeyboardButton> TodayTomorrow()

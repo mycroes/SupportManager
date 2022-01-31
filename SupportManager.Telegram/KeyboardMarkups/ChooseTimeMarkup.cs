@@ -15,12 +15,9 @@ namespace SupportManager.Telegram
         {
             InlineKeyboardButton Button(TimeSpan time)
             {
-                if (minTime > time) return new InlineKeyboardButton {Text = " ", CallbackData = Constants.Ignore};
+                if (minTime > time) return new InlineKeyboardButton(" ") { CallbackData = Constants.Ignore };
 
-                return new InlineKeyboardButton
-                {
-                    Text = time.ToString(@"hh\:mm"), CallbackData = prefix + time.TotalSeconds
-                };
+                return new InlineKeyboardButton(time.ToString(@"hh\:mm")) { CallbackData = prefix + time.TotalSeconds };
             }
 
             IEnumerable<InlineKeyboardButton> BuildRow(int hour)
@@ -32,21 +29,21 @@ namespace SupportManager.Telegram
 
             IEnumerable<InlineKeyboardButton> BuildPrevNextRow()
             {
-                yield return new InlineKeyboardButton
+                yield return new InlineKeyboardButton("6 hours earlier")
                 {
-                    Text = "6 hours earlier", CallbackData = prefix + (char) ('A' + (startHour + 18) % 24)
+                    CallbackData = prefix + (char)('A' + (startHour + 18) % 24)
                 };
-                yield return new InlineKeyboardButton
+                yield return new InlineKeyboardButton("6 hours later")
                 {
-                    Text = "6 hours later", CallbackData = prefix + (char) ('A' + (startHour + 6) % 24)
+                    CallbackData = prefix + (char)('A' + (startHour + 6) % 24)
                 };
             }
 
             yield return new[]
             {
-                new InlineKeyboardButton
+                new InlineKeyboardButton($"{startHour:00}:00 - {(startHour + 6) % 24:00}:00")
                 {
-                    Text = $"{startHour:00}:00 - {(startHour + 6) % 24:00}:00", CallbackData = Constants.Ignore
+                    CallbackData = Constants.Ignore
                 }
             };
 
