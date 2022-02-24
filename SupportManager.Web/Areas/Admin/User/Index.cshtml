@@ -1,4 +1,6 @@
-﻿@model SupportManager.Web.Areas.Admin.User.Index.Result
+﻿@using X.PagedList.Mvc.Core
+@using SupportManager.Web.Areas.Admin.User
+@model SupportManager.Web.Areas.Admin.User.Index.Result
 @{
     ViewBag.Title = "Users";
 }
@@ -28,6 +30,8 @@
     }
     </tbody>
 </table>
+
+@Html.PagedListPager(Model.Users, page => Url.RouteUrl(new Index.Query { PageNumber = page }), new PagedListRenderOptions { LiElementClasses = new[] { "page-item" }, PageClasses = new[] { "page-link" } })
 
 <p>
     <a asp-action="Create">Add user</a>
