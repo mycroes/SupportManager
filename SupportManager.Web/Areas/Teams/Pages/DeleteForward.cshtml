@@ -1,5 +1,5 @@
-﻿@model SupportManager.Web.Areas.Teams.Home.DeleteForward.Result
-
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.DeleteForwardModel
 @{
     ViewBag.Title = "Delete scheduled forward";
 }
@@ -12,7 +12,7 @@
 
     <div class="form-horizontal">
         <h4>Forwarding information</h4>
-        <hr />
+        <hr/>
         <div class="alert alert-info">
             Please verify the information below before confirming delete.
         </div>
@@ -29,21 +29,21 @@
             <tbody>
             <tr>
                 <td></td>
-                <td>@Html.Display(m => m.UserName)</td>
-                <td>@Html.Display(m => m.PhoneNumber)</td>
-                <td>@Html.Display(m => m.When)</td>
+                <td>@Html.Display(m => m.Data.UserName)</td>
+                <td>@Html.Display(m => m.Data.PhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.When)</td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    @Html.Input(m => m.Id);
+    @Html.Input(m => m.Data.Id)
 
     <div class="form-group">
         <div class="col-md-12">
-            <input type="submit" value="Delete" class="btn btn-danger" />
-            
-            @Html.ActionLink("Cancel", "Home", null, null, new {@class = "btn btn-default"})
+            <input type="submit" value="Delete" class="btn btn-danger"/>
+
+            <a asp-route-TeamId="@Model.Data.TeamId" asp-page="Index" class="btn btn-default">Cancel</a>
         </div>
     </div>
 }

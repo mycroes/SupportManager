@@ -1,14 +1,12 @@
-﻿@using System.Threading
-@using HtmlTags
-@using SupportManager.Web.Features.Report
-@model SupportManager.Web.Features.Report.Monthly.Result
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.Report.MonthlyModel
 
 @{
     ViewBag.Title = "Monthly result";
 }
 
 <h2>Monthly report</h2>
-<h3>@Model.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)</h3>
+<h3>@Model.Data.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)</h3>
 @{
     int w = 0;
 }
@@ -16,17 +14,17 @@
     <thead>
     <tr>
         <th colspan="2">Week</th>
-        @foreach (var summary in Model.Weeks[0].Summaries)
+        @foreach (var summary in Model.Data.Weeks[0].Summaries)
         {
             <th>@summary.GroupingKey</th>
         }
     </tr>
     </thead>
     <tbody>
-    @foreach (var week in Model.Weeks)
+    @foreach (var week in Model.Data.Weeks)
     {
         <tr>
-            <td>@Html.Display(m => m.Weeks[w].Start)</td><td>@Html.Display(m => m.Weeks[w].End)</td>
+            <td>@Html.Display(m => m.Data.Weeks[w].Start)</td><td>@Html.Display(m => m.Data.Weeks[w].End)</td>
             @foreach (var summary in week.Summaries)
             {
                 double totalSeconds;
@@ -38,7 +36,7 @@
                     @if(totalSeconds > 0)
                     {
                         @:@{ var mostParticipated = summary.Participations.OrderByDescending(p => p.Duration).First(); }
-                    
+
                         @mostParticipated.UserName <span class="text-secondary">@(Math.Round(mostParticipated.Duration.TotalSeconds / totalSeconds * 100, 1))%</span>
 
                         <!--<dl>
@@ -64,5 +62,6 @@
     </tbody>
 </table>
 
-<a href="@Url.Action("Monthly", Model.Previous.Query)" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> @Model.Previous.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)</a>
-<a href="@Url.Action("Monthly", Model.Next.Query)" class="pull-right btn btn-outline-primary">@Model.Next.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture) <i class="fa fa-arrow-right"></i></a>
+<a href="@Url.Page("Monthly", Model.Data.Previous.Query)" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> @Model.Data.Previous.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)</a>
+<a href="@Url.Page("Monthly", Model.Data.Next.Query)" class="pull-right btn btn-outline-primary">@Model.Data.Next.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture) <i class="fa fa-arrow-right"></i></a>
+

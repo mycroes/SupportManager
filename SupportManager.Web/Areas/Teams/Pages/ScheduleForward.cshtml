@@ -1,7 +1,6 @@
-﻿@using SupportManager.Web.Areas.Teams.Home
+﻿@page
 @using SupportManager.Web.Infrastructure
-@model SupportManager.Web.Areas.Teams.Home.ScheduleForward.Command
-
+@model SupportManager.Web.Areas.Teams.Pages.ScheduleForwardModel
 @{
     ViewBag.Title = "Schedule forward";
 }
@@ -14,12 +13,13 @@
 
     <div class="form-horizontal">
         <h4>Forwarding information</h4>
-        <hr />
-        @Html.FormBlock(m => m.PhoneNumber)
-        @Html.FormBlock(m => m.When)
+        <hr/>
+        @Html.HiddenFor(m => m.Data.TeamId)
+        @Html.FormBlock(m => m.Data.PhoneNumber)
+        @Html.FormBlock(m => m.Data.When)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default"/>
             </div>
         </div>
     </div>

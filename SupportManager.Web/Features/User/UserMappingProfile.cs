@@ -9,7 +9,7 @@ namespace SupportManager.Web.Features.User
         {
             CreateMap<UserExistsQuery, UserExistsResponse>(MemberList.Source);
             CreateMap<DAL.User, UserExistsResponse>()
-                .ForMember(dest => dest.IsExistingUser, opt => opt.UseValue(true));
+                .ForMember(dest => dest.IsExistingUser, opt => opt.MapFrom(_ => true));
             CreateMap<CreateCommand, DAL.User>(MemberList.Source);
             CreateMap<DAL.User, DetailsModel>();
             CreateMap<UserPhoneNumber, PhoneListModel>();

@@ -4,6 +4,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
 using X.PagedList;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace SupportManager.Web.Infrastructure
 {

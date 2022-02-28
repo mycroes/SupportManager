@@ -12,8 +12,11 @@ namespace SupportManager.Web.Infrastructure
             for (var i = 0; i < selectorCount; i++)
             {
                 var selector = model.Selectors[i];
-                selector.AttributeRouteModel.Template =
-                    selector.AttributeRouteModel.Template.Replace("Teams/", "Teams/{teamId:int}/");
+                if (selector.AttributeRouteModel?.Template?.StartsWith("Teams") ?? false)
+                {
+                    selector.AttributeRouteModel.Template = "Teams/{teamId:int}" +
+                        selector.AttributeRouteModel.Template.Substring("Teams".Length);
+                }
             }
         }
     }

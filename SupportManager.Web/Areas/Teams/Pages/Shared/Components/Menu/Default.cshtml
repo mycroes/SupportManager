@@ -1,0 +1,8 @@
+﻿@model SupportManager.Web.Areas.Teams.Pages.Shared.MenuModel
+
+<li class="nav-item">
+    <a asp-route-TeamId="@Model.TeamId" asp-page="/Index" class="nav-link">Team @Model.TeamName</a>
+</li>
+<li class="nav-item">
+    <a asp-route-TeamId="@Model.TeamId" asp-page="/Report/Monthly" class="nav-link">Report</a>
+</li>

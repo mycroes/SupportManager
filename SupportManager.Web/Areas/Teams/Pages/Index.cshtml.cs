@@ -1,43 +1,47 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.DAL;
 
-namespace SupportManager.Web.Areas.Teams.Home
+namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public static class Index
+    public class IndexModel : PageModel
     {
-        public class Query : IRequest<Result>
+        private readonly IMediator mediator;
+
+        public IndexModel(IMediator mediator) => this.mediator = mediator;
+
+        public Result Data { get; set; }
+
+        public async Task OnGetAsync(Query query)
         {
-            public int TeamId { get; set; }
+            Data = await mediator.Send(query);
         }
 
-        public class Result
-        {
-            public int TeamId { get; set; }
-            public string TeamName { get; set; }
-            public Registration CurrentStatus { get; set; }
-            public List<Member> Members { get; set; }
-            public List<Registration> Schedule { get; set; }
-            public List<Registration> History { get; set; }
+        public record Query(int TeamId) : IRequest<Result>;
 
-            public class Member
+        public record Result
+        {
+            public int TeamId { get; init; }
+            public string TeamName { get; init; }
+            public Registration CurrentStatus { get; init; }
+            public List<Member> Members { get; init; }
+            public List<Registration> Schedule { get; init; }
+            public List<Registration> History { get; init; }
+
+            public record Member
             {
-                public string DisplayName { get; set; }
-                public string PrimaryPhoneNumber { get; set; }
-                public int? PrimaryPhoneNumberId { get; set; }
+                public string DisplayName { get; init; }
+                public string PrimaryPhoneNumber { get; init; }
+                public int? PrimaryPhoneNumberId { get; init; }
             }
 
-            public class Registration
+            public record Registration
             {
-                public int Id { get; set; }
-                public string User { get; set; }
-                public string PhoneNumber { get; set; }
-                public DateTimeOffset When { get; set; }
+                public int Id { get; init; }
+                public string User { get; init; }
+                public string PhoneNumber { get; init; }
+                public DateTimeOffset When { get; init; }
             }
         }
 

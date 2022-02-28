@@ -1,25 +1,38 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Hangfire;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.Contracts;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure;
 
-namespace SupportManager.Web.Areas.Teams.Home
+namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public static class EditForward
+    public class EditForwardModel : PageModel
     {
-        public class Query : IRequest<Command>
+        private readonly IMediator mediator;
+
+        public EditForwardModel(IMediator mediator) => this.mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public async Task OnGetAsync(Query request) => Data = await mediator.Send(request);
+
+        public async Task<IActionResult> OnPostAsync(int teamId)
         {
-            public int Id { get; set; }
+            await mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index), new { teamId });
         }
+
+        public record Query(int Id) : IRequest<Command>;
 
         public class Command : IRequest
         {
-            public int Id { get; set; }
-            public UserPhoneNumber PhoneNumber { get; set; }
-            public DateTimeOffset When { get; set; }
+            public int Id { get; init; }
+            public UserPhoneNumber PhoneNumber { get; init; }
+            public DateTimeOffset When { get; init; }
         }
 
         public class CommandHandler : AsyncRequestHandler<Command>

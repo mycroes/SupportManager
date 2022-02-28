@@ -1,0 +1,132 @@
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.IndexModel
+@{
+    ViewBag.Title = $"Team {Model.Data.TeamName}";
+}
+
+<h2>Team @Model.Data.TeamName</h2>
+
+<h4>Current forwarding status</h4>
+@if (Model.Data.CurrentStatus != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-10"></th>
+                <th class="w-25">User</th>
+                <th class="w-25">Phonenumber</th>
+                <th class="w-40">Since</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Data.CurrentStatus.User)</td>
+                <td>@Html.Display(m => m.Data.CurrentStatus.PhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.CurrentStatus.When)</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="jumbotron">No current forwarding state.</div>
+}
+
+<h4>Team members</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="w-10"></th>
+            <th class="w-25">Name</th>
+            <th class="w-25">Primary phonenumber</th>
+            <th class="w-40"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var member in Model.Data.Members)
+        {
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Data.Members[i].DisplayName)</td>
+                <td>@Html.Display(m => m.Data.Members[i].PrimaryPhoneNumber)</td>
+                <td>
+                    @if (member.PrimaryPhoneNumberId != null)
+                    {
+                        <a asp-route-TeamId="@Model.Data.TeamId" asp-page="SetForward" asp-route-PhoneNumberId="@member.PrimaryPhoneNumberId.Value">Forward now</a>
+                    }
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+<h4>Schedule</h4>
+@if (@Model.Data.Schedule.Any())
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="w-10"></th>
+            <th class="w-25">User</th>
+            <th class="w-25">Phonenumber</th>
+            <th class="w-40">When</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{ i = 0; }
+        @foreach (var schedule in Model.Data.Schedule)
+        {
+            <tr>
+                <td>
+                    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
+                    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
+                </td>
+                <td>@Html.Display(m => m.Data.Schedule[i].User)</td>
+                <td>@Html.Display(m => m.Data.Schedule[i].PhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.Schedule[i].When)</td>
+            </tr>
+            i++;
+        }
+        </tbody>
+    </table>
+    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward">Schedule forward</a>
+}
+else
+{
+    <div class="jumbotron">
+        <h5>Nothing scheduled yet!</h5>
+        <p>
+            There are no actions scheduled yet, use the button below to add a new entry.
+        </p>
+
+        <a asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward" class="btn btn-primary btn-lg">Schedule forward</a>
+    </div>
+}
+
+<h4>History</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="w-10"></th>
+            <th class="w-23">User</th>
+            <th class="w-25">Phonenumber</th>
+            <th class="w-40">Since</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ i = 0; }
+        @foreach (var registration in Model.Data.History)
+        {
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Data.History[i].User)</td>
+                <td>@Html.Display(m => m.Data.History[i].PhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.History[i].When)</td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

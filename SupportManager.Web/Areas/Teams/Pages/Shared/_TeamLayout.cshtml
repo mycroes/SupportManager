@@ -17,8 +17,7 @@
         </button>
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">@Html.ActionLink($"Team {ViewData["TeamName"]}", "Index", "Home", null, new { @class = "nav-link" })</li>
-                <li class="nav-item">@Html.ActionLink("Report", "Index", "Report", null, new { @class = "nav-link" })</li>
+                <vc:menu />
             </ul>
             <div class="navbar-text navbar-right">Hello, @User.Identity.Name!</div>
         </div>

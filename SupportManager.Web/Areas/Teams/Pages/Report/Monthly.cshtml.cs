@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MoreLinq;
 using NodaTime;
 using SupportManager.DAL;
 
-namespace SupportManager.Web.Features.Report
+namespace SupportManager.Web.Areas.Teams.Pages.Report
 {
-    public static class Monthly
+    public class MonthlyModel : PageModel
     {
-        public class Query : IRequest<Result>
+        private readonly IMediator mediator;
+
+        public MonthlyModel(IMediator mediator) => this.mediator = mediator;
+
+        public Result Data { get; set; }
+
+        public async Task OnGetAsync(Query query)
         {
-            public int TeamId { get; set; }
-            public int Year { get; set; }
-            public int Month { get; set; }
+            Data = await mediator.Send(query.Year == 0
+                ? query with { Year = DateTime.Now.Year, Month = DateTime.Now.Month }
+                : query);
         }
+
+        public record Query(int TeamId, int Year, int Month) : IRequest<Result>;
 
         public class Ref
         {
@@ -28,7 +32,7 @@ namespace SupportManager.Web.Features.Report
             public Ref(int teamId, LocalDate date)
             {
                 Date = date;
-                Query = new Query {TeamId = teamId, Year = date.Year, Month = date.Month};
+                Query = new Query(teamId, date.Year, date.Month);
             }
         }
 
