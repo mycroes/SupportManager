@@ -27,6 +27,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
             public Registration CurrentStatus { get; init; }
             public List<Member> Members { get; init; }
             public List<Registration> Schedule { get; init; }
+            public int ScheduledCount { get; init; }
             public List<Registration> History { get; init; }
 
             public record Member
@@ -99,6 +100,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
                     CurrentStatus = await history.FirstOrDefaultAsync(),
                     Members = await members.ToListAsync(),
                     Schedule = await schedule.Take(10).ToListAsync(),
+                    ScheduledCount = await schedule.CountAsync(),
                     History = await history.Skip(1).Take(10).ToListAsync()
                 };
             }

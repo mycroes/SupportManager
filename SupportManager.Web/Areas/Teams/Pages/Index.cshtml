@@ -92,7 +92,14 @@ else
         }
         </tbody>
     </table>
-    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward">Schedule forward</a>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward">Schedule forward</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-route-TeamId="@Model.Data.TeamId" asp-page="FullSchedule">Full schedule</a>
+        </li>
+    </ul>
 }
 else
 {
