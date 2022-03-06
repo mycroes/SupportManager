@@ -1,0 +1,39 @@
+﻿@page
+@using X.PagedList.Web.Common
+@using X.PagedList.Mvc.Core
+@model SupportManager.Web.Areas.Admin.Pages.User.IndexModel
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Login</th>
+        <th>Primary phonenumber</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Data.Users)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.DisplayName</td>
+            <td>@user.Login</td>
+            <td>@user.PrimaryPhoneNumberValue</td>
+            <td><a asp-page="Edit" asp-route-id="@user.Id">Edit</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model.Data.Users, page => Url.RouteUrl(Model.Data.Query with {PageNumber = page}), new PagedListRenderOptions { LiElementClasses = new[] { "page-item" }, PageClasses = new[] { "page-link" } })
+
+<p>
+    <a asp-page="Create">Add user</a>
+</p>

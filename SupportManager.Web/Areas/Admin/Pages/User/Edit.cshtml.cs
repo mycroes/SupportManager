@@ -1,28 +1,39 @@
-﻿using System;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.DAL;
+using SupportManager.Web.Infrastructure;
 
-namespace SupportManager.Web.Areas.Admin.User
+namespace SupportManager.Web.Areas.Admin.Pages.User
 {
-    public static class Edit
+    public class EditModel : PageModel
     {
+        private readonly IMediator mediator;
+
+        public EditModel(IMediator mediator) => this.mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public async Task OnGetAsync(Query query) => Data = await mediator.Send(query);
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+        public record Query(int Id) : IRequest<Command>;
+
         public class Command : IRequest
         {
-            public int Id { get; set; }
-            public string DisplayName { get; set; }
-            public string Login { get; set; }
-            public string PrimaryEmailAddress { get; set; }
-            public string PrimaryPhoneNumber { get; set; }
-        }
-
-        public class Query : IRequest<Command>
-        {
-            public int Id { get; set; }
+            public int Id { get; init; }
+            public string DisplayName { get; init; }
+            public string Login { get; init; }
+            public string PrimaryEmailAddress { get; init; }
+            public string PrimaryPhoneNumber { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>

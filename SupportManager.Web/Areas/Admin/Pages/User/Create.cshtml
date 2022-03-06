@@ -1,6 +1,6 @@
-﻿@model SupportManager.Web.Areas.Admin.User.Create.Command
+﻿@page
 @using SupportManager.Web.Infrastructure
-
+@model SupportManager.Web.Areas.Admin.Pages.User.CreateModel
 @{
     ViewBag.Title = "Create";
 }
@@ -10,14 +10,14 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>User</h4>
-        <hr />
-        @Html.FormBlock(m => m.DisplayName)
-        @Html.FormBlock(m => m.Login)
-        @Html.FormBlock(m => m.PrimaryEmailAddress)
-        @Html.FormBlock(m => m.PrimaryPhoneNumber)
+        <hr/>
+        @Html.FormBlock(m => m.Data.DisplayName)
+        @Html.FormBlock(m => m.Data.Login)
+        @Html.FormBlock(m => m.Data.PrimaryEmailAddress)
+        @Html.FormBlock(m => m.Data.PrimaryPhoneNumber)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default"/>
@@ -27,5 +27,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to list", "Index", "User")
+    <a asp-page="Index">Back to list</a>
 </div>

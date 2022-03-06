@@ -1,6 +1,6 @@
-﻿@model SupportManager.Web.Areas.Admin.User.Edit.Command
+﻿@page
 @using SupportManager.Web.Infrastructure
-
+@model SupportManager.Web.Areas.Admin.Pages.User.EditModel
 @{
     ViewBag.Title = "Edit";
 }
@@ -14,11 +14,11 @@
     <div class="form-horizontal">
         <h4>User</h4>
         <hr/>
-        @Html.HiddenFor(m => m.Id)
-        @Html.FormBlock(m => m.DisplayName)
-        @Html.FormBlock(m => m.Login)
-        @Html.FormBlock(m => m.PrimaryEmailAddress)
-        @Html.FormBlock(m => m.PrimaryPhoneNumber)
+        @Html.HiddenFor(m => m.Data.Id)
+        @Html.FormBlock(m => m.Data.DisplayName)
+        @Html.FormBlock(m => m.Data.Login)
+        @Html.FormBlock(m => m.Data.PrimaryEmailAddress)
+        @Html.FormBlock(m => m.Data.PrimaryPhoneNumber)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Edit" class="btn btn-default"/>
@@ -28,5 +28,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to list", "Index", "User")
+    <a asp-page="Index">Back to list</a>
 </div>
