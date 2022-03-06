@@ -19,14 +19,6 @@ namespace SupportManager.Web.Features.User
             this.mediator = mediator;
         }
 
-        [Authorize]
-        public async Task<IActionResult> Index()
-        {
-            var query = new DetailsQuery { UserName = User.Identity.Name };
-            var details = await mediator.Send(query);
-            return View(details);
-        }
-
         public IActionResult Welcome()
         {
             return View();

@@ -1,5 +1,5 @@
-﻿@model SupportManager.Web.Features.User.DetailsModel
-
+﻿@page
+@model SupportManager.Web.Pages.User.IndexModel
 @{
     ViewBag.Title = "User home";
 }
@@ -7,17 +7,17 @@
     <div class="col-lg-12">
         <div class="page-header">
             <h2>
-                User details <small>for @Model.DisplayName</small>
+                User details <small>for @Model.Data.DisplayName</small>
             </h2>
         </div>
 
         <dl class="dl-horizontal">
             <dt>Primary emailaddress</dt>
-            <dd>@(Model.PrimaryEmailAddressValue ?? "Not set")</dd>
+            <dd>@(Model.Data.PrimaryEmailAddressValue ?? "Not set")</dd>
             <dt>Primary phonenumber</dt>
-            @if (Model.PrimaryPhoneNumberValue != null)
+            @if (Model.Data.PrimaryPhoneNumberValue != null)
             {
-                <dd>@Model.PrimaryPhoneNumberValue</dd>
+                <dd>@Model.Data.PrimaryPhoneNumberValue</dd>
             }
             else
             {
@@ -34,7 +34,7 @@
                 <h3 class="panel-title">Emailaddresses</h3>
             </div>
 
-            @if (Model.EmailAddresses.Any())
+            @if (Model.Data.EmailAddresses.Any())
             {
                 <table class="table">
                     <thead>
@@ -45,13 +45,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @for (int i = 0; i < Model.EmailAddresses.Count; i++)
+                    @for (int i = 0; i < Model.Data.EmailAddresses.Count; i++)
                     {
                         <tr>
-                            <td>@Model.EmailAddresses[i].Value</td>
-                            <td>@Html.Display(m => m.EmailAddresses[i].IsVerified)</td>
+                            <td>@Model.Data.EmailAddresses[i].Value</td>
+                            <td>@Html.Display(m => m.Data.EmailAddresses[i].IsVerified)</td>
                             <td>
-                                @if (Model.PrimaryEmailAddressId == Model.EmailAddresses[i].Id)
+                                @if (Model.Data.PrimaryEmailAddressId == Model.Data.EmailAddresses[i].Id)
                                 {
                                     <span class="badge badge-primary">Primary</span>
                                 }
@@ -85,8 +85,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Phonenumbers</h3>
             </div>
-            
-            @if (Model.PhoneNumbers.Any())
+
+            @if (Model.Data.PhoneNumbers.Any())
             {
                 <table class="table">
                     <thead>
@@ -98,15 +98,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.PhoneNumbers.Count; i++)
+                        @for (int i = 0; i < Model.Data.PhoneNumbers.Count; i++)
                         {
-                            var phone = Model.PhoneNumbers[i];
+                            var phone = Model.Data.PhoneNumbers[i];
                             <tr>
                                 <td>@phone.Label</td>
                                 <td>@phone.Value</td>
-                                <td>@Html.Display(m => m.PhoneNumbers[i].IsVerified)</td>
+                                <td>@Html.Display(m => m.Data.PhoneNumbers[i].IsVerified)</td>
                                 <td>
-                                    @if (Model.PrimaryPhoneNumberId == phone.Id)
+                                    @if (Model.Data.PrimaryPhoneNumberId == phone.Id)
                                     {
                                         <span class="badge badge-primary">Primary</span>
                                     }
