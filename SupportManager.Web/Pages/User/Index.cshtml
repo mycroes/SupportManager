@@ -5,132 +5,126 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        <div class="page-header">
-            <h2>
-                User details <small>for @Model.Data.DisplayName</small>
-            </h2>
-        </div>
+        <h2>
+            User details <small class="text-muted">for @Model.Data.DisplayName</small>
+        </h2>
 
-        <dl class="dl-horizontal">
-            <dt>Primary emailaddress</dt>
-            <dd>@(Model.Data.PrimaryEmailAddressValue ?? "Not set")</dd>
-            <dt>Primary phonenumber</dt>
+        <dl class="row">
+            <dt class="col-md-3">Primary email address</dt>
+            <dd class="col-md-9">@(Model.Data.PrimaryEmailAddressValue ?? "Not set")</dd>
+            <dt class="col-md-3">Primary phone number</dt>
             @if (Model.Data.PrimaryPhoneNumberValue != null)
             {
-                <dd>@Model.Data.PrimaryPhoneNumberValue</dd>
+                <dd class="col-md-9">@Model.Data.PrimaryPhoneNumberValue</dd>
             }
             else
             {
-                <dd>Not set</dd>
+                <dd class="col-md-9">Not set</dd>
             }
         </dl>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Emailaddresses</h3>
-            </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <h5 class="card-header">Email addresses</h5>
 
-            @if (Model.Data.EmailAddresses.Any())
-            {
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Emailaddress</th>
-                        <th>Verified?</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for (int i = 0; i < Model.Data.EmailAddresses.Count; i++)
-                    {
-                        <tr>
-                            <td>@Model.Data.EmailAddresses[i].Value</td>
-                            <td>@Html.Display(m => m.Data.EmailAddresses[i].IsVerified)</td>
-                            <td>
-                                @if (Model.Data.PrimaryEmailAddressId == Model.Data.EmailAddresses[i].Id)
-                                {
-                                    <span class="badge badge-primary">Primary</span>
-                                }
-                                else
-                                {
-                                    <a href="#">Set as primary</a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="panel-body">
-                    <div class="alert alert-warning" style="margin-bottom: 1px">
-                        No emailaddress configured yet, you won't be able to receive email notifications!
+            <div class="card-body">
+                @if (Model.Data.EmailAddresses.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Email address</th>
+                                <th>Verified?</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Data.EmailAddresses.Count; i++)
+                            {
+                                <tr>
+                                    <td>@Model.Data.EmailAddresses[i].Value</td>
+                                    <td>@Html.Display(m => m.Data.EmailAddresses[i].IsVerified)</td>
+                                    <td>
+                                        @if (Model.Data.PrimaryEmailAddressId == Model.Data.EmailAddresses[i].Id)
+                                        {
+                                            <span class="badge badge-primary">Primary</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#">Set as primary</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="card-text">
+                        <div class="alert alert-warning" style="margin-bottom: 1px">
+                            No email address configured yet, you won't be able to receive email notifications!
+                        </div>
                     </div>
-                </div>
-            }
-
-            <div class="panel-footer">
-                @Html.ActionLink("Add emailaddress", "AddEmailAddress", null, null, new { @class = "btn btn-default" })
+                }
+                @Html.ActionLink("Add email address", "AddEmailAddress", null, null, new { @class = "btn btn-primary" })
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Phonenumbers</h3>
-            </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <h5 class="card-header">Phone numbers</h5>
 
-            @if (Model.Data.PhoneNumbers.Any())
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Label</th>
-                            <th>Phonenumber</th>
-                            <th>Verified?</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Data.PhoneNumbers.Count; i++)
-                        {
-                            var phone = Model.Data.PhoneNumbers[i];
+            <div class="card-body">
+
+                @if (Model.Data.PhoneNumbers.Any())
+                {
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>@phone.Label</td>
-                                <td>@phone.Value</td>
-                                <td>@Html.Display(m => m.Data.PhoneNumbers[i].IsVerified)</td>
-                                <td>
-                                    @if (Model.Data.PrimaryPhoneNumberId == phone.Id)
-                                    {
-                                        <span class="badge badge-primary">Primary</span>
-                                    }
-                                    else
-                                    {
-                                        <a href="#">Set as primary</a>
-                                    }
-                                </td>
+                                <th>Label</th>
+                                <th>Phone number</th>
+                                <th>Verified?</th>
+                                <th>Actions</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="panel-body">
-                    <div class="alert alert-warning" style="margin-bottom: 1px">
-                        No phonenumber configured yet, you won't be able to take support duty!
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Data.PhoneNumbers.Count; i++)
+                            {
+                                var phone = Model.Data.PhoneNumbers[i];
+                                <tr>
+                                    <td>@phone.Label</td>
+                                    <td>@phone.Value</td>
+                                    <td>@Html.Display(m => m.Data.PhoneNumbers[i].IsVerified)</td>
+                                    <td>
+                                        @if (Model.Data.PrimaryPhoneNumberId == phone.Id)
+                                        {
+                                            <span class="badge badge-primary">Primary</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#">Set as primary</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="card-text">
+                        <div class="alert alert-warning" style="margin-bottom: 1px">
+                            No phone number configured yet, you won't be able to take support duty!
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
-            <div class="panel-footer">
-                @Html.ActionLink("Add phonenumber", "AddPhoneNumber", null, null, new { @class = "btn btn-default" })
+                @Html.ActionLink("Add phone number", "AddPhoneNumber", null, null, new { @class = "btn btn-primary" })
             </div>
         </div>
     </div>
