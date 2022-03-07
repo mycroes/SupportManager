@@ -33,6 +33,7 @@ namespace SupportManager.Web.Pages.User
             public string PrimaryPhoneNumberValue { get; init; }
             public List<PhoneNumber> PhoneNumbers { get; init; }
             public List<EmailAddress> EmailAddresses { get; init; }
+            public List<TeamMemberShip> MemberShips { get; init; }
 
             public record PhoneNumber
             {
@@ -48,6 +49,13 @@ namespace SupportManager.Web.Pages.User
                 public string Value { get; init; }
                 public bool IsVerified { get; init; }
             }
+
+            public record TeamMemberShip
+            {
+                public int TeamId { get; init; }
+                public string TeamName { get; init; }
+                public bool IsAdministrator { get; init; }
+            }
         }
 
         public class MapperProfile : Profile
@@ -57,6 +65,7 @@ namespace SupportManager.Web.Pages.User
                 CreateMap<DAL.User, Result>();
                 CreateMap<UserPhoneNumber, Result.PhoneNumber>();
                 CreateMap<UserEmailAddress, Result.EmailAddress>();
+                CreateMap<TeamMember, Result.TeamMemberShip>();
             }
         }
 
