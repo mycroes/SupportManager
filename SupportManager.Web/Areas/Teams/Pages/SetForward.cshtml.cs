@@ -1,12 +1,12 @@
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.Contracts;
+using SupportManager.Web.Areas.Teams.Pages.Shared;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public class SetForwardModel : PageModel
+    public class SetForwardModel : TeamPageModel
     {
         private readonly IMediator mediator;
 
@@ -16,7 +16,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
         {
             await mediator.Send(command);
 
-            return RedirectToPage(nameof(Index), new { command.TeamId });
+            return RedirectToPage(nameof(Index), new { TeamId });
         }
 
         public class Command : IRequest

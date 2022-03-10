@@ -54,7 +54,7 @@ else
                 <td>
                     @if (member.PrimaryPhoneNumberId != null)
                     {
-                        <a asp-route-TeamId="@Model.Data.TeamId" asp-page="SetForward" asp-route-PhoneNumberId="@member.PrimaryPhoneNumberId.Value">Forward now</a>
+                        <a asp-route-TeamId="@Model.TeamId" asp-page="SetForward" asp-route-PhoneNumberId="@member.PrimaryPhoneNumberId.Value">Forward now</a>
                     }
                 </td>
             </tr>
@@ -81,8 +81,8 @@ else
         {
             <tr>
                 <td>
-                    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
-                    <a asp-route-TeamId="@Model.Data.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
+                    <a asp-route-TeamId="@Model.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
+                    <a asp-route-TeamId="@Model.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
                 </td>
                 <td>@Html.Display(m => m.Data.Schedule[i].User)</td>
                 <td>@Html.Display(m => m.Data.Schedule[i].PhoneNumber)</td>
@@ -94,10 +94,10 @@ else
     </table>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward">Schedule forward</a>
+            <a class="nav-link" asp-route-TeamId="@Model.TeamId" asp-page="ScheduleForward">Schedule forward</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-route-TeamId="@Model.Data.TeamId" asp-page="FullSchedule">Full schedule</a>
+            <a class="nav-link" asp-route-TeamId="@Model.TeamId" asp-page="FullSchedule">Full schedule</a>
         </li>
     </ul>
 }
@@ -109,7 +109,7 @@ else
             There are no actions scheduled yet, use the button below to add a new entry.
         </p>
 
-        <a asp-route-TeamId="@Model.Data.TeamId" asp-page="ScheduleForward" class="btn btn-primary btn-lg">Schedule forward</a>
+        <a asp-route-TeamId="@Model.TeamId" asp-page="ScheduleForward" class="btn btn-primary btn-lg">Schedule forward</a>
     </div>
 }
 

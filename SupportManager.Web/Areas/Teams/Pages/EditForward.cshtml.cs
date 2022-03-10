@@ -1,14 +1,14 @@
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.Contracts;
 using SupportManager.DAL;
+using SupportManager.Web.Areas.Teams.Pages.Shared;
 using SupportManager.Web.Infrastructure;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public class EditForwardModel : PageModel
+    public class EditForwardModel : TeamPageModel
     {
         private readonly IMediator mediator;
 
@@ -19,11 +19,11 @@ namespace SupportManager.Web.Areas.Teams.Pages
 
         public async Task OnGetAsync(Query request) => Data = await mediator.Send(request);
 
-        public async Task<IActionResult> OnPostAsync(int teamId)
+        public async Task<IActionResult> OnPostAsync()
         {
             await mediator.Send(Data);
 
-            return this.RedirectToPageJson(nameof(Index), new { teamId });
+            return this.RedirectToPageJson(nameof(Index), new { TeamId });
         }
 
         public record Query(int Id) : IRequest<Command>;

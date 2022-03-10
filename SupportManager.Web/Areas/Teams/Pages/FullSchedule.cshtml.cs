@@ -1,12 +1,12 @@
 using MediatR;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.DAL;
+using SupportManager.Web.Areas.Teams.Pages.Shared;
 using SupportManager.Web.Infrastructure;
 using X.PagedList;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public class FullScheduleModel : PageModel
+    public class FullScheduleModel : TeamPageModel
     {
         private IMediator mediator;
 

@@ -1,12 +1,11 @@
 using System.Data.Entity;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SupportManager.DAL;
+using SupportManager.Web.Areas.Teams.Pages.Shared;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : TeamPageModel
     {
         private readonly IMediator mediator;
 
@@ -23,7 +22,6 @@ namespace SupportManager.Web.Areas.Teams.Pages
 
         public record Result
         {
-            public int TeamId { get; init; }
             public string TeamName { get; init; }
             public Registration CurrentStatus { get; init; }
             public List<Member> Members { get; init; }
@@ -97,7 +95,6 @@ namespace SupportManager.Web.Areas.Teams.Pages
 
                 return new Result
                 {
-                    TeamId = team.Id,
                     TeamName = team.Name,
                     CurrentStatus = await history.FirstOrDefaultAsync(),
                     Members = await members.ToListAsync(),

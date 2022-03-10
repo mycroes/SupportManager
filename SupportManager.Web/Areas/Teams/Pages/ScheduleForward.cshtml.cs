@@ -1,14 +1,14 @@
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportManager.Contracts;
 using SupportManager.DAL;
+using SupportManager.Web.Areas.Teams.Pages.Shared;
 using SupportManager.Web.Infrastructure;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
-    public class ScheduleForwardModel : PageModel
+    public class ScheduleForwardModel : TeamPageModel
     {
         private readonly IMediator mediator;
 
@@ -17,13 +17,13 @@ namespace SupportManager.Web.Areas.Teams.Pages
         [BindProperty]
         public Command Data { get; set; }
 
-        public void OnGet(int teamId) => Data = new Command { TeamId = teamId };
+        public void OnGet() => Data = new Command { TeamId = TeamId };
 
         public async Task<IActionResult> OnPostAsync()
         {
             await mediator.Send(Data);
 
-            return this.RedirectToPageJson(nameof(Index), new { Data.TeamId });
+            return this.RedirectToPageJson(nameof(Index), new { TeamId });
         }
 
         public record Command : IRequest

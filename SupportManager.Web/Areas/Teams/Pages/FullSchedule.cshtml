@@ -22,8 +22,8 @@
     {
         <tr>
             <td>
-                <a asp-route-TeamId="@Model.Data.Query.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
-                <a asp-route-TeamId="@Model.Data.Query.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
+                <a asp-route-TeamId="@Model.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
+                <a asp-route-TeamId="@Model.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
             </td>
             <td>@schedule.User</td>
             <td>@schedule.PhoneNumber</td>
