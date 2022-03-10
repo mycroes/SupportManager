@@ -11,16 +11,12 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container">
-            @Html.ActionLink("SupportManager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <a asp-page="/Index" class="navbar-brand">SupportManager</a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-link" })</li>
-                </ul>
+                <div class="mr-auto"></div>
                 <div class="navbar-text navbar-right">Hello, @User.Identity.Name!</div>
             </div>
         </div>
