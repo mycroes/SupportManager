@@ -1,0 +1,26 @@
+﻿@page
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Areas.Teams.Pages.EditForwardModel
+@{
+    ViewBag.Title = "Edit forward";
+}
+
+<h2>Edit forward</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Forwarding information</h4>
+        @Html.HiddenFor(m => m.Data.Id)
+        @Html.FormBlock(m => m.Data.PhoneNumber)
+        @Html.FormBlock(m => m.Data.When)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default"/>
+            </div>
+        </div>
+    </div>
+}

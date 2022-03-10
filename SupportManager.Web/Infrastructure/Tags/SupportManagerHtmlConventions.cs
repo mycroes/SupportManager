@@ -28,6 +28,10 @@ namespace SupportManager.Web.Infrastructure.Tags
             Labels.Always.AddClass("control-label");
             Labels.Always.AddClass("col-md-2");
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
+
+            // Just assume a "Data." prefix for attributes.
+            Labels.Always.ModifyWith(er => er.CurrentTag.Text(er.CurrentTag.Text().Replace("Data ", "")));
+
             DisplayLabels.Always.BuildBy<DefaultDisplayLabelBuilder>();
             DisplayLabels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
 
@@ -39,7 +43,7 @@ namespace SupportManager.Web.Infrastructure.Tags
             Displays.IfPropertyIs<DateTime>().ModifyWith(SetDateTimeText);
             Displays.IfPropertyIs<DateTime?>().BuildBy<DateTimeBuilder>();
             Displays.IfPropertyIs<DateTime?>().ModifyWith(SetDateTimeText);
-            
+
             Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
             Displays.IfPropertyIs<bool>().BuildBy<BoolDisplayBuilder>();
         }

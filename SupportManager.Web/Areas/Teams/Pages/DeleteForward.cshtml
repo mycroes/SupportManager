@@ -1,0 +1,49 @@
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.DeleteForwardModel
+@{
+    ViewBag.Title = "Delete scheduled forward";
+}
+
+<h2>Delete scheduled forward</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Forwarding information</h4>
+        <hr/>
+        <div class="alert alert-info">
+            Please verify the information below before confirming delete.
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="w-10"></th>
+                <th class="w-25">User</th>
+                <th class="w-25">Phonenumber</th>
+                <th class="w-40">When</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Data.UserName)</td>
+                <td>@Html.Display(m => m.Data.PhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.When)</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @Html.Input(m => m.Data.Id)
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <input type="submit" value="Delete" class="btn btn-danger"/>
+
+            <a asp-route-TeamId="@Model.Data.TeamId" asp-page="Index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+}

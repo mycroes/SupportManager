@@ -1,60 +1,91 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.Net.Mail;
+using FluentValidation.AspNetCore;
 using Hangfire;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.HttpSys;
+using Hangfire.Console;
+using HtmlTags;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SupportManager.Contracts;
-using Topshelf;
+using SupportManager.Control;
+using SupportManager.DAL;
+using SupportManager.Web.Infrastructure;
+using SupportManager.Web.Infrastructure.ApiKey;
+using SupportManager.Web.Infrastructure.Tags;
+using SupportManager.Web.Mailers;
 
-namespace SupportManager.Web
+var webApplicationOptions = new WebApplicationOptions()
 {
-    public class Program
+    ContentRootPath = AppContext.BaseDirectory,
+    Args = args,
+    ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
+};
+var builder = WebApplication.CreateBuilder(webApplicationOptions);
+
+builder.Host.UseWindowsService();
+
+// Add services to the container.
+builder.Services
+    .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+    .AddNegotiate()
+    .AddApiKeyAuthentication();
+
+builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
+
+builder.Services.AddAutoMapper(typeof(Program))
+    .AddMediatR(typeof(Program))
+    .AddScoped(_ => new SupportManagerContext(builder.Configuration["Connections:SupportManager"]))
+    .AddHtmlTags(new SupportManagerHtmlConventions())
+    .AddHangfire(hangfire =>
     {
-        private static string[] args;
+        hangfire.UseSqlServerStorage(builder.Configuration["Connections:hangfire"]);
+        hangfire.UseConsole();
+    })
+    .AddTransient<IActionContextAccessor, ActionContextAccessor>()
+    .AddScoped<IForwarder, Forwarder>()
+    .AddScoped<SupportManager.Control.IPublisher, Publisher>()
+    .AddScoped<TeamMemberFilter>()
+    .AddTransient<UserMailer>()
+    .AddTransient<SmtpClient>(_ => throw new NotImplementedException());
 
-        public static void Main()
-        {
-            HostFactory.Run(cfg =>
-            {
-                cfg.AddCommandLineDefinition("aspnetcoreargs", v => args = v.Split(' '));
 
-                cfg.SetServiceName("SupportManager.Web");
-                cfg.SetDisplayName("SupportManager.Web");
-                cfg.SetDescription("SupportManager Web Interface");
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/User");
+    options.Conventions.Add(new TeamIdPageRouteModelConvention());
+    options.Conventions.Add(new TeamMemberModelConvention());
+}).AddMvcOptions(options =>
+{
+    options.Filters.Add<DbContextTransactionFilter>();
+    options.Filters.Add<ValidatorActionFilter>();
+    options.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
+    options.ModelBinderProviders.Insert(0, new LoggedInUserModelBinderProvider());
+}).AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Program>());
 
-                cfg.Service<IWebHost>(svc =>
-                {
-                    svc.ConstructUsing(CreateWebHost);
-                    svc.WhenStarted(webHost =>
-                    {
-                        webHost.Start();
-                        RecurringJob.AddOrUpdate<IForwarder>(f => f.ReadAllTeamStatus(null), Cron.MinuteInterval(10));
-                    });
-                    svc.WhenStopped(webHost => webHost.Dispose());
-                });
+var app = builder.Build();
 
-                cfg.RunAsLocalSystem();
-                cfg.StartAutomatically();
-            });
-        }
-
-        private static IWebHost CreateWebHost()
-        {
-            var builder = WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
-
-            if (!Debugger.IsAttached)
-            {
-                builder.UseHttpSys(options =>
-                {
-                    options.Authentication.Schemes = AuthenticationSchemes.NTLM | AuthenticationSchemes.Negotiate;
-                    options.Authentication.AllowAnonymous = true;
-                });
-
-                builder.UseContentRoot(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName));
-            }
-
-            return builder.Build();
-        }
-    }
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseHangfireDashboard(options: new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter() }
+});
+
+app.MapRazorPages();
+app.MapControllers();
+
+app.Run();

@@ -1,0 +1,43 @@
+﻿@page
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model SupportManager.Web.Areas.Teams.Pages.FullScheduleModel
+@{
+    ViewBag.Title = "Schedule";
+}
+
+<h2>Schedule</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th class="w-10"></th>
+        <th class="w-25">User</th>
+        <th class="w-25">Phonenumber</th>
+        <th class="w-40">When</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var schedule in Model.Data.Schedule)
+    {
+        <tr>
+            <td>
+                <a asp-route-TeamId="@Model.Data.Query.TeamId" asp-page="EditForward" asp-route-id="@schedule.Id"><i class="fa fa-pencil fa-fw"></i></a>
+                <a asp-route-TeamId="@Model.Data.Query.TeamId" asp-page="DeleteForward" asp-route-id="@schedule.Id"><i class="fa fa-trash-o fa-fw"></i></a>
+            </td>
+            <td>@schedule.User</td>
+            <td>@schedule.PhoneNumber</td>
+            <td>@schedule.When</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Html.PagedListPager(
+    Model.Data.Schedule,
+    page => Url.RouteUrl(Model.Data.Query with {PageNumber = page}),
+    new PagedListRenderOptions
+    {
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })

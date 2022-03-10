@@ -1,0 +1,26 @@
+﻿@page
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Areas.Teams.Pages.ScheduleForwardModel
+@{
+    ViewBag.Title = "Schedule forward";
+}
+
+<h2>Schedule forward</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Forwarding information</h4>
+        <hr/>
+        @Html.HiddenFor(m => m.Data.TeamId)
+        @Html.FormBlock(m => m.Data.PhoneNumber)
+        @Html.FormBlock(m => m.Data.When)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default"/>
+            </div>
+        </div>
+    </div>
+}

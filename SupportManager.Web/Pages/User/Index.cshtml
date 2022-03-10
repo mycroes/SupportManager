@@ -1,0 +1,182 @@
+﻿@page
+@model SupportManager.Web.Pages.User.IndexModel
+@{
+    ViewBag.Title = "User home";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h2>
+            User details <small class="text-muted">for @Model.Data.DisplayName</small>
+        </h2>
+
+        <dl class="row">
+            <dt class="col-md-3">Primary email address</dt>
+            <dd class="col-md-9">@(Model.Data.PrimaryEmailAddressValue ?? "Not set")</dd>
+            <dt class="col-md-3">Primary phone number</dt>
+            @if (Model.Data.PrimaryPhoneNumberValue != null)
+            {
+                <dd class="col-md-9">@Model.Data.PrimaryPhoneNumberValue</dd>
+            }
+            else
+            {
+                <dd class="col-md-9">Not set</dd>
+            }
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <h5 class="card-header">Email addresses</h5>
+
+            <div class="card-body">
+                @if (Model.Data.EmailAddresses.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Email address</th>
+                                <th>Verified?</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Data.EmailAddresses.Count; i++)
+                            {
+                                <tr>
+                                    <td>@Model.Data.EmailAddresses[i].Value</td>
+                                    <td>@Html.Display(m => m.Data.EmailAddresses[i].IsVerified)</td>
+                                    <td>
+                                        @if (Model.Data.PrimaryEmailAddressId == Model.Data.EmailAddresses[i].Id)
+                                        {
+                                            <span class="badge badge-primary">Primary</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#">Set as primary</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="card-text">
+                        <div class="alert alert-warning" style="margin-bottom: 1px">
+                            No email address configured yet, you won't be able to receive email notifications!
+                        </div>
+                    </div>
+                }
+                @Html.ActionLink("Add email address", "AddEmailAddress", null, null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-3">
+        <div class="card">
+            <h5 class="card-header">Phone numbers</h5>
+
+            <div class="card-body">
+
+                @if (Model.Data.PhoneNumbers.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Phone number</th>
+                                <th>Verified?</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Data.PhoneNumbers.Count; i++)
+                            {
+                                var phone = Model.Data.PhoneNumbers[i];
+                                <tr>
+                                    <td>@phone.Label</td>
+                                    <td>@phone.Value</td>
+                                    <td>@Html.Display(m => m.Data.PhoneNumbers[i].IsVerified)</td>
+                                    <td>
+                                        @if (Model.Data.PrimaryPhoneNumberId == phone.Id)
+                                        {
+                                            <span class="badge badge-primary">Primary</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#">Set as primary</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="card-text">
+                        <div class="alert alert-warning" style="margin-bottom: 1px">
+                            No phone number configured yet, you won't be able to take support duty!
+                        </div>
+                    </div>
+                }
+
+                @Html.ActionLink("Add phone number", "AddPhoneNumber", null, null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <h5 class="card-header">
+                Teams
+            </h5>
+            <div class="card-body">
+                @if (Model.Data.MemberShips.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Data.MemberShips.Count; i++)
+                            {
+                                var team = Model.Data.MemberShips[i];
+                                <tr>
+                                    <td>
+                                        <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.TeamId">@team.TeamName</a>
+                                    </td>
+                                    <td>
+                                        @if (team.IsAdministrator)
+                                        {
+                                            <span class="badge badge-primary">Admin</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">User</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="card-text">
+                        <div class="alert alert-warning" style="margin-bottom: 1px">
+                            Not a member of any team.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

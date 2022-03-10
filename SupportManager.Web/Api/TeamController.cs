@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Api.Teams;
 using SupportManager.Api.Users;
 using SupportManager.Web.Api.Team;
-using SupportManager.Web.Areas.Teams.Home;
+using SupportManager.Web.Areas.Teams.Pages;
+using Schedule = SupportManager.Web.Api.Team.Schedule;
 
 namespace SupportManager.Web.Api
 {
@@ -35,7 +34,8 @@ namespace SupportManager.Web.Api
         [HttpDelete("forward/{id}")]
         public async Task<IActionResult> DeleteForward(int id)
         {
-            await mediator.Send(new DeleteForward.Command {Id = id});
+            // Hack, move command out of Model
+            await mediator.Send(new DeleteForwardModel.Command {Id = id});
             return Ok();
         }
 
