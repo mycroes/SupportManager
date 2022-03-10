@@ -1,6 +1,7 @@
 using System.Data.Entity;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SupportManager.DAL;
 
 namespace SupportManager.Web.Areas.Teams.Pages
@@ -62,6 +63,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
                     from tm in t.Members
                     let m = tm.User
                     where t.Id == message.TeamId
+                    orderby m.DisplayName
                     select new Result.Member
                     {
                         DisplayName = m.DisplayName,
