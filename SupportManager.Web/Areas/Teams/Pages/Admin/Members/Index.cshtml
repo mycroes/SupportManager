@@ -1,0 +1,44 @@
+﻿@page
+@using X.PagedList.Web.Common
+@using X.PagedList.Mvc.Core
+@model SupportManager.Web.Areas.Teams.Pages.Admin.Members.IndexModel
+@{
+    ViewBag.Title = "Team members";
+}
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Login</th>
+        <th>Primary phone number</th>
+        <th>Admin?</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Data.Users)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.DisplayName</td>
+            <td>@user.Login</td>
+            <td>@user.PrimaryPhoneNumberValue</td>
+            <td>@user.IsAdministrator</td>
+            <td>
+                <a asp-page="Edit" asp-route-TeamId="@Model.TeamId" asp-route-id="@user.Id">Edit</a>
+                <a asp-page="Delete" asp-route-TeamId="@Model.TeamId" asp-route-id="@user.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model.Data.Users, page => Url.RouteUrl(Model.Data.Query with {PageNumber = page}), new PagedListRenderOptions { LiElementClasses = new[] { "page-item" }, PageClasses = new[] { "page-link" } })
+
+<p>
+    <a asp-route-TeamId="@Model.TeamId" asp-page="Add">Add user</a>
+</p>

@@ -1,0 +1,49 @@
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.Admin.Members.DeleteModel
+@{
+    ViewBag.Title = $"Delete user {Model.Data.DisplayName}";
+}
+
+<h2>Delete user @Model.Data.DisplayName</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <h4>Forwarding information</h4>
+        <hr/>
+        <div class="alert alert-info">
+            Please verify the information below before confirming delete.
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="w-10"></th>
+                <th class="w-25">Name</th>
+                <th class="w-25">Phone number</th>
+                <th class="w-40">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td>@Html.Display(m => m.Data.DisplayName)</td>
+                <td>@Html.Display(m => m.Data.PrimaryPhoneNumber)</td>
+                <td>@Html.Display(m => m.Data.PrimaryEmailAddress)</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @Html.Input(m => m.Data.Id)
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <input type="submit" value="Delete" class="btn btn-danger"/>
+
+            <a asp-route-TeamId="@Model.TeamId" asp-page="Index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+}
