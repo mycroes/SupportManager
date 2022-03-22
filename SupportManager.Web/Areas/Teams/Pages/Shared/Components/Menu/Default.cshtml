@@ -6,3 +6,10 @@
 <li class="nav-item">
     <a asp-route-TeamId="@Model.TeamId" asp-page="/Report/Monthly" class="nav-link">Report</a>
 </li>
+
+@if (Model.IsAdmin)
+{
+    <li class="nav-item">
+        <a asp-route-TeamId="@Model.TeamId" asp-page="/Admin/Members/Index" class="nav-link">Manage users</a>
+    </li>
+}
