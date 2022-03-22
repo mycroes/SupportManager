@@ -52,10 +52,6 @@
                                         {
                                             <span class="badge badge-primary">Primary</span>
                                         }
-                                        else
-                                        {
-                                            <a href="#">Set as primary</a>
-                                        }
                                     </td>
                                 </tr>
                             }
@@ -70,7 +66,6 @@
                         </div>
                     </div>
                 }
-                @Html.ActionLink("Add email address", "AddEmailAddress", null, null, new { @class = "btn btn-primary" })
             </div>
         </div>
     </div>
@@ -105,10 +100,6 @@
                                         {
                                             <span class="badge badge-primary">Primary</span>
                                         }
-                                        else
-                                        {
-                                            <a href="#">Set as primary</a>
-                                        }
                                     </td>
                                 </tr>
                             }
@@ -123,8 +114,6 @@
                         </div>
                     </div>
                 }
-
-                @Html.ActionLink("Add phone number", "AddPhoneNumber", null, null, new { @class = "btn btn-primary" })
             </div>
         </div>
     </div>
@@ -145,27 +134,27 @@
                                 <th>Role</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        @for (int i = 0; i < Model.Data.MemberShips.Count; i++)
-                        {
-                            var team = Model.Data.MemberShips[i];
-                            <tr>
-                                <td>
-                                    <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.TeamId">@team.TeamName</a>
-                                </td>
-                                <td>
-                                    @if (team.IsAdministrator)
-                                    {
-                                        <span class="badge badge-primary">Admin</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-secondary">User</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
+                                <tbody>
+                                @for (int i = 0; i < Model.Data.MemberShips.Count; i++)
+                                {
+                                    var team = Model.Data.MemberShips[i];
+                                            <tr>
+                                                <td>
+                                                    <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.TeamId">@team.TeamName</a>
+                                                </td>
+                                                <td>
+                                            @if (team.IsAdministrator)
+                                            {
+                                                                <span class="badge badge-primary">Admin</span>
+                                            }
+                                            else
+                                            {
+                                                                <span class="badge badge-secondary">User</span>
+                                            }
+                                                </td>
+                                            </tr>
+                                }
+                                </tbody>
                     </table>
                 }
                 else
