@@ -85,6 +85,8 @@ app.UseHangfireDashboard(options: new DashboardOptions
     Authorization = new[] { new HangfireAuthorizationFilter() }
 });
 
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
 app.MapRazorPages();
 app.MapControllers();
 
