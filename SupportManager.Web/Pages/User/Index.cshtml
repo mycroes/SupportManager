@@ -146,25 +146,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (int i = 0; i < Model.Data.MemberShips.Count; i++)
-                            {
-                                var team = Model.Data.MemberShips[i];
-                                <tr>
-                                    <td>
-                                        <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.TeamId">@team.TeamName</a>
-                                    </td>
-                                    <td>
-                                        @if (team.IsAdministrator)
-                                        {
-                                            <span class="badge badge-primary">Admin</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-secondary">User</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
+                        @for (int i = 0; i < Model.Data.MemberShips.Count; i++)
+                        {
+                            var team = Model.Data.MemberShips[i];
+                            <tr>
+                                <td>
+                                    <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.TeamId">@team.TeamName</a>
+                                </td>
+                                <td>
+                                    @if (team.IsAdministrator)
+                                    {
+                                        <span class="badge badge-primary">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">User</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 }
