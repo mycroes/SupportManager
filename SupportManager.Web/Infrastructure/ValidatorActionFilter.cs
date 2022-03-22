@@ -4,34 +4,37 @@ using Newtonsoft.Json;
 
 namespace SupportManager.Web.Infrastructure
 {
-    public class ValidatorActionFilter : IActionFilter
+    public class ValidatorActionFilter : IPageFilter
     {
-        public void OnActionExecuting(ActionExecutingContext filterContext)
+        public void OnPageHandlerSelected(PageHandlerSelectedContext context)
         {
-            if (!filterContext.ModelState.IsValid)
+        }
+
+        public void OnPageHandlerExecuting(PageHandlerExecutingContext context)
+        {
+            if (!context.ModelState.IsValid)
             {
-                if (filterContext.HttpContext.Request.Method == "GET")
+                if (context.HttpContext.Request.Method == "GET")
                 {
                     var result = new BadRequestResult();
-                    filterContext.Result = result;
+                    context.Result = result;
                 }
                 else
                 {
                     var result = new ContentResult();
-                    string content = JsonConvert.SerializeObject(filterContext.ModelState,
-                        new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
+                    string content = JsonConvert.SerializeObject(context.ModelState,
+                        new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                     result.Content = content;
                     result.ContentType = "application/json";
 
-                    filterContext.HttpContext.Response.StatusCode = 400;
-                    filterContext.Result = result;
+                    context.HttpContext.Response.StatusCode = 400;
+                    context.Result = result;
                 }
             }
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
+        public void OnPageHandlerExecuted(PageHandlerExecutedContext context)
         {
-
         }
     }
 }
