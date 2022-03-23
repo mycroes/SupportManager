@@ -14,5 +14,10 @@ namespace SupportManager.DAL
         public virtual UserEmailAddress PrimaryEmailAddress { get; set; }
         public virtual UserPhoneNumber PrimaryPhoneNumber { get; set; }
         public virtual ICollection<TeamMember> Memberships { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the user is a superuser.
+        /// </summary>
+        public virtual bool IsSuperUser { get; set; }
     }
 }
