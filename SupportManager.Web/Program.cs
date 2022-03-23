@@ -4,6 +4,7 @@ using Hangfire;
 using Hangfire.Console;
 using HtmlTags;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SupportManager.Contracts;
@@ -45,6 +46,7 @@ builder.Services.AddAutoMapper(typeof(Program))
     .AddScoped<IForwarder, Forwarder>()
     .AddScoped<SupportManager.Control.IPublisher, Publisher>()
     .AddScoped<TeamMemberFilter>()
+    .AddTransient<IClaimsTransformation, ClaimsTransformation>()
     .AddTransient<UserMailer>()
     .AddTransient<SmtpClient>(_ => throw new NotImplementedException());
 

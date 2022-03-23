@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SupportManager.DAL;
 
@@ -27,15 +26,7 @@ public class TeamMemberFilter : IAsyncPageFilter
             return;
         }
 
-        var team = await db.Teams.FindAsync(teamId);
-        if (team == null)
-        {
-            context.Result = new NotFoundResult();
-            return;
-        }
-
-        var userName = context.HttpContext.User.Identity?.Name;
-        if (!await db.TeamMembers.AnyAsync(x => x.TeamId == teamId && x.User.Login == userName))
+        if (!context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamMember, teamId.ToString()))
         {
             context.Result = new NotFoundResult();
             return;
