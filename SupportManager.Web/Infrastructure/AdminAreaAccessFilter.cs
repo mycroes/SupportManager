@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SupportManager.Web.Infrastructure;
@@ -16,7 +15,6 @@ internal class AdminAreaAccessFilter : IPageFilter
 
         if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.SuperUser, true.ToString())) return;
 
-        context.HttpContext.Response.StatusCode = (int) HttpStatusCode.Forbidden;
         context.Result = new ForbidResult();
     }
 
