@@ -58,6 +58,7 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.Add(new TeamMemberModelConvention());
 }).AddMvcOptions(options =>
 {
+    options.Filters.Add<AdminAreaAccessFilter>();
     options.Filters.Add<DbContextTransactionFilter>();
     options.Filters.Add<ValidatorActionFilter>();
     options.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
