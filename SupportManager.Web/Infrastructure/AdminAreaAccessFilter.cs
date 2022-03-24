@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SupportManager.Web.Infrastructure;
@@ -13,7 +14,8 @@ internal class AdminAreaAccessFilter : IPageFilter
     {
         if (context.ActionDescriptor.AreaName != "Admin") return;
 
-        if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.SuperUser, true.ToString())) return;
+        if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.SuperUser,
+                true.ToString(CultureInfo.InvariantCulture))) return;
 
         context.Result = new ForbidResult();
     }

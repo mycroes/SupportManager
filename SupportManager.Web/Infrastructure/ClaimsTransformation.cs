@@ -29,18 +29,19 @@ internal class ClaimsTransformation : IClaimsTransformation
         identity.AddClaim(new Claim(SupportManagerClaimTypes.UserId, user.Id.ToString(CultureInfo.InvariantCulture)));
         if (user.IsSuperUser && !principal.HasClaim(c => c.Type == SupportManagerClaimTypes.SuperUser))
         {
-            identity.AddClaim(new Claim(SupportManagerClaimTypes.SuperUser, true.ToString()));
+            identity.AddClaim(
+                new Claim(SupportManagerClaimTypes.SuperUser, true.ToString(CultureInfo.InvariantCulture)));
         }
 
         foreach (var membership in user.Memberships)
         {
-            if (!principal.HasClaim(SupportManagerClaimTypes.TeamMember, membership.TeamId.ToString()))
+            var teamId = membership.TeamId.ToString(CultureInfo.InvariantCulture);
+            if (principal.HasClaim(SupportManagerClaimTypes.TeamMember, teamId)) continue;
+
+            identity.AddClaim(new Claim(SupportManagerClaimTypes.TeamMember, teamId));
+            if (membership.IsAdministrator)
             {
-                identity.AddClaim(new Claim(SupportManagerClaimTypes.TeamMember, membership.TeamId.ToString()));
-                if (membership.IsAdministrator)
-                {
-                    identity.AddClaim(new Claim(SupportManagerClaimTypes.TeamAdmin, membership.TeamId.ToString()));
-                }
+                identity.AddClaim(new Claim(SupportManagerClaimTypes.TeamAdmin, teamId));
             }
         }
 
