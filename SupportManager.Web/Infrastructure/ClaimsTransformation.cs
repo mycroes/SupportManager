@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using SupportManager.DAL;
@@ -25,6 +26,7 @@ internal class ClaimsTransformation : IClaimsTransformation
         if (user == null) return principal;
 
         var identity = new ClaimsIdentity();
+        identity.AddClaim(new Claim(SupportManagerClaimTypes.UserId, user.Id.ToString(CultureInfo.InvariantCulture)));
         if (user.IsSuperUser && !principal.HasClaim(c => c.Type == SupportManagerClaimTypes.SuperUser))
         {
             identity.AddClaim(new Claim(SupportManagerClaimTypes.SuperUser, true.ToString()));
