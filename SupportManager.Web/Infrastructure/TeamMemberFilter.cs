@@ -19,9 +19,18 @@ public class TeamMemberFilter : IPageFilter
             return;
         }
 
-        if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamMember, teamId.ToString())) return;
+        if (!context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamMember, teamId.ToString()))
+        {
+            context.Result = new NotFoundResult();
+            return;
+        }
 
-        context.Result = new NotFoundResult();
+        if (context.ActionDescriptor.ViewEnginePath.StartsWith("/Admin") &&
+            !context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamAdmin, teamId.ToString()))
+        {
+            context.Result = new ForbidResult();
+            return;
+        }
     }
 
     public void OnPageHandlerExecuted(PageHandlerExecutedContext context)
