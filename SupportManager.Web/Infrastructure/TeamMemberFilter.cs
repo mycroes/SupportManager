@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SupportManager.DAL;
 
 namespace SupportManager.Web.Infrastructure;
 
