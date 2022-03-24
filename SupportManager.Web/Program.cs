@@ -55,10 +55,10 @@ builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/User");
     options.Conventions.Add(new TeamIdPageRouteModelConvention());
-    options.Conventions.Add(new TeamMemberModelConvention());
 }).AddMvcOptions(options =>
 {
     options.Filters.Add<AdminAreaAccessFilter>();
+    options.Filters.Add<TeamMemberFilter>();
     options.Filters.Add<DbContextTransactionFilter>();
     options.Filters.Add<ValidatorActionFilter>();
     options.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
