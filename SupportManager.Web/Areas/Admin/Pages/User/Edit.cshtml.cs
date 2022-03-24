@@ -34,6 +34,10 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             public string Login { get; init; }
             public string PrimaryEmailAddress { get; init; }
             public string PrimaryPhoneNumber { get; init; }
+            public bool Deleted { get; set; }
+            public bool IsSuperUser { get; set; }
+            public SupportTeam Team { get; set; }
+            public bool IsTeamAdmin { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -62,7 +66,11 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
                     DisplayName = u.DisplayName,
                     Login = u.Login,
                     PrimaryEmailAddress = u.PrimaryEmailAddress.Value,
-                    PrimaryPhoneNumber = u.PrimaryPhoneNumber.Value
+                    PrimaryPhoneNumber = u.PrimaryPhoneNumber.Value,
+                    Deleted = u.Deleted,
+                    IsSuperUser = u.IsSuperUser,
+                    Team = u.Memberships.FirstOrDefault().Team,
+                    IsTeamAdmin = u.Memberships.Any() && u.Memberships.FirstOrDefault().IsAdministrator
                 }).SingleOrDefaultAsync() ?? throw new Exception($"Couldn't find User with Id '{request.Id}.");
             }
         }
@@ -81,9 +89,12 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             {
                 var user = await db.Users.FindAsync(message.Id) ??
                     throw new ArgumentException($"Couldn't find User with Id '{message.Id}'.");
+                await db.Entry(user).Collection(u => u.Memberships).LoadAsync();
 
                 user.DisplayName = message.DisplayName;
                 user.Login = message.Login;
+                user.IsSuperUser = message.IsSuperUser;
+                user.Deleted = message.Deleted;
 
                 if (message.PrimaryEmailAddress == null)
                 {
@@ -129,6 +140,24 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
                     {
                         user.PrimaryPhoneNumber.Value = message.PrimaryPhoneNumber;
                     }
+                }
+
+                if (message.Team == null)
+                {
+                    user.Memberships.Clear();
+                }
+                else
+                {
+                    if (!user.Memberships.Any() || user.Memberships.Any(x => x.TeamId != message.Team.Id))
+                    {
+                        user.Memberships.Clear();
+                        user.Memberships.Add(new TeamMember
+                        {
+                            Team = message.Team
+                        });
+                    }
+
+                    user.Memberships.First().IsAdministrator = message.IsTeamAdmin;
                 }
 
                 await db.SaveChangesAsync();
