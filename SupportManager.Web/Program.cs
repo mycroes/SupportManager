@@ -42,6 +42,7 @@ builder.Services.AddAutoMapper(typeof(Program))
         hangfire.UseSqlServerStorage(builder.Configuration["Connections:hangfire"]);
         hangfire.UseConsole();
     })
+    .AddHangfireServer()
     .AddTransient<IActionContextAccessor, ActionContextAccessor>()
     .AddScoped<IForwarder, Forwarder>()
     .AddScoped<SupportManager.Control.IPublisher, Publisher>()
