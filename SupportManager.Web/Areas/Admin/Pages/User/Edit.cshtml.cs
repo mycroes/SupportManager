@@ -34,10 +34,10 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             public string Login { get; init; }
             public string PrimaryEmailAddress { get; init; }
             public string PrimaryPhoneNumber { get; init; }
-            public bool Deleted { get; set; }
-            public bool IsSuperUser { get; set; }
-            public SupportTeam Team { get; set; }
-            public bool IsTeamAdmin { get; set; }
+            public bool Deleted { get; init; }
+            public bool IsSuperUser { get; init; }
+            public SupportTeam Team { get; init; }
+            public bool IsTeamAdmin { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>
