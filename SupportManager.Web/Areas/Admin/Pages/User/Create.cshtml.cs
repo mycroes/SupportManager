@@ -31,6 +31,9 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             public string Login { get; init; }
             public string PrimaryEmailAddress { get; init; }
             public string PrimaryPhoneNumber { get; init; }
+            public bool IsSuperUser { get; init; }
+            public SupportTeam Team { get; init; }
+            public bool IsTeamAdmin { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -53,8 +56,20 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
 
             protected override async Task Handle(Command message, CancellationToken cancellationToken)
             {
-                var user = new DAL.User { DisplayName = message.DisplayName, Login = message.Login };
+                var user = new DAL.User
+                {
+                    DisplayName = message.DisplayName, Login = message.Login, IsSuperUser = message.IsSuperUser
+                };
                 db.Users.Add(user);
+
+                if (message.Team is { })
+                {
+                    user.Memberships = new List<TeamMember>
+                    {
+                        new() { Team = message.Team, IsAdministrator = message.IsTeamAdmin }
+                    };
+                }
+
                 await db.SaveChangesAsync();
 
                 if (message.PrimaryEmailAddress != null)
