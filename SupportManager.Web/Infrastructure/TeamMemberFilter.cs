@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace SupportManager.Web.Infrastructure;
@@ -12,6 +13,13 @@ internal class TeamMemberFilter : IPageFilter
     public void OnPageHandlerExecuting(PageHandlerExecutingContext context)
     {
         if (context.ActionDescriptor.AreaName != "Teams") return;
+
+        // Permit superuser access to all teams
+        if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.SuperUser,
+                true.ToString(CultureInfo.InvariantCulture)))
+        {
+            return;
+        }
 
         if (context.RouteData.Values["teamId"] is not string teamId)
         {
