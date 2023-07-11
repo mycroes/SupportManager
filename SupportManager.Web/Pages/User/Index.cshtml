@@ -1,4 +1,6 @@
 ﻿@page
+@using SupportManager.Web.Infrastructure
+@using System.Globalization
 @model SupportManager.Web.Pages.User.IndexModel
 @{
     ViewBag.Title = "User home";
@@ -172,5 +174,9 @@
 <div class="row">
     <div class="col-lg-12">
         <a class="btn btn-primary" asp-page="ApiKeys/List">Manage API Keys</a>
+        @if (User.HasClaim(SupportManagerClaimTypes.SuperUser, true.ToString(CultureInfo.InvariantCulture)))
+        {
+            <a class="btn btn-primary" asp-area="Admin" asp-page="/User/Index">Manage users</a>
+        }
     </div>
 </div>
