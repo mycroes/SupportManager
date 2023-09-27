@@ -16,7 +16,7 @@
         <hr/>
         @Html.HiddenFor(m => m.Data.TeamId)
         @Html.FormBlock(m => m.Data.PhoneNumber)
-        @Html.FormBlock(m => m.Data.When)
+        @Html.FormBlock(m => m.Data.When, inputModifier: tag => tag.Attr("min", DateTime.Now.ToString("s")).Attr("step", "1"))
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default"/>
