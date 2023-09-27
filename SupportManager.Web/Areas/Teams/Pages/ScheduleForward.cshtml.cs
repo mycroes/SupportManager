@@ -21,6 +21,8 @@ namespace SupportManager.Web.Areas.Teams.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Data.When <= DateTimeOffset.Now) return new BadRequestResult();
+
             await mediator.Send(Data);
 
             return this.RedirectToPageJson(nameof(Index), new { TeamId });
