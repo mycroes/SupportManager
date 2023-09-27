@@ -24,3 +24,14 @@
         </div>
     </div>
 }
+
+@section scripts
+{
+    <script type="text/javascript">
+        var whenField = document.getElementById('Data_When');
+        function updateMinValue() {
+            whenField.setAttribute('min', new Date().toISOString().substring(0, 19));
+        }
+        window.setInterval(updateMinValue, 10000);
+    </script>
+}
