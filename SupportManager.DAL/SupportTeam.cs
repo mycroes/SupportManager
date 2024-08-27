@@ -9,5 +9,6 @@ namespace SupportManager.DAL
         public virtual string Name { get; set; }
         public virtual string ConnectionString { get; set; }
         public virtual ICollection<TeamMember> Members { get; set; }
+        public virtual ICollection<ScheduleTemplate> ScheduleTemplates { get; set; }
     }
 }
