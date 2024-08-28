@@ -12,6 +12,9 @@ public class TeamPageModel : PageModel
         int.TryParse(context.RouteData.Values["teamId"]?.ToString(), out var teamId);
         TeamId = teamId;
 
+        var teamIdContainer = context.HttpContext.RequestServices.GetRequiredService<TeamId>();
+        teamIdContainer.Value = teamId;
+
         base.OnPageHandlerSelected(context);
     }
 }

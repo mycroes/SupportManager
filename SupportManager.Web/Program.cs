@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SupportManager.Contracts;
 using SupportManager.Control;
 using SupportManager.DAL;
+using SupportManager.Web.Areas.Teams;
 using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Web.Infrastructure.Tags;
@@ -30,6 +31,8 @@ builder.Services
     .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
     .AddNegotiate()
     .AddApiKeyAuthentication();
+
+builder.Services.AddScoped<TeamId>();
 
 builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
 
