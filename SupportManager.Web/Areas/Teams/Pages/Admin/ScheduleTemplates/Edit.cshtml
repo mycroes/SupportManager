@@ -1,0 +1,134 @@
+﻿@page
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Areas.Teams.Pages.Admin.ScheduleTemplates.EditModel
+@{
+    ViewBag.Title = "Edit Schedule Template";
+}
+
+<h2>Edit Schedule Template</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Metadata</h4>
+        <hr />
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Data.TeamId)
+        @Html.FormBlock(m => m.Data.Name)
+        @Html.FormBlock(m => m.Data.StartDay)
+
+        <h4>Schedule</h4>
+        <hr />
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].DayOfWeek).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].Time).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].UserSlot)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="entries">
+                @for (var i = 0; i < Model.Data.Entries.Count; i++)
+                {
+                    <tr class="entry">
+                        <td class="form-group">
+                            @Html.Input(m => m.Data.Entries[i].DayOfWeek)
+                        </td>
+                        <td>
+                            @Html.Input(m => m.Data.Entries[i].Time)
+                        </td>
+                        <td>
+                            @Html.Input(m => m.Data.Entries[i].UserSlot)
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger entry-remove">Remove entry</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-success entry-add">Add entry</button>
+        </div>
+
+        <hr />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<table id="entry-template" style="display: none;">
+    <tbody>
+        <tr class="entry">
+            <td class="form-group">
+                @Html.Input(m => m.Data.Entries[0].DayOfWeek).Modify(tag => (tag as SelectTag)?.SelectByValue(""))
+            </td>
+            <td>
+                @Html.Input(m => m.Data.Entries[0].Time).Value("00:00")
+            </td>
+            <td>
+                @Html.Input(m => m.Data.Entries[0].UserSlot).Value("")
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger entry-remove">Remove entry</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+
+    (function () {
+        const source = document.getElementById('entry-template');
+        const entries = document.getElementById('entries');
+
+        function removeNode(target) {
+            let match = false;
+            Array.from(entries.children).forEach((node, idx) => {
+                if (!match) {
+                    match = node === target;
+                    return;
+                }
+
+                node.querySelectorAll('input, select').forEach(el => {
+                    el.name = el.name.replace(`[${idx}]`, `[${idx - 1}]`);
+                    el.id = el.id.replace(`_${idx}_`, `_${idx - 1}_`);
+                });
+            });
+
+            entries.removeChild(target);
+        }
+
+        function copyTemplate() {
+            const idx = entries.children.length;
+            const copy = source.querySelector('tr').cloneNode(true);
+
+            copy.querySelectorAll('input, select').forEach(el => {
+                el.name = el.name.replace('[0]', `[${idx}]`);
+                el.id = el.id.replace('_0_', `_${idx}_`);
+            });
+
+            entries.appendChild(copy);
+
+            copy.querySelector('button').addEventListener('click', () => removeNode(copy));
+        }
+
+        document.querySelector('button.entry-add').addEventListener('click', () => {
+            copyTemplate();
+        });
+
+        Array.from(entries.children).forEach(node => {
+            console.log(node);
+            node.querySelector('button').addEventListener('click', () => removeNode(node));
+        });
+    })();
+</script>

@@ -1,0 +1,34 @@
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.Admin.ScheduleTemplates.IndexModel
+@{
+    ViewBag.Title = "Schedule Templates";
+}
+
+<h2>Schedule Templates</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var (id, template) in Model.Data)
+    {
+        <tr>
+            <td>@id</td>
+            <td>@template.Name</td>
+            <td>
+                <a asp-page="Edit" asp-route-TeamId="@Model.TeamId" asp-route-id="@id">Edit</a>
+                <a asp-page="Delete" asp-route-TeamId="@Model.TeamId" asp-route-id="@id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<p>
+    <a asp-route-TeamId="@Model.TeamId" asp-page="Add">Add template</a>
+</p>
