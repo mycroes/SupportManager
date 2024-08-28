@@ -22,6 +22,11 @@ namespace SupportManager.Web.Infrastructure.Tags
             Editors.If(er => er.Accessor.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase)).BuildBy(a => new HiddenTag().Value(a.StringValue()));
             Editors.IfPropertyIs<byte[]>().BuildBy(a => new HiddenTag().Value(Convert.ToBase64String(a.Value<byte[]>())));
 
+            Editors.IfPropertyIs<TimeSpan?>().ModifyWith(m =>
+                m.CurrentTag.AddPattern("9{1,2}:[0-5][0-9]").Attr("type", "time").Value(m.Value<TimeSpan?>() != null
+                    ? m.Value<TimeSpan>().ToString(@"hh\:mm")
+                    : string.Empty));
+
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
