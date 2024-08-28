@@ -15,7 +15,7 @@ namespace SupportManager.Web.Infrastructure.Tags
 
         public HtmlTag Build(ElementRequest request)
         {
-            return new HtmlTag("").NoTag().Text(BreakUpCamelCase(request.Accessor.Name));
+            return new HtmlTag("").NoTag().Text(BreakUpCamelCase(request.Accessor.InnerProperty.Name));
         }
 
         public static string BreakUpCamelCase(string fieldName)
