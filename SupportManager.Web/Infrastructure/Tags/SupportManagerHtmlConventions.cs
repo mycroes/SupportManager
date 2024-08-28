@@ -30,6 +30,8 @@ namespace SupportManager.Web.Infrastructure.Tags
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
+            Editors.BuilderPolicy<EnumSelectElementBuilder>();
+
             Labels.Always.BuildBy<DefaultDisplayLabelBuilder>();
             Labels.Always.AddClass("control-label");
             Labels.Always.AddClass("col-md-2");
