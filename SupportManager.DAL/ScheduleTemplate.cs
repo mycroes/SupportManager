@@ -12,5 +12,5 @@ public class ScheduleTemplate : Entity
 
     public virtual DayOfWeek StartDay { get; set; }
 
-    public virtual ICollection<ScheduleTemplateEntry> Entries { get; set; }
+    public virtual List<ScheduleTemplateEntry> Entries { get; set; }
 }
