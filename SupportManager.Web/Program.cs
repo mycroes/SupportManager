@@ -2,8 +2,6 @@
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.Console;
-using HtmlTags;
-using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -11,7 +9,6 @@ using SupportManager.Contracts;
 using SupportManager.Control;
 using SupportManager.DAL;
 using SupportManager.Web.Areas.Teams;
-using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Web.Infrastructure.Tags;
 using SupportManager.Web.Mailers;
@@ -37,7 +34,7 @@ builder.Services.AddScoped<TeamId>();
 builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
 
 builder.Services.AddAutoMapper(typeof(Program))
-    .AddMediatR(typeof(Program))
+    .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>())
     .AddScoped(_ => new SupportManagerContext(builder.Configuration["Connections:SupportManager"]))
     .AddHtmlTags(new SupportManagerHtmlConventions())
     .AddHangfire(hangfire =>

@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DelegateDecompiler;
+﻿using AutoMapper.QueryableExtensions;
 using X.PagedList;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
@@ -13,7 +9,6 @@ namespace SupportManager.Web.Infrastructure
         public static async Task<IPagedList<TDestination>> ProjectToPagedListAsync<TDestination>(
             this IOrderedQueryable queryable, IConfigurationProvider configurationProvider, int pageNumber,
             int pageSize) =>
-            await queryable.ProjectTo<TDestination>(configurationProvider).Decompile()
-                .ToPagedListAsync(pageNumber, pageSize);
+            await queryable.ProjectTo<TDestination>(configurationProvider).ToPagedListAsync(pageNumber, pageSize);
     }
 }
