@@ -31,6 +31,9 @@ namespace SupportManager.Web.Infrastructure.Tags
                 m.CurrentTag.Attr("type", "date")
                     .Value(m.Value<DateOnly?>() is { } date ? date.ToString("O") : string.Empty));
 
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(int))
+                .ModifyWith(m => m.CurrentTag.Attr("type", "number").Attr("step", "1"));
+
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
