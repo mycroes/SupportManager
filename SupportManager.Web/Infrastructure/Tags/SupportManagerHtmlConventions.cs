@@ -27,6 +27,10 @@ namespace SupportManager.Web.Infrastructure.Tags
                     ? m.Value<TimeSpan>().ToString(@"hh\:mm")
                     : string.Empty));
 
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(DateOnly)).ModifyWith(m =>
+                m.CurrentTag.Attr("type", "date")
+                    .Value(m.Value<DateOnly?>() is { } date ? date.ToString("O") : string.Empty));
+
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
