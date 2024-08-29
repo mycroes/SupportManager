@@ -12,5 +12,7 @@ public class ScheduleTemplate : Entity
 
     public virtual DayOfWeek StartDay { get; set; }
 
+    public virtual TimeSpan StartTime { get; set; }
+
     public virtual List<ScheduleTemplateEntry> Entries { get; set; }
 }

@@ -18,6 +18,7 @@
         @Html.HiddenFor(m => m.Data.TeamId)
         @Html.FormBlock(m => m.Data.Name, inputModifier: t => t.Attr("disabled"))
         @Html.FormBlock(m => m.Data.StartDay, inputModifier: t => t.Attr("disabled"))
+        @Html.FormBlock(m => m.Data.StartTime, inputModifier: t => t.Attr("disabled"))
 
         <h4>Schedule</h4>
         <hr />

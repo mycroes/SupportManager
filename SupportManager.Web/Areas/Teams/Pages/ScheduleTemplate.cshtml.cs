@@ -67,7 +67,8 @@ namespace SupportManager.Web.Areas.Teams.Pages
                     throw NotFound(teamId.Value, request.Id, nameof(request));
 
                 return new Command(template, null,
-                    template.Entries.DistinctBy(e => e.UserSlot).Select(e => new Slot(e.UserSlot, null)).ToList());
+                    template.Entries.DistinctBy(e => e.UserSlot).OrderBy(e => e.UserSlot)
+                        .Select(e => new Slot(e.UserSlot, null)).ToList());
             }
         }
 
@@ -103,7 +104,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
                 DateOnly startDate)
             {
                 var dayDiff = entry.DayOfWeek - template.StartDay;
-                if (dayDiff < 0) dayDiff += 7;
+                if (dayDiff < 0 || dayDiff == 0 && entry.Time < template.StartTime) dayDiff += 7;
 
                 return startDate.AddDays(dayDiff).ToDateTime(TimeOnly.FromTimeSpan(entry.Time));
             }

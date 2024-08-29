@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.DAL;
 using SupportManager.Web.Areas.Teams.Pages.Shared;
-using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.CRUD;
 
 namespace SupportManager.Web.Areas.Teams.Pages.Admin.ScheduleTemplates;
@@ -43,14 +42,17 @@ public class EditModel(IMediator mediator) : TeamPageModel
 
             template.Name = model.Name;
             template.StartDay = model.StartDay;
+            template.StartTime = model.StartTime;
 
-            foreach (var entry in template.Entries)
+            foreach (var entry in template.Entries.ToList())
             {
                 db.ScheduleTemplateEntries.Remove(entry);
             }
 
             template.Entries = model.Entries.Select(BuildEntry)
-                .OrderBy(x => x.DayOfWeek < model.StartDay ? 1 : 0).ThenBy(x => x.DayOfWeek)
+                .OrderBy(x =>
+                    x.DayOfWeek < model.StartDay ? 1 :
+                    x.DayOfWeek == model.StartDay && x.Time < model.StartTime ? 1 : 0).ThenBy(x => x.DayOfWeek)
                 .ThenBy(x => x.Time).ToList();
         }
 

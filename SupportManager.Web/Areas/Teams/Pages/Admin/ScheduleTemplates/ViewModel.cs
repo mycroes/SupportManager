@@ -4,12 +4,11 @@ using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using MediatR;
 using SupportManager.DAL;
-using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.CRUD;
 
 namespace SupportManager.Web.Areas.Teams.Pages.Admin.ScheduleTemplates;
 
-public record ViewModel(int TeamId, string Name, DayOfWeek StartDay, List<ViewModel.Entry> Entries)
+public record ViewModel(int TeamId, string Name, DayOfWeek StartDay, TimeSpan StartTime, List<ViewModel.Entry> Entries)
 {
     public record Entry(DayOfWeek? DayOfWeek, TimeSpan? Time, int? UserSlot)
     {
