@@ -34,6 +34,8 @@ namespace SupportManager.DAL
         public DbSet<UserPhoneNumber> UserPhoneNumbers { get; set; }
         public DbSet<ApiKey> ApiKeys { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<ScheduleTemplate> ScheduleTemplates { get; set; }
+        public DbSet<ScheduleTemplateEntry> ScheduleTemplateEntries { get; set; }
 
         public void BeginTransaction()
         {

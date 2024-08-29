@@ -1,0 +1,60 @@
+﻿@page
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Areas.Teams.Pages.Admin.ScheduleTemplates.DeleteModel
+@{
+    ViewBag.Title = "Delete Schedule Template";
+}
+
+<h2>Delete Schedule Template</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Metadata</h4>
+        <hr />
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Data.TeamId)
+        @Html.FormBlock(m => m.Data.Name, inputModifier: t => t.Attr("disabled"))
+        @Html.FormBlock(m => m.Data.StartDay, inputModifier: t => t.Attr("disabled"))
+        @Html.FormBlock(m => m.Data.StartTime, inputModifier: t => t.Attr("disabled"))
+
+        <h4>Schedule</h4>
+        <hr />
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].DayOfWeek).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].Time).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.Entries[0].UserSlot).NoTag()</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Data.Entries.Count; i++)
+                    {
+                        <tr class="entry">
+                            <td class="form-group">
+                                @Html.Input(m => m.Data.Entries[i].DayOfWeek).Attr("disabled", "disabled")
+                            </td>
+                            <td>
+                                @Html.Input(m => m.Data.Entries[i].Time).Attr("disabled", "disabled")
+                            </td>
+                            <td>
+                                @Html.Input(m => m.Data.Entries[i].UserSlot).Attr("disabled", "disabled")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </div>
+        </div>
+    </div>
+}

@@ -17,7 +17,11 @@ namespace SupportManager.Web.Areas.Teams.Pages
         [BindProperty]
         public Command Data { get; set; }
 
-        public void OnGet() => Data = new Command { TeamId = TeamId };
+        public void OnGet()
+        {
+            Data = new Command { TeamId = TeamId };
+
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {

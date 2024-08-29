@@ -1,0 +1,95 @@
+﻿@page
+@using SupportManager.Web.Infrastructure
+@model SupportManager.Web.Areas.Teams.Pages.ScheduleTemplateModel
+@{
+    ViewBag.Title = $"Schedule Template {Model.Data.ScheduleTemplate.Name}";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Metadata</h4>
+        <hr />
+        @Html.Input(m => m.Data.ScheduleTemplate).Value(Model.Data.ScheduleTemplate.Id.ToString()).Hide()
+        @Html.FormBlock(m => m.Data.ScheduleTemplate.Name, inputModifier: t => t.Attr("disabled"))
+        @Html.FormBlock(m => m.Data.ScheduleTemplate.StartDay, inputModifier: t => t.Attr("disabled"))
+
+        <h4>Schedule</h4>
+        <hr />
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayLabel(m => m.Data.ScheduleTemplate.Entries[0].DayOfWeek).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.ScheduleTemplate.Entries[0].Time).NoTag()</th>
+                        <th>@Html.DisplayLabel(m => m.Data.ScheduleTemplate.Entries[0].UserSlot).NoTag()</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Data.ScheduleTemplate.Entries.Count; i++)
+                    {
+                        <tr class="entry">
+                            <td class="form-group">
+                                @Html.Input(m => m.Data.ScheduleTemplate.Entries[i].DayOfWeek).Attr("disabled", "disabled")
+                            </td>
+                            <td>
+                                @Html.Input(m => m.Data.ScheduleTemplate.Entries[i].Time).Attr("disabled", "disabled")
+                            </td>
+                            <td>
+                                @Html.Input(m => m.Data.ScheduleTemplate.Entries[i].UserSlot).Attr("disabled", "disabled")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Select Start Date</h4>
+        <hr />
+        <div class="form-group">
+            @Html.InputBlock(m => m.Data.StartDate,
+                inputModifier: tag => tag
+                    .Attr("min", DateOnly.FromDateTime(DateTime.Today.AddDays(Model.Data.ScheduleTemplate.StartDay - DateTime.Today.DayOfWeek)).ToString("O"))
+                    .Attr("step", 7))
+        </div>
+
+        <h4>Select Users</h4>
+        <hr />
+        <div class="form-group">
+            <table>
+                <thead>
+                <tr>
+                    <th>@Html.DisplayLabel(m => m.Data.Slots[0].UserSlot).NoTag()</th>
+                    <th>@Html.DisplayLabel(m => m.Data.Slots[0].PhoneNumber).NoTag()</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (var i = 0; i < Model.Data.Slots.Count; i++)
+                {
+                    <tr class="entry">
+                        <td class="form-group">
+                            @Html.Display(m => m.Data.Slots[i].UserSlot)
+                            @Html.HiddenFor(m => m.Data.Slots[i].UserSlot)
+                        </td>
+                        <td>
+                            @Html.Input(m => m.Data.Slots[i].PhoneNumber)
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Schedule" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+

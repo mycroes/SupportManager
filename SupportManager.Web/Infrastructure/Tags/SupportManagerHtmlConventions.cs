@@ -22,9 +22,24 @@ namespace SupportManager.Web.Infrastructure.Tags
             Editors.If(er => er.Accessor.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase)).BuildBy(a => new HiddenTag().Value(a.StringValue()));
             Editors.IfPropertyIs<byte[]>().BuildBy(a => new HiddenTag().Value(Convert.ToBase64String(a.Value<byte[]>())));
 
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(TimeSpan)).ModifyWith(m =>
+                m.CurrentTag.AddPattern("9{1,2}:[0-5][0-9]").Attr("type", "time").Value(m.Value<TimeSpan?>() != null
+                    ? m.Value<TimeSpan>().ToString(@"hh\:mm")
+                    : string.Empty));
+
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(DateOnly)).ModifyWith(m =>
+                m.CurrentTag.Attr("type", "date")
+                    .Value(m.Value<DateOnly?>() is { } date ? date.ToString("O") : string.Empty));
+
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(int))
+                .ModifyWith(m => m.CurrentTag.Attr("type", "number").Attr("step", "1"));
+
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
 
+            Editors.BuilderPolicy<EnumSelectElementBuilder>();
+
+            Labels.Always.BuildBy<DefaultDisplayLabelBuilder>();
             Labels.Always.AddClass("control-label");
             Labels.Always.AddClass("col-md-2");
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));

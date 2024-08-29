@@ -1,0 +1,17 @@
+﻿@model SupportManager.Web.Areas.Teams.Pages.Shared.ScheduleTemplateListViewComponent.Model
+
+@if (Model.Templates.Any())
+{
+    <ul>
+        @foreach (var template in Model.Templates)
+        {
+            <li>@Model.Render(template)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>
+        No templates exist for your team, ask your team admins to create templates.
+    </p>
+}
