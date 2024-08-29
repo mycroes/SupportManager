@@ -1,0 +1,8 @@
+﻿@model SupportManager.Web.Areas.Teams.Pages.Shared.ScheduleTemplateListViewComponent.Model
+
+<ul>
+    @foreach (var template in Model.Templates)
+    {
+        <li>@Model.Render(template)</li>
+    }
+</ul>

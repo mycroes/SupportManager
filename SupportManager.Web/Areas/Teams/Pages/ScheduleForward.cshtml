@@ -1,11 +1,12 @@
 ﻿@page
+@using SupportManager.Web.Areas.Teams.Pages.Shared
 @using SupportManager.Web.Infrastructure
 @model SupportManager.Web.Areas.Teams.Pages.ScheduleForwardModel
 @{
     ViewBag.Title = "Schedule forward";
 }
 
-<h2>Schedule forward</h2>
+<h2>Schedule single forward</h2>
 
 @using (Html.BeginForm())
 {
@@ -23,7 +24,12 @@
             </div>
         </div>
     </div>
+
+    <hr />
 }
+
+<h2>Schedule using template</h2>
+<vc:schedule-template-list render="model => new LinkTag(model.Name, @Url.Page("ScheduleTemplate", new {Model.TeamId, model.Id}))"></vc:schedule-template-list>
 
 @section scripts
 {
