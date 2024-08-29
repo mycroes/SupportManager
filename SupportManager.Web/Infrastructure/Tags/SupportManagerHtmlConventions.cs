@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using HtmlTags;
 using HtmlTags.Conventions;
 
@@ -19,7 +18,7 @@ namespace SupportManager.Web.Infrastructure.Tags
                 .AddPlaceholder("MM/DD/YYYY")
                 .AddClass("datepicker")
                 .Value(m.Value<DateTime?>() != null ? m.Value<DateTime>().ToShortDateString() : string.Empty));
-            Editors.If(er => er.Accessor.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase)).BuildBy(a => new HiddenTag().Value(a.StringValue()));
+
             Editors.IfPropertyIs<byte[]>().BuildBy(a => new HiddenTag().Value(Convert.ToBase64String(a.Value<byte[]>())));
 
             Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(TimeSpan)).ModifyWith(m =>
@@ -31,8 +30,16 @@ namespace SupportManager.Web.Infrastructure.Tags
                 m.CurrentTag.Attr("type", "date")
                     .Value(m.Value<DateOnly?>() is { } date ? date.ToString("O") : string.Empty));
 
-            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(int))
-                .ModifyWith(m => m.CurrentTag.Attr("type", "number").Attr("step", "1"));
+            Editors.IfPropertyTypeIs(t => (Nullable.GetUnderlyingType(t) ?? t) == typeof(int)).ModifyWith(m =>
+            {
+                if ("input".Equals(m.CurrentTag.Attr("type")))
+                {
+                    m.CurrentTag.Attr("type", "number").Attr("step", "1");
+                }
+            });
+
+            Editors.If(er => er.Accessor.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase))
+                .BuildBy(a => new HiddenTag().Value(a.StringValue()));
 
             Editors.BuilderPolicy<UserPhoneNumberSelectElementBuilder>();
             Editors.BuilderPolicy<TeamSelectElementBuilder>();
