@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using AutoMapper;
 using Hangfire;
 using MediatR;
 using SupportManager.Api.Teams;
+using SupportManager.Api.Users;
 using SupportManager.Contracts;
 using SupportManager.DAL;
 
@@ -35,7 +37,22 @@ namespace SupportManager.Web.Api.Team
             public async Task<List<ForwardRegistration>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await db.ScheduledForwards.Where(fwd => fwd.When >= DateTimeOffset.Now).Where(fwd => fwd.TeamId == request.TeamId).OrderBy(fwd => fwd.When)
-                    .Take(10).ProjectToListAsync<ForwardRegistration>(mapper.ConfigurationProvider);
+                    .Take(10).Select(fwd => new ForwardRegistration
+                    {
+                        Id = fwd.Id,
+                        PhoneNumber = new PhoneNumber
+                        {
+                            Id = fwd.PhoneNumber.Id,
+                            Label = fwd.PhoneNumber.Label,
+                            Value = fwd.PhoneNumber.Value
+                        },
+                        User = new SupportManager.Api.Users.User
+                        {
+                            Id = fwd.PhoneNumber.User.Id,
+                            DisplayName = fwd.PhoneNumber.User.DisplayName
+                        },
+                        When = fwd.When
+                    }).ToListAsync(cancellationToken);
             }
         }
 
