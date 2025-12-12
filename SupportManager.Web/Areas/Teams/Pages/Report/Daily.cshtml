@@ -1,0 +1,148 @@
+﻿@page
+@model SupportManager.Web.Areas.Teams.Pages.Report.DailyModel
+
+@using System.Threading
+
+@{
+    ViewBag.Title = "Daily result";
+
+    // custom category order
+    Dictionary<string, int> order = new()
+    {
+        { "Kantooruren", 1 },
+        { "Doordeweeks", 2 },
+        { "Weekend", 3 },
+    };
+}
+
+@functions
+{
+    string FormatDuration(TimeSpan duration)
+    {
+        var hours = (int)Math.Floor(duration.TotalHours);
+        var minutes = duration.Minutes;
+        return $"{hours:00}:{minutes:00}";
+    }
+}
+
+<h2>Daily report</h2>
+<h3>@Model.Data.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)</h3>
+
+@foreach (var week in Model.Data.Weeks)
+{
+    <h4 class="mt-4 mb-3">
+        Week @week.Start.ToString("dd-MM-yyyy", Thread.CurrentThread.CurrentUICulture)
+        – @week.End.ToString("dd-MM-yyyy", Thread.CurrentThread.CurrentUICulture)
+    </h4>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th style="width: 22%;">Dag</th>
+                <th style="width: 15%;">Categorie</th>
+                <th>Support-details</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var day in week.Days)
+        {
+            if (day.Summaries == null || !day.Summaries.Any())
+            {
+                <tr>
+                    <td>@day.Date.ToString("dddd dd-MM-yyyy", Thread.CurrentThread.CurrentUICulture)</td>
+                    <td colspan="2">No data yet</td>
+                </tr>
+            }
+            else
+            {
+                var summaries = day.Summaries
+                    .OrderBy(s => order[s.GroupingKey])
+                    .ToList();
+
+                bool firstRow = true;
+
+                foreach (var summary in summaries)
+                {
+                    var totalSeconds = summary.Duration.TotalSeconds;
+
+                    // ⭐highest contributor
+                    var topContributor = summary.Participations
+                        .OrderByDescending(x => x.Duration)
+                        .FirstOrDefault();
+
+                    <tr>
+                        @if (firstRow)
+                        {
+                            <td rowspan="@summaries.Count" class="align-top">
+                                <strong>@day.Date.ToString("dddd dd-MM-yyyy", Thread.CurrentThread.CurrentUICulture)</strong>
+                            </td>
+                            firstRow = false;
+                        }
+
+                        <td class="align-top" style="background-color:#f2f4f7;">
+                            @* <strong>@summary.GroupingKey</strong> *@
+                            <strong>@(summary.GroupingKey == "Doordeweeks"  || summary.GroupingKey == "Weekend"  ? "Storingsdienst" : summary.GroupingKey)</strong>
+                        </td>
+
+                        <td class="align-top">
+                            @if (summary.Participations?.Any() == true)
+                            {
+                                <ul class="list-unstyled mb-0 small">
+
+                                    @foreach (var p in summary.Participations.OrderByDescending(x => x.Duration))
+                                    {
+                                        var percentage = Math.Round(
+                                            p.Duration.TotalSeconds / totalSeconds * 100, 1);
+
+                                        bool isTop = topContributor != null &&
+                                            p.UserName == topContributor.UserName;
+                                        
+                                        <li>
+
+                                            @if (isTop)
+                                            {
+                                                <span style="color:gold;">⭐</span>
+                                            }
+
+                                            <strong>@p.UserName</strong>
+
+                                            @if (p.FirstStart.HasValue)
+                                            {
+                                                <span class="text-secondary">
+                                                    start @p.FirstStart.Value.ToString("HH:mm")
+                                                </span>
+                                            }
+
+                                            <span class="text-secondary" style="margin-left:6px;">
+                                                — duur @FormatDuration(p.Duration)
+                                                (@percentage %)
+                                            </span>
+
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                @:No data yet
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        }
+
+        </tbody>
+    </table>
+}
+
+<a href="@Url.Page("Daily", Model.Data.Previous.Query)" class="btn btn-outline-primary">
+    <i class="fa fa-arrow-left"></i>
+    @Model.Data.Previous.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)
+</a>
+
+<a href="@Url.Page("Daily", Model.Data.Next.Query)" class="pull-right btn btn-outline-primary">
+    @Model.Data.Next.Date.ToString("MMMM yyyy", Thread.CurrentThread.CurrentUICulture)
+    <i class="fa fa-arrow-right"></i>
+</a>

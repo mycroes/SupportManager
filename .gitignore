@@ -32,3 +32,8 @@ packages/
 lib/
 
 .vs/
+
+node_modules/
+bower_components/
+
+appsettings.Development.json
