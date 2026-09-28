@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SupportManager.Web.Infrastructure.ApiKey;
@@ -26,9 +27,10 @@ namespace SupportManager.Web.Api
         }
 
         [HttpGet("schedule/{id}")]
-        public async Task<ActionResult<List<ForwardRegistration>>> GetSchedule(int id)
+        public async Task<ActionResult<List<ForwardRegistration>>> GetSchedule(int id,
+            [FromQuery, Range(1, 1000)] int limit = 10)
         {
-            return await mediator.Send(new Schedule.Query(id));
+            return await mediator.Send(new Schedule.Query(id, limit));
         }
 
         [HttpDelete("forward/{id}")]

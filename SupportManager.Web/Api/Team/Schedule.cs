@@ -18,9 +18,14 @@ namespace SupportManager.Web.Api.Team
     {
         public class Query : IRequest<List<ForwardRegistration>>
         {
-            public Query(int teamId) => TeamId = teamId;
+            public Query(int teamId, int limit)
+            {
+                TeamId = teamId;
+                Limit = limit;
+            }
 
             public int TeamId { get; }
+            public int Limit { get; }
         }
 
         public class QueryHandler : IRequestHandler<Query, List<ForwardRegistration>>
@@ -37,7 +42,7 @@ namespace SupportManager.Web.Api.Team
             public async Task<List<ForwardRegistration>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await db.ScheduledForwards.Where(fwd => fwd.When >= DateTimeOffset.Now).Where(fwd => fwd.TeamId == request.TeamId).OrderBy(fwd => fwd.When)
-                    .Take(10).Select(fwd => new ForwardRegistration
+                    .Take(request.Limit).Select(fwd => new ForwardRegistration
                     {
                         Id = fwd.Id,
                         PhoneNumber = new PhoneNumber
