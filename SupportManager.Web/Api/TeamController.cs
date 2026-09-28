@@ -43,7 +43,7 @@ namespace SupportManager.Web.Api
         {
             // Hack, move command out of Model
             var command = await mediator.Send(new DeleteForwardModel.Query(id));
-            if (!User.IsTeamMember(command.TeamId)) return NotFound();
+            if (command == null || !User.IsTeamMember(command.TeamId)) return NotFound();
 
             await mediator.Send(command);
             return Ok();

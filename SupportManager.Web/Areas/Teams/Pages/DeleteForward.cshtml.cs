@@ -17,11 +17,17 @@ namespace SupportManager.Web.Areas.Teams.Pages
         [BindProperty]
         public Command Data { get; set; }
 
-        public async Task OnGetAsync(Query query) => Data = await mediator.Send(query);
+        public async Task<IActionResult> OnGetAsync(Query query)
+        {
+            Data = await mediator.Send(query);
+            if (Data == null || Data.TeamId != TeamId) return NotFound();
+
+            return Page();
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            await mediator.Send(Data);
+            await mediator.Send(Data with { TeamId = TeamId });
 
             return this.RedirectToPageJson(nameof(Index), new { TeamId });
         }
@@ -48,7 +54,8 @@ namespace SupportManager.Web.Areas.Teams.Pages
 
             protected override async Task Handle(Command message, CancellationToken cancellationToken)
             {
-                var scheduled = await db.ScheduledForwards.FindAsync(message.Id);
+                var scheduled = await db.ScheduledForwards.SingleAsync(
+                    s => s.Id == message.Id && s.TeamId == message.TeamId, cancellationToken);
                 if (scheduled.ScheduleId != null)
                 {
                     BackgroundJob.Delete(scheduled.ScheduleId);
@@ -77,7 +84,7 @@ namespace SupportManager.Web.Areas.Teams.Pages
                         PhoneNumber = s.PhoneNumber.Value,
                         UserName = s.PhoneNumber.User.DisplayName,
                         When = s.When
-                    }).SingleAsync();
+                    }).SingleOrDefaultAsync();
             }
         }
     }

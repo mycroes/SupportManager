@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using Hangfire;
 using MediatR;
 using SupportManager.Api.Teams;
 using SupportManager.Api.Users;
 using SupportManager.Contracts;
 using SupportManager.DAL;
+using SupportManager.Web.Api.Shared;
 
 namespace SupportManager.Web.Api.Team
 {
@@ -73,6 +75,14 @@ namespace SupportManager.Web.Api.Team
             public int TeamId { get; }
             public int PhoneNumberId { get; }
             public DateTimeOffset When { get; }
+
+            public class Validator : AbstractValidator<Command>
+            {
+                public Validator(SupportManagerContext db)
+                {
+                    RuleFor(x => x.PhoneNumberId).BelongsToTeamMember(db, x => x.TeamId);
+                }
+            }
         }
 
         public class CommandHandler : IRequestHandler<Command, int>

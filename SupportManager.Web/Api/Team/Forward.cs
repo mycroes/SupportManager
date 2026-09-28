@@ -1,6 +1,9 @@
-﻿using Hangfire;
+﻿using FluentValidation;
+using Hangfire;
 using MediatR;
 using SupportManager.Contracts;
+using SupportManager.DAL;
+using SupportManager.Web.Api.Shared;
 
 namespace SupportManager.Web.Api.Team
 {
@@ -15,6 +18,14 @@ namespace SupportManager.Web.Api.Team
             {
                 TeamId = teamId;
                 PhoneNumberId = phoneNumberId;
+            }
+
+            public class Validator : AbstractValidator<Command>
+            {
+                public Validator(SupportManagerContext db)
+                {
+                    RuleFor(x => x.PhoneNumberId).BelongsToTeamMember(db, x => x.TeamId);
+                }
             }
         }
 
