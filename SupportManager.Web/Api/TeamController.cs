@@ -40,10 +40,9 @@ namespace SupportManager.Web.Api
         }
 
         [HttpPost("schedule")]
-        public async Task<IActionResult> Schedule([FromBody] Schedule.Command command)
+        public async Task<ActionResult<int>> Schedule([FromBody] Schedule.Command command)
         {
-            await mediator.Send(command);
-            return Ok();
+            return await mediator.Send(command);
         }
 
         [HttpGet("members/{id}")]

@@ -56,7 +56,7 @@ namespace SupportManager.Web.Api.Team
             }
         }
 
-        public class Command : IRequest
+        public class Command : IRequest<int>
         {
             public Command(int teamId, int phoneNumberId, DateTimeOffset @when)
             {
@@ -70,13 +70,13 @@ namespace SupportManager.Web.Api.Team
             public DateTimeOffset When { get; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SupportManagerContext db;
 
             public CommandHandler(SupportManagerContext db) => this.db = db;
 
-            protected override async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<int> Handle(Command request, CancellationToken cancellationToken)
             {
                 var scheduledForward = new ScheduledForward
                 {
@@ -93,6 +93,8 @@ namespace SupportManager.Web.Api.Team
 
                 await db.SaveChangesAsync();
                 await db.CommitTransactionAsync();
+
+                return scheduledForward.Id;
             }
         }
     }
