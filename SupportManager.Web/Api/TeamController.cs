@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SupportManager.Web.Infrastructure;
 using SupportManager.Web.Infrastructure.ApiKey;
 using SupportManager.Api.Teams;
 using SupportManager.Api.Users;
@@ -23,6 +24,8 @@ namespace SupportManager.Web.Api
         [HttpGet("status/{id}")]
         public async Task<ActionResult<TeamStatus>> Status(int id)
         {
+            if (!User.IsTeamMember(id)) return NotFound();
+
             return await mediator.Send(new Status.Query(id));
         }
 
@@ -30,6 +33,8 @@ namespace SupportManager.Web.Api
         public async Task<ActionResult<List<ForwardRegistration>>> GetSchedule(int id,
             [FromQuery, Range(1, 1000)] int limit = 10)
         {
+            if (!User.IsTeamMember(id)) return NotFound();
+
             return await mediator.Send(new Schedule.Query(id, limit));
         }
 
@@ -37,25 +42,34 @@ namespace SupportManager.Web.Api
         public async Task<IActionResult> DeleteForward(int id)
         {
             // Hack, move command out of Model
-            await mediator.Send(new DeleteForwardModel.Command {Id = id});
+            var command = await mediator.Send(new DeleteForwardModel.Query(id));
+            if (!User.IsTeamMember(command.TeamId)) return NotFound();
+
+            await mediator.Send(command);
             return Ok();
         }
 
         [HttpPost("schedule")]
         public async Task<ActionResult<int>> Schedule([FromBody] Schedule.Command command)
         {
+            if (!User.IsTeamMember(command.TeamId)) return NotFound();
+
             return await mediator.Send(command);
         }
 
         [HttpGet("members/{id}")]
         public async Task<ActionResult<List<UserDetails>>> GetMembers(int id)
         {
+            if (!User.IsTeamMember(id)) return NotFound();
+
             return await mediator.Send(new Members.Query(id));
         }
 
         [HttpPost("forward")]
         public async Task<IActionResult> Forward([FromBody] Forward.Command command)
         {
+            if (!User.IsTeamMember(command.TeamId)) return NotFound();
+
             await mediator.Send(command);
             return Ok();
         }
