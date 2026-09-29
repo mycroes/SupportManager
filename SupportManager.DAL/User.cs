@@ -19,5 +19,10 @@ namespace SupportManager.DAL
         /// Gets or sets a value indicating whether or not the user is a superuser.
         /// </summary>
         public virtual bool IsSuperUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the user is an observer, with read-only access to all teams.
+        /// </summary>
+        public virtual bool IsObserver { get; set; }
     }
 }
