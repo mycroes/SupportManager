@@ -20,17 +20,27 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var team in Model.Data.Teams)
+            @for (var i = 0; i < Model.Data.Teams.Count; i++)
             {
+                var team = Model.Data.Teams[i];
                 <tr>
                     <td>
-                        <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.Id">@team.Name</a>
+                        <a asp-area="Teams" asp-page="/Index" asp-route-TeamId="@team.Id">@Html.Display(m => m.Data.Teams[i].Name)</a>
                     </td>
                     @if (team.CurrentSince != null)
                     {
-                        <td>@(team.CurrentUser ?? "Unknown")</td>
-                        <td>@team.CurrentPhoneNumber</td>
-                        <td>@team.CurrentSince</td>
+                        <td>
+                            @if (team.CurrentUser != null)
+                            {
+                                @Html.Display(m => m.Data.Teams[i].CurrentUser)
+                            }
+                            else
+                            {
+                                <span class="text-muted">Unknown</span>
+                            }
+                        </td>
+                        <td>@Html.Display(m => m.Data.Teams[i].CurrentPhoneNumber)</td>
+                        <td>@Html.Display(m => m.Data.Teams[i].CurrentSince)</td>
                     }
                     else
                     {
@@ -38,8 +48,8 @@
                     }
                     @if (team.NextWhen != null)
                     {
-                        <td>@team.NextUser</td>
-                        <td>@team.NextWhen</td>
+                        <td>@Html.Display(m => m.Data.Teams[i].NextUser)</td>
+                        <td>@Html.Display(m => m.Data.Teams[i].NextWhen)</td>
                     }
                     else
                     {
