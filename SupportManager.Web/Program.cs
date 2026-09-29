@@ -17,7 +17,7 @@ var webApplicationOptions = new WebApplicationOptions()
 {
     ContentRootPath = AppContext.BaseDirectory,
     Args = args,
-    ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
+    ApplicationName = typeof(Program).Assembly.GetName().Name
 };
 var builder = WebApplication.CreateBuilder(webApplicationOptions);
 
