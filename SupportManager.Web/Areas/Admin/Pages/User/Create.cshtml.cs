@@ -32,6 +32,7 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             public string PrimaryEmailAddress { get; init; }
             public string PrimaryPhoneNumber { get; init; }
             public bool IsSuperUser { get; init; }
+            public bool IsObserver { get; init; }
             public SupportTeam Team { get; init; }
             public bool IsTeamAdmin { get; init; }
         }
@@ -58,7 +59,8 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             {
                 var user = new DAL.User
                 {
-                    DisplayName = message.DisplayName, Login = message.Login, IsSuperUser = message.IsSuperUser
+                    DisplayName = message.DisplayName, Login = message.Login, IsSuperUser = message.IsSuperUser,
+                    IsObserver = message.IsObserver
                 };
                 db.Users.Add(user);
 

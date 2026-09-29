@@ -19,7 +19,9 @@ namespace SupportManager.Web.Pages
         {
             var result = await mediator.Send(new Query(User.Identity?.Name));
 
-            return RedirectToPage(result.IsExistingUser ? "User/Index" : "User/Welcome");
+            if (!result.IsExistingUser) return RedirectToPage("User/Welcome");
+
+            return RedirectToPage(User.IsObserver() ? "Overview" : "User/Index");
         }
 
         public record Query(string UserName) : IRequest<Result>;

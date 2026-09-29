@@ -36,6 +36,7 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
             public string PrimaryPhoneNumber { get; init; }
             public bool Deleted { get; init; }
             public bool IsSuperUser { get; init; }
+            public bool IsObserver { get; init; }
             public SupportTeam Team { get; init; }
             public bool IsTeamAdmin { get; init; }
         }
@@ -69,6 +70,7 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
                     PrimaryPhoneNumber = u.PrimaryPhoneNumber.Value,
                     Deleted = u.Deleted,
                     IsSuperUser = u.IsSuperUser,
+                    IsObserver = u.IsObserver,
                     Team = u.Memberships.FirstOrDefault().Team,
                     IsTeamAdmin = u.Memberships.Any() && u.Memberships.FirstOrDefault().IsAdministrator
                 }).SingleOrDefaultAsync() ?? throw new Exception($"Couldn't find User with Id '{request.Id}.");
@@ -94,6 +96,7 @@ namespace SupportManager.Web.Areas.Admin.Pages.User
                 user.DisplayName = message.DisplayName;
                 user.Login = message.Login;
                 user.IsSuperUser = message.IsSuperUser;
+                user.IsObserver = message.IsObserver;
                 user.Deleted = message.Deleted;
 
                 if (message.PrimaryEmailAddress == null)

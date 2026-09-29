@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -14,12 +14,10 @@ internal class TeamMemberFilter : IPageFilter
     {
         if (context.ActionDescriptor.AreaName != "Teams") return;
 
+        var user = context.HttpContext.User;
+
         // Permit superuser access to all teams
-        if (context.HttpContext.User.HasClaim(SupportManagerClaimTypes.SuperUser,
-                true.ToString(CultureInfo.InvariantCulture)))
-        {
-            return;
-        }
+        if (user.IsSuperUser()) return;
 
         if (context.RouteData.Values["teamId"] is not string teamId)
         {
@@ -27,14 +25,25 @@ internal class TeamMemberFilter : IPageFilter
             return;
         }
 
-        if (!context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamMember, teamId))
+        if (!user.HasClaim(SupportManagerClaimTypes.TeamMember, teamId))
         {
-            context.Result = new NotFoundResult();
+            if (!user.IsObserver())
+            {
+                context.Result = new NotFoundResult();
+                return;
+            }
+
+            // Observers have read-only access to pages that explicitly allow it
+            if (!IsObserverAllowed(context))
+            {
+                context.Result = new ForbidResult();
+            }
+
             return;
         }
 
         if (context.ActionDescriptor.ViewEnginePath.StartsWith("/Admin") &&
-            !context.HttpContext.User.HasClaim(SupportManagerClaimTypes.TeamAdmin, teamId))
+            !user.HasClaim(SupportManagerClaimTypes.TeamAdmin, teamId))
         {
             context.Result = new ForbidResult();
             return;
@@ -43,5 +52,13 @@ internal class TeamMemberFilter : IPageFilter
 
     public void OnPageHandlerExecuted(PageHandlerExecutedContext context)
     {
+    }
+
+    private static bool IsObserverAllowed(PageHandlerExecutingContext context)
+    {
+        var method = context.HttpContext.Request.Method;
+        if (!HttpMethods.IsGet(method) && !HttpMethods.IsHead(method)) return false;
+
+        return context.ActionDescriptor.HandlerTypeInfo?.IsDefined(typeof(AllowObserverAttribute), false) ?? false;
     }
 }

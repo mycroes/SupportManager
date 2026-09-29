@@ -33,6 +33,12 @@ internal class ClaimsTransformation : IClaimsTransformation
                 new Claim(SupportManagerClaimTypes.SuperUser, true.ToString(CultureInfo.InvariantCulture)));
         }
 
+        if (user.IsObserver && !principal.HasClaim(c => c.Type == SupportManagerClaimTypes.Observer))
+        {
+            identity.AddClaim(
+                new Claim(SupportManagerClaimTypes.Observer, true.ToString(CultureInfo.InvariantCulture)));
+        }
+
         foreach (var membership in user.Memberships)
         {
             var teamId = membership.TeamId.ToString(CultureInfo.InvariantCulture);

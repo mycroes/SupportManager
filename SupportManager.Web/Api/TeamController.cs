@@ -24,7 +24,7 @@ namespace SupportManager.Web.Api
         [HttpGet("status/{id}")]
         public async Task<ActionResult<TeamStatus>> Status(int id)
         {
-            if (!User.IsTeamMember(id)) return NotFound();
+            if (!User.CanViewTeam(id)) return NotFound();
 
             return await mediator.Send(new Status.Query(id));
         }
@@ -33,7 +33,7 @@ namespace SupportManager.Web.Api
         public async Task<ActionResult<List<ForwardRegistration>>> GetSchedule(int id,
             [FromQuery, Range(1, 1000)] int limit = 10)
         {
-            if (!User.IsTeamMember(id)) return NotFound();
+            if (!User.CanViewTeam(id)) return NotFound();
 
             return await mediator.Send(new Schedule.Query(id, limit));
         }
@@ -60,7 +60,7 @@ namespace SupportManager.Web.Api
         [HttpGet("members/{id}")]
         public async Task<ActionResult<List<UserDetails>>> GetMembers(int id)
         {
-            if (!User.IsTeamMember(id)) return NotFound();
+            if (!User.CanViewTeam(id)) return NotFound();
 
             return await mediator.Send(new Members.Query(id));
         }

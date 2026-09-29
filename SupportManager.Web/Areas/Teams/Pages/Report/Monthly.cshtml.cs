@@ -7,6 +7,7 @@ using SupportManager.DAL;
 
 namespace SupportManager.Web.Areas.Teams.Pages.Report
 {
+    [AllowObserver]
     public class MonthlyModel : PageModel
     {
         private readonly IMediator mediator;

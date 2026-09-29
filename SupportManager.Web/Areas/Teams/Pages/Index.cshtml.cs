@@ -5,6 +5,7 @@ using SupportManager.Web.Areas.Teams.Pages.Shared;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
+    [AllowObserver]
     public class IndexModel : TeamPageModel
     {
         private readonly IMediator mediator;

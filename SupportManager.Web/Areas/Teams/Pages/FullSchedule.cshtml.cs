@@ -6,6 +6,7 @@ using X.PagedList;
 
 namespace SupportManager.Web.Areas.Teams.Pages
 {
+    [AllowObserver]
     public class FullScheduleModel : TeamPageModel
     {
         private IMediator mediator;
