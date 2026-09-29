@@ -44,7 +44,8 @@ namespace SupportManager.Backup
                     u.PhoneNumbers.Select(p => new UserPhoneNumber(p.Id, p.Label, p.Value, p.IsVerified)).ToList(),
                     u.ApiKeys.Select(k => new ApiKey(k.Value, k.CallbackUrl)).ToList(), u.PrimaryEmailAddress.Id,
                     u.PrimaryPhoneNumber.Id,
-                    u.Memberships.Select(m => new TeamMember(m.TeamId, m.IsAdministrator)).ToList())).WithMembers()
+                    u.Memberships.Select(m => new TeamMember(m.TeamId, m.IsAdministrator)).ToList(), u.IsObserver))
+                .WithMembers()
                 .ToListAsync();
 
             progress.Report("Loading schedule...");

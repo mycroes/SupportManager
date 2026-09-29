@@ -136,6 +136,7 @@ namespace SupportManager.Backup
                     {
                         Login = user.Login,
                         DisplayName = user.DisplayName,
+                        IsObserver = user.IsObserver,
                         Memberships = new List<DAL.TeamMember>(),
                         ApiKeys = new List<DAL.ApiKey>(),
                         EmailAddresses = new List<DAL.UserEmailAddress>(),
