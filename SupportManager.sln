@@ -5,13 +5,13 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{DFAABEEB-CBAB-44B3-B9B8-72A74A37CEA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportManager.DAL", "SupportManager.DAL\SupportManager.DAL.csproj", "{5851ABDF-F30D-453C-BCE0-2237E6107FCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportManager.DAL", "SupportManager.DAL\SupportManager.DAL.csproj", "{5851ABDF-F30D-453C-BCE0-2237E6107FCC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportManager.Control", "SupportManager.Control\SupportManager.Control.csproj", "{A8E9BBC3-C014-4F47-877A-8E2A8EAC8BB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MYCroes.ATCommands", "MYCroes.ATCommands\MYCroes.ATCommands.csproj", "{7A3CF6FF-8C0B-4976-BAD0-19CC2AE0A158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportManager.Contracts", "SupportManager.Contracts\SupportManager.Contracts.csproj", "{E2BAFCB0-3837-48B0-840A-8C6684E371C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportManager.Contracts", "SupportManager.Contracts\SupportManager.Contracts.csproj", "{E2BAFCB0-3837-48B0-840A-8C6684E371C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportManager.Web", "SupportManager.Web\SupportManager.Web.csproj", "{C66C111C-D4A9-4E59-984B-783787AD034B}"
 EndProject
