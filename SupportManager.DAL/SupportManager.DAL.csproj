@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="NeinLinq.EntityFramework" Version="6.0.0" />
     <PackageReference Include="ReflEx" Version="0.3.0" />
   </ItemGroup>
